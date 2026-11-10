@@ -1,0 +1,62 @@
+use "fonts/ROYALHefanaRegular.woff"
+use "fonts/Archivo.ttf"
+
+import "icons/lucide/arrow-left.svg" as arrowLeft
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+
+// Logo en tête de l'accueil, en Hefana : seul endroit où la police de marque apparaît. Sur le fond rose, sans bandeau.
+export brandHeader = frame {
+  left: 0px,
+  top: 0px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center},
+  fill: c.colors.brand,
+  padding: [28px, 20px, 20px],
+  children: logo,
+
+  logo = text {
+    transform: [1, -0.2, 8, 0, 1, 0],
+    fill: c.colors.ink,
+    contents: "VENI VIDI VICI",
+    font-size: 40,
+    font-family: f.fonts.brand
+  }
+}
+
+// En-tête d'un écran secondaire : retour + titre en Archivo gras
+export pageHeader = frame {
+  left: 0px,
+  top: 200px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: l.lengths.space-m},
+  padding: [20px, 20px, 0px],
+  children: [backButton, pageTitle],
+
+  backButton = frame {
+    width: 44px,
+    height: 44px,
+    layout: {justify-content: .center, align-items: .center},
+    border: c.colors.ink,
+    corner-radius: l.lengths.radius-m,
+    children: backIcon,
+
+    backIcon = asset {
+      width: 24px,
+      height: 24px,
+      fill: c.colors.ink,
+      contents: arrowLeft
+    }
+  }
+
+  pageTitle = text {
+    fill: c.colors.ink,
+    contents: "Titre",
+    font-size: 28,
+    font-family: f.fonts.ui,
+    font-style: "Bold"
+  }
+}

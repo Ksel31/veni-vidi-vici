@@ -1,0 +1,81 @@
+use "fonts/Archivo.ttf"
+
+import "icons/lucide/house.svg" as houseIcon
+import "icons/lucide/history.svg" as historyIcon
+import "icons/lucide/plus.svg" as plusIcon
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+
+// Barre d'onglets du bas : Accueil, Ajouter (action principale), Historique.
+// Onglet actif = opacité pleine et libellé gras ; inactif = opacité réduite.
+export tabBar = frame {
+  left: 0px,
+  top: 0px,
+  width: 100%,
+  height: .auto,
+  layout: {justify-content: .space-around, align-items: .center},
+  fill: c.colors.surface-card,
+  padding: [12px, 16px, 28px],
+  children: [tabHome, addTab, tabHistory],
+
+  tabHome = frame {
+    width: 96px,
+    height: .auto,
+    layout: {direction: .column, align-items: .center, item-gap: 4px},
+    children: [homeGlyph, homeLabel],
+
+    homeGlyph = asset {
+      width: 28px,
+      height: 28px,
+      fill: c.colors.ink,
+      contents: houseIcon
+    }
+
+    homeLabel = text {
+      fill: c.colors.ink,
+      contents: "Accueil",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+  }
+
+  addTab = frame {
+    width: 56px,
+    height: 56px,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.action,
+    corner-radius: l.lengths.radius-l,
+    children: addGlyph,
+
+    addGlyph = asset {
+      width: 28px,
+      height: 28px,
+      fill: c.colors.on-action,
+      contents: plusIcon
+    }
+  }
+
+  tabHistory = frame {
+    width: 96px,
+    height: .auto,
+    opacity: 0.6,
+    layout: {direction: .column, align-items: .center, item-gap: 4px},
+    children: [historyGlyph, historyLabel],
+
+    historyGlyph = asset {
+      width: 28px,
+      height: 28px,
+      fill: c.colors.ink,
+      contents: historyIcon
+    }
+
+    historyLabel = text {
+      fill: c.colors.ink,
+      contents: "Historique",
+      font-size: 14,
+      font-family: f.fonts.ui
+    }
+  }
+}

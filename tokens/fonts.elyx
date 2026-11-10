@@ -1,5 +1,6 @@
-// Titres : ROYAL Hefana, toujours en capitales (fichier dans fonts/). Texte : Archivo regular.
+// brand : ROYAL Hefana, uniquement pour le logo et le branding (illisible en interface).
+// ui : Archivo, pour tous les titres et textes de l'interface (gras pour les titres).
 export fonts = tokens {
-  display: "ROYAL Hefana",
-  body: "Archivo"
+  brand: "ROYAL Hefana",
+  ui: "Archivo"
 }

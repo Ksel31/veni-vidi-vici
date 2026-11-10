@@ -1,0 +1,304 @@
+use "fonts/Archivo.ttf"
+
+import "icons/lucide/chevron-right.svg" as chevronRight
+import "icons/lucide/check.svg" as checkIcon
+import "icons/lucide/x.svg" as crossIcon
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+
+// Event à venir : nom, type | date | lieu, état du billet, compte à rebours.
+export eventCard = frame {
+  left: 0px,
+  top: 0px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: l.lengths.space-m},
+  fill: c.colors.surface-card,
+  corner-radius: l.lengths.radius-l,
+  padding: l.lengths.space-m,
+  children: [info, countdown],
+
+  info = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 4px},
+    children: [eventTitle, eventMeta, ticketState],
+
+    eventTitle = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Titre",
+      font-size: 18,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+
+    eventMeta = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Concert | Date | Lieu",
+      font-size: 14,
+      font-family: f.fonts.ui
+    }
+
+    ticketState = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Billet",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+  }
+
+  // Information, pas une action : fond papier
+  countdown = frame {
+    width: .auto,
+    height: .auto,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.paper,
+    corner-radius: l.lengths.radius-s,
+    padding: [6px, 10px],
+    children: countdownLabel,
+
+    countdownLabel = text {
+      fill: c.colors.ink,
+      contents: "Dans 0 jours",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+  }
+}
+
+// Event passé à confirmer : « Raté » (secondaire, contour encre) et « Vu » (principal, encre pleine).
+export confirmCard = frame {
+  left: 0px,
+  top: 300px,
+  width: 100%,
+  height: .auto,
+  layout: {direction: .column, item-gap: 12px},
+  fill: c.colors.surface-card,
+  corner-radius: l.lengths.radius-l,
+  padding: l.lengths.space-m,
+  children: [info, question, actions],
+
+  info = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 4px},
+    children: [eventTitle, eventMeta],
+
+    eventTitle = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Titre",
+      font-size: 18,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+
+    eventMeta = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Concert | Date | Lieu",
+      font-size: 14,
+      font-family: f.fonts.ui
+    }
+  }
+
+  question = text {
+    width: 100%,
+    fill: c.colors.ink,
+    contents: "Tu y étais ?",
+    font-size: 16,
+    font-family: f.fonts.ui
+  }
+
+  actions = frame {
+    width: 100%,
+    height: .auto,
+    layout: {item-gap: 12px},
+    children: [missedButton, seenButton],
+
+    missedButton = frame {
+      width: 100%,
+      height: l.lengths.tap,
+      layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+      border: c.colors.action-secondary,
+      corner-radius: l.lengths.radius-m,
+      children: [missedIcon, missedLabel],
+
+      missedIcon = asset {
+        width: 24px,
+        height: 24px,
+        fill: c.colors.ink,
+        contents: crossIcon
+      }
+
+      missedLabel = text {
+        fill: c.colors.ink,
+        contents: "Raté",
+        font-size: 16,
+        font-family: f.fonts.ui,
+        font-style: "Bold"
+      }
+    }
+
+    seenButton = frame {
+      width: 100%,
+      height: l.lengths.tap,
+      layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+      fill: c.colors.action,
+      corner-radius: l.lengths.radius-m,
+      children: [seenIcon, seenLabel],
+
+      seenIcon = asset {
+        width: 24px,
+        height: 24px,
+        fill: c.colors.on-action,
+        contents: checkIcon
+      }
+
+      seenLabel = text {
+        fill: c.colors.on-action,
+        contents: "Vu",
+        font-size: 16,
+        font-family: f.fonts.ui,
+        font-style: "Bold"
+      }
+    }
+  }
+}
+
+// Event passé déjà confirmé : le statut est écrit (« Vu » ou « Raté »), jamais porté par l'icône seule.
+export historyCard = frame {
+  left: 0px,
+  top: 600px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: l.lengths.space-m},
+  fill: c.colors.surface-card,
+  corner-radius: l.lengths.radius-l,
+  padding: l.lengths.space-m,
+  children: [info, status],
+
+  info = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 4px},
+    children: [eventTitle, eventMeta],
+
+    eventTitle = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Titre",
+      font-size: 18,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+
+    eventMeta = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Concert | Date | Lieu",
+      font-size: 14,
+      font-family: f.fonts.ui
+    }
+  }
+
+  status = frame {
+    width: .auto,
+    height: .auto,
+    layout: {justify-content: .center, align-items: .center, item-gap: 4px},
+    fill: c.colors.paper,
+    corner-radius: l.lengths.radius-s,
+    padding: [6px, 10px],
+    children: [statusIcon, statusLabel],
+
+    statusIcon = asset {
+      width: 20px,
+      height: 20px,
+      fill: c.colors.ink,
+      contents: checkIcon
+    }
+
+    statusLabel = text {
+      fill: c.colors.ink,
+      contents: "Vu",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+  }
+}
+
+// Bandeau de l'accueil : action principale (encre pleine) qui mène à l'écran « À confirmer »
+export confirmBanner = frame {
+  left: 0px,
+  top: 800px,
+  width: 100%,
+  height: 56px,
+  layout: {justify-content: .space-between, align-items: .center},
+  fill: c.colors.action,
+  corner-radius: l.lengths.radius-l,
+  padding: [0px, 16px],
+  children: [bannerLabel, bannerIcon],
+
+  bannerLabel = text {
+    fill: c.colors.on-action,
+    contents: "2 events à confirmer",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Bold"
+  }
+
+  bannerIcon = asset {
+    width: 24px,
+    height: 24px,
+    fill: c.colors.on-action,
+    contents: chevronRight
+  }
+}
+
+// Filtre par année de l'historique : actif = encre pleine, inactif = contour encre
+export yearChip = frame {
+  left: 0px,
+  top: 900px,
+  width: .auto,
+  height: 36px,
+  layout: {justify-content: .center, align-items: .center},
+  border: c.colors.action-secondary,
+  corner-radius: l.lengths.radius-m,
+  padding: [0px, 16px],
+  children: yearLabel,
+
+  yearLabel = text {
+    fill: c.colors.ink,
+    contents: "2025",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Bold"
+  }
+}
+
+export yearChipActive = frame {
+  left: 0px,
+  top: 950px,
+  width: .auto,
+  height: 36px,
+  layout: {justify-content: .center, align-items: .center},
+  fill: c.colors.action-secondary,
+  corner-radius: l.lengths.radius-m,
+  padding: [0px, 16px],
+  children: yearLabelActive,
+
+  yearLabelActive = text {
+    fill: c.colors.paper,
+    contents: "2026",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Bold"
+  }
+}

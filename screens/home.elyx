@@ -1,338 +1,110 @@
-use "fonts/ROYALHefanaRegular.woff"
 use "fonts/Archivo.ttf"
 
-import "components/event-row.elyx" as rows
+import "components/event-card.elyx" as cards
+import "components/screen-header.elyx" as headers
+import "components/tab-bar.elyx" as nav
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
-import "components/section.elyx" as sections
-import "components/presence.elyx" as presence
-import "icons/lucide/plus.svg" as addIcon
 
-// Accueil mobile : trois cartes groupées (à confirmer, à venir, historique), chacune repliable.
+// Accueil : une seule intention, voir ce qui arrive. Le bandeau rose mène à « À confirmer ».
 export home = frame {
   title: "Accueil",
-  caption: "Chaque groupe est une carte avec son titre, son nombre d'events et un bouton de repli.",
+  caption: "Les events à venir, et un accès direct aux events à confirmer.",
   left: 0px,
   top: 0px,
   width: 390px,
-  height: .auto,
+  height: 844px,
   layout: {direction: .column},
   fill: c.colors.surface-screen,
-  children: [header, content, addButton],
+  children: [header, content, tabs],
 
-  header = frame {
-    width: 100%,
-    height: .auto,
-    layout: {align-items: .center},
-    padding: [24px, 20px, 8px],
-    children: appName,
-
-    appName = text {
-      transform: [1, -0.2, 8, 0, 1, 0],
-      fill: c.colors.ink,
-      contents: "VENI VIDI VICI",
-      font-size: 36,
-      font-family: f.fonts.display
-    }
-  }
+  header = frame : headers.brandHeader {}
 
   content = frame {
     width: 100%,
-    height: .auto,
+    height: 100%,
     layout: {direction: .column, item-gap: l.lengths.space-m},
-    padding: [16px, 20px, 120px],
-    children: [confirmSection, upcomingSection, historySection],
+    padding: [20px, 20px, 0px],
+    children: [banner, upcomingTitle, row1, row2, row3],
 
-    // Events passés dont on n'a pas encore dit « vu » ou « raté »
-    confirmSection = frame {
+    banner = frame : cards.confirmBanner {}
+
+    upcomingTitle = text {
       width: 100%,
-      height: .auto,
-      layout: {direction: .column},
-      fill: c.colors.surface-card,
-      corner-radius: 18px,
-      padding: [4px, 16px, 8px],
-      children: [
-        confirmHeader,
-        confirmHelp,
-        confirmDivider1,
-        confirmRow1,
-        confirmDivider2,
-        confirmRow2
-      ],
-
-      confirmHeader = frame : sections.sectionHeader {
-        headerTitle {
-          contents: "À CONFIRMER"
-        }
-
-        headerCount {
-          countLabel {
-            contents: "2"
-          }
-        }
-      }
-
-      confirmHelp = text {
-        width: 100%,
-        fill: c.colors.ink,
-        contents: "Ces events sont passés. Dis si tu y étais.",
-        font-size: 14,
-        font-family: f.fonts.body
-      }
-
-      confirmDivider1 = frame : sections.sectionDivider {}
-
-      confirmRow1 = frame : rows.eventRow {
-        overrides: [
-          insert(confirmActions1, after = rows.eventRow.info),
-          remove(rows.eventRow.countdown)
-        ],
-
-        info {
-          ticketState {
-            contents: "Tu y étais ?"
-          }
-
-          eventMeta {
-            contents: "Concert | 2 novembre | Forest National, Bruxelles"
-          }
-
-          eventTitle {
-            contents: "Gojira"
-          }
-        }
-
-        confirmActions1 = frame : presence.confirmActions {}
-      }
-
-      confirmDivider2 = frame : sections.sectionDivider {}
-
-      confirmRow2 = frame : rows.eventRow {
-        overrides: [
-          insert(confirmActions2, after = rows.eventRow.info),
-          remove(rows.eventRow.countdown)
-        ],
-
-        info {
-          ticketState {
-            contents: "Tu y étais ?"
-          }
-
-          eventMeta {
-            contents: "Concert | 6 novembre | Vooruit, Gand"
-          }
-
-          eventTitle {
-            contents: "Fontaines D.C."
-          }
-        }
-
-        confirmActions2 = frame : presence.confirmActions {}
-      }
-    }
-
-    upcomingSection = frame {
-      width: 100%,
-      height: .auto,
-      layout: {direction: .column},
-      fill: c.colors.surface-card,
-      corner-radius: l.lengths.radius-l,
-      padding: [4px, 16px, 0px],
-      children: [
-        upcomingHeader,
-        upcomingDivider1,
-        row1,
-        upcomingDivider2,
-        row2,
-        upcomingDivider3,
-        upcomingMore
-      ],
-
-      upcomingHeader = frame : sections.sectionHeader {
-        headerTitle {
-          contents: "À VENIR"
-        }
-
-        headerCount {
-          countLabel {
-            contents: "4"
-          }
-        }
-      }
-
-      upcomingDivider1 = frame : sections.sectionDivider {}
-
-      row1 = frame : rows.eventRow {
-        countdown {
-          countdownLabel {
-            contents: "Dans 4 jours"
-          }
-        }
-
-        info {
-          eventTitle {
-            contents: "Nick Cave"
-          }
-
-          eventMeta {
-            contents: "Concert | 14 novembre | Ancienne Belgique, Bruxelles"
-          }
-
-          ticketState {
-            contents: "Billet acheté"
-          }
-        }
-      }
-
-      upcomingDivider2 = frame : sections.sectionDivider {}
-
-      row2 = frame : rows.eventRow {
-        countdown {
-          countdownLabel {
-            contents: "Dans 249 jours"
-          }
-        }
-
-        info {
-          eventTitle {
-            contents: "Rock Werchter"
-          }
-
-          eventMeta {
-            contents: "Festival, 4 jours | 17 au 20 juillet | Werchter"
-          }
-
-          ticketState {
-            contents: "Billet non acheté"
-          }
-        }
-      }
-
-      upcomingDivider3 = frame : sections.sectionDivider {}
-
-      upcomingMore = frame : sections.sectionLink {
-        linkLabel {
-          contents: "Tous les events à venir"
-        }
-      }
-    }
-
-    historySection = frame {
-      width: 100%,
-      height: .auto,
-      layout: {direction: .column},
-      fill: c.colors.surface-card,
-      corner-radius: l.lengths.radius-l,
-      padding: [4px, 16px, 0px],
-      children: [
-        historyHeader,
-        historyDivider1,
-        historyRow1,
-        historyDivider2,
-        historyRow2,
-        historyDivider3,
-        historyMore
-      ],
-
-      historyHeader = frame : sections.sectionHeader {
-        headerTitle {
-          contents: "HISTORIQUE"
-        }
-
-        headerCount {
-          countLabel {
-            contents: "12"
-          }
-        }
-      }
-
-      historyDivider1 = frame : sections.sectionDivider {}
-
-      historyRow1 = frame : rows.eventRow {
-        overrides: [
-          insert(seen1, after = rows.eventRow.info),
-          remove(rows.eventRow.countdown)
-        ],
-
-        info {
-          ticketState {
-            contents: "Vu"
-          }
-
-          eventMeta {
-            contents: "Concert | 3 octobre | Forest National, Bruxelles"
-          }
-
-          eventTitle {
-            contents: "Arcade Fire"
-          }
-        }
-
-        seen1 = asset : presence.seenMark {}
-      }
-
-      historyDivider2 = frame : sections.sectionDivider {}
-
-      historyRow2 = frame : rows.eventRow {
-        overrides: [
-          insert(missed1, after = rows.eventRow.info),
-          remove(rows.eventRow.countdown)
-        ],
-
-        info {
-          ticketState {
-            contents: "Raté"
-          }
-
-          eventMeta {
-            contents: "Festival, 4 jours | 16 au 19 juillet | Dour"
-          }
-
-          eventTitle {
-            contents: "Dour Festival"
-          }
-        }
-
-        missed1 = asset : presence.missedMark {}
-      }
-
-      historyDivider3 = frame : sections.sectionDivider {}
-
-      historyMore = frame : sections.sectionLink {
-        linkLabel {
-          contents: "Tout l'historique"
-        }
-      }
-    }
-  }
-
-  // Bouton principal flottant, en bas à droite
-  addButton = frame {
-    right: 20px,
-    bottom: 20px,
-    width: .auto,
-    height: 56px,
-    ignore-stack: .true,
-    layout: {justify-content: .center, align-items: .center, item-gap: 8px},
-    fill: c.colors.ink,
-    corner-radius: l.lengths.radius-l,
-    padding: [0px, 22px],
-    children: [plus, addLabel],
-
-    plus = asset {
-      width: 24px,
-      height: 24px,
-      fill: c.colors.paper,
-      contents: addIcon
-    }
-
-    addLabel = text {
-      fill: c.colors.paper,
-      contents: "Ajouter un event",
-      font-size: 16,
-      font-family: f.fonts.body,
+      fill: c.colors.ink,
+      contents: "À venir",
+      font-size: 28,
+      font-family: f.fonts.ui,
       font-style: "Bold"
     }
+
+    row1 = frame : cards.eventCard {
+      countdown {
+        countdownLabel {
+          contents: "Dans 4 jours"
+        }
+      }
+
+      info {
+        eventTitle {
+          contents: "Nick Cave"
+        }
+
+        eventMeta {
+          contents: "Concert | 14 novembre | Ancienne Belgique, Bruxelles"
+        }
+
+        ticketState {
+          contents: "Billet acheté"
+        }
+      }
+    }
+
+    row2 = frame : cards.eventCard {
+      countdown {
+        countdownLabel {
+          contents: "Dans 32 jours"
+        }
+      }
+
+      info {
+        eventTitle {
+          contents: "Ghost"
+        }
+
+        eventMeta {
+          contents: "Concert | 12 décembre | Forest National, Bruxelles"
+        }
+
+        ticketState {
+          contents: "Billet non acheté"
+        }
+      }
+    }
+
+    row3 = frame : cards.eventCard {
+      countdown {
+        countdownLabel {
+          contents: "Dans 249 jours"
+        }
+      }
+
+      info {
+        eventTitle {
+          contents: "Rock Werchter"
+        }
+
+        eventMeta {
+          contents: "Festival, 4 jours | 17 au 20 juillet | Werchter"
+        }
+
+        ticketState {
+          contents: "Billet non acheté"
+        }
+      }
+    }
   }
+
+  tabs = frame : nav.tabBar {}
 }

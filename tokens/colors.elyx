@@ -1,19 +1,18 @@
-// Couleurs tirées des refs (livre « Heavy Metal ») : rose fluo, encre brun-noir, papier blanc cassé.
+// Rose = marque et fond d'écran. Encre = texte et actions (pleine = principale, contour = secondaire). Papier = pastilles d'information. Blanc = cartes.
+// Le fond d'écran et les cartes ne sont jamais de la couleur d'action.
 export colors = tokens {
   pink: #FF2E88,
   ink: #2B1118,
   paper: #F5F1EA,
+  white: #FFFFFF,
 
   // Rôles
-  surface-pink: pink,
-  surface-paper: paper,
-
-  // Écran en rose, cartes en papier
+  brand: pink,
+  action: ink,
+  on-action: paper,
+  action-secondary: ink,
   surface-screen: pink,
-  surface-card: paper,
-  text-on-pink: ink,
-  text-on-paper: ink,
-  text-reverse: paper,
-  accent: pink,
+  surface-card: white,
+  text: ink,
   line: ink
 }

@@ -20,32 +20,34 @@ import "icons/lucide/arrow-left.svg" as arrowLeftIcon
 import "icons/lucide/chevron-right.svg" as chevronRightIcon
 import "icons/lucide/chevron-down.svg" as chevronDownIcon
 
-// Style guide : palette, typographies, icônes (Lucide) et formes. Inspiré des refs « Heavy Metal ».
+// Style guide : palette, typographies, icônes (Lucide), formes et composants.
+// Règles : un écran = une intention ; le fond et les cartes ne sont jamais de la couleur d'action ;
+// l'encre est l'action secondaire ; la police de marque ne sert que pour le logo.
 export styleGuide = frame {
   title: "Style guide",
-  caption: "Palette, typographies, icônes Lucide et formes de Veni Vidi Vici.",
+  caption: "Palette, typographies, icônes Lucide, formes et composants de Veni Vidi Vici.",
   left: 0px,
-  top: 0px,
+  top: 1100px,
   width: 720px,
   height: .auto,
   layout: {direction: .column},
-  fill: c.colors.surface-paper,
+  fill: c.colors.paper,
   children: [header, colors, typography, icons, shapes],
 
   header = frame {
     width: 100%,
     height: .auto,
-    layout: {},
-    fill: c.colors.surface-pink,
+    layout: {direction: .row},
+    fill: c.colors.brand,
     padding: [48px, 24px],
     children: headerTitle,
 
     headerTitle = text {
       transform: [1, -0.2, 17, 0, 1, 0],
-      fill: c.colors.text-on-pink,
-      contents: "STYLE GUIDE",
+      fill: c.colors.ink,
+      contents: "VENI VIDI VICI",
       font-size: 72,
-      font-family: f.fonts.display
+      font-family: f.fonts.brand
     }
   }
 
@@ -54,24 +56,32 @@ export styleGuide = frame {
     height: .auto,
     layout: {direction: .column, item-gap: l.lengths.space-m},
     padding: l.lengths.space-l,
-    children: [colorsTitle, colorRow],
+    children: [colorsTitle, colorsNote, colorRow],
 
     colorsTitle = text {
-      transform: [1, -0.2, 10, 0, 1, 0],
-      fill: c.colors.text-on-paper,
-      contents: "COULEURS",
-      font-size: 40,
-      font-family: f.fonts.display
+      fill: c.colors.ink,
+      contents: "Couleurs",
+      font-size: 28,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+
+    colorsNote = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Le fond d'écran et les cartes ne sont jamais de la couleur d'action : le rose est le fond d'écran et la marque, l'encre porte les actions.",
+      font-size: 16,
+      font-family: f.fonts.ui
     }
 
     colorRow = frame {
       width: 100%,
       height: .auto,
       layout: {item-gap: l.lengths.space-m},
-      children: [pinkSwatch, inkSwatch, paperSwatch],
+      children: [pinkSwatch, inkSwatch, paperSwatch, whiteSwatch],
 
       pinkSwatch = frame {
-        width: 208px,
+        width: 156px,
         height: .auto,
         layout: {direction: .column, item-gap: 8px},
         children: [
@@ -89,31 +99,31 @@ export styleGuide = frame {
         }
 
         pinkSwatchName = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Rose",
           font-size: 16,
-          font-family: f.fonts.body,
+          font-family: f.fonts.ui,
           font-style: "Bold"
         }
 
         pinkSwatchHex = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "#FF2E88",
           font-size: 14,
-          font-family: f.fonts.body
+          font-family: f.fonts.ui
         }
 
         pinkSwatchRole = text {
           width: 100%,
-          fill: c.colors.text-on-paper,
-          contents: "Fond des écrans et boutons de repli. Accent sur fond papier.",
+          fill: c.colors.ink,
+          contents: "Fond d'écran, marque.",
           font-size: 14,
-          font-family: f.fonts.body
+          font-family: f.fonts.ui
         }
       }
 
       inkSwatch = frame {
-        width: 208px,
+        width: 156px,
         height: .auto,
         layout: {direction: .column, item-gap: 8px},
         children: [inkSwatchChip, inkSwatchName, inkSwatchHex, inkSwatchRole],
@@ -126,31 +136,31 @@ export styleGuide = frame {
         }
 
         inkSwatchName = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Encre",
           font-size: 16,
-          font-family: f.fonts.body,
+          font-family: f.fonts.ui,
           font-style: "Bold"
         }
 
         inkSwatchHex = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "#2B1118",
           font-size: 14,
-          font-family: f.fonts.body
+          font-family: f.fonts.ui
         }
 
         inkSwatchRole = text {
           width: 100%,
-          fill: c.colors.text-on-paper,
-          contents: "Texte, icônes, bordures et bouton principal.",
+          fill: c.colors.ink,
+          contents: "Texte, icônes, actions.",
           font-size: 14,
-          font-family: f.fonts.body
+          font-family: f.fonts.ui
         }
       }
 
       paperSwatch = frame {
-        width: 208px,
+        width: 156px,
         height: .auto,
         layout: {direction: .column, item-gap: 8px},
         children: [
@@ -169,26 +179,69 @@ export styleGuide = frame {
         }
 
         paperSwatchName = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Papier",
           font-size: 16,
-          font-family: f.fonts.body,
+          font-family: f.fonts.ui,
           font-style: "Bold"
         }
 
         paperSwatchHex = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "#F5F1EA",
           font-size: 14,
-          font-family: f.fonts.body
+          font-family: f.fonts.ui
         }
 
         paperSwatchRole = text {
           width: 100%,
-          fill: c.colors.text-on-paper,
-          contents: "Fond des cartes. Très grands titres sur rose.",
+          fill: c.colors.ink,
+          contents: "Pastilles d'information.",
           font-size: 14,
-          font-family: f.fonts.body
+          font-family: f.fonts.ui
+        }
+      }
+
+      whiteSwatch = frame {
+        width: 156px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        children: [
+          whiteSwatchChip,
+          whiteSwatchName,
+          whiteSwatchHex,
+          whiteSwatchRole
+        ],
+
+        whiteSwatchChip = frame {
+          width: 100%,
+          height: 96px,
+          fill: c.colors.white,
+          border: c.colors.ink,
+          corner-radius: l.lengths.radius-l
+        }
+
+        whiteSwatchName = text {
+          fill: c.colors.ink,
+          contents: "Blanc",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Bold"
+        }
+
+        whiteSwatchHex = text {
+          fill: c.colors.ink,
+          contents: "#FFFFFF",
+          font-size: 14,
+          font-family: f.fonts.ui
+        }
+
+        whiteSwatchRole = text {
+          width: 100%,
+          fill: c.colors.ink,
+          contents: "Cartes et barre du bas.",
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
     }
@@ -201,59 +254,69 @@ export styleGuide = frame {
     padding: l.lengths.space-l,
     children: [
       typoTitle,
-      hefanaSpecimen,
-      hefanaNote,
-      archivoSpecimen,
-      archivoNote,
+      uiSpecimenTitle,
+      uiSpecimen,
+      uiNote,
+      brandSpecimen,
+      brandNote,
       sizesNote
     ],
 
     typoTitle = text {
-      transform: [1, -0.2, 10, 0, 1, 0],
-      fill: c.colors.text-on-paper,
-      contents: "TYPOGRAPHIES",
-      font-size: 40,
-      font-family: f.fonts.display
+      fill: c.colors.ink,
+      contents: "Typographies",
+      font-size: 28,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
     }
 
-    hefanaSpecimen = text {
-      transform: [1, -0.2, 40, 0, 1, 0],
-      fill: c.colors.text-on-paper,
-      contents: "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\n0123456789",
+    uiSpecimenTitle = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Titre d'écran en Archivo gras",
+      font-size: 28,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+
+    uiSpecimen = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Ancienne Belgique, Bruxelles. AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz 0123456789",
+      font-size: 16,
+      font-family: f.fonts.ui
+    }
+
+    uiNote = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Archivo, pour tous les titres et tous les textes de l'interface. Regular pour le texte, Bold pour les titres, les noms et les boutons.",
+      font-size: 14,
+      font-family: f.fonts.ui
+    }
+
+    brandSpecimen = text {
+      transform: [1, -0.2, 18, 0, 1, 0],
+      fill: c.colors.ink,
+      contents: "VENI VIDI VICI",
       font-size: 44,
-      font-family: f.fonts.display
+      font-family: f.fonts.brand
     }
 
-    hefanaNote = text {
+    brandNote = text {
       width: 100%,
-      fill: c.colors.text-on-paper,
-      contents: "ROYAL Hefana, pour les titres. Toujours en capitales et inclinée à 11°, car la police n'a pas d'italique.",
+      fill: c.colors.ink,
+      contents: "ROYAL Hefana, réservée au logo et au branding. Trop fine pour de l'interface. Capitales uniquement, inclinée à 11° car la police n'a pas d'italique.",
       font-size: 14,
-      font-family: f.fonts.body
-    }
-
-    archivoSpecimen = text {
-      width: 100%,
-      fill: c.colors.text-on-paper,
-      contents: "Ancienne Belgique, Bruxelles\nAaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz 0123456789",
-      font-size: 20,
-      font-family: f.fonts.body
-    }
-
-    archivoNote = text {
-      width: 100%,
-      fill: c.colors.text-on-paper,
-      contents: "Archivo, pour tous les textes. Regular par défaut, Bold pour les noms et les boutons.",
-      font-size: 14,
-      font-family: f.fonts.body
+      font-family: f.fonts.ui
     }
 
     sizesNote = text {
       width: 100%,
-      fill: c.colors.text-on-paper,
-      contents: "Tailles : titre d'écran 60, titre de section 44, titre de carte 32, texte 16, texte secondaire 14.",
+      fill: c.colors.ink,
+      contents: "Tailles : titre d'écran 28, titre de carte 18, texte 16, texte secondaire 14. Jamais en dessous de 14.",
       font-size: 14,
-      font-family: f.fonts.body
+      font-family: f.fonts.ui
     }
   }
 
@@ -265,19 +328,19 @@ export styleGuide = frame {
     children: [iconsTitle, iconsNote, iconGrid],
 
     iconsTitle = text {
-      transform: [1, -0.2, 10, 0, 1, 0],
-      fill: c.colors.text-on-paper,
-      contents: "ICÔNES",
-      font-size: 40,
-      font-family: f.fonts.display
+      fill: c.colors.ink,
+      contents: "Icônes",
+      font-size: 28,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
     }
 
     iconsNote = text {
       width: 100%,
-      fill: c.colors.text-on-paper,
-      contents: "Lucide, trait de 2 px. Toujours en encre, à 24 px en liste et 28 px dans les boutons.",
+      fill: c.colors.ink,
+      contents: "Lucide, trait de 2 px. Toujours en encre (ou en encre sur le rose), 24 px dans les boutons et 28 px dans la barre du bas.",
       font-size: 14,
-      font-family: f.fonts.body
+      font-family: f.fonts.ui
     }
 
     iconGrid = frame {
@@ -307,7 +370,7 @@ export styleGuide = frame {
       ],
 
       houseCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [houseGlyph, houseLabel],
@@ -320,15 +383,15 @@ export styleGuide = frame {
         }
 
         houseLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Accueil",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       historyCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [historyGlyph, historyLabel],
@@ -341,15 +404,15 @@ export styleGuide = frame {
         }
 
         historyLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Historique",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       plusCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [plusGlyph, plusLabel],
@@ -362,15 +425,15 @@ export styleGuide = frame {
         }
 
         plusLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Ajouter",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       calendarCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [calendarGlyph, calendarLabel],
@@ -383,15 +446,15 @@ export styleGuide = frame {
         }
 
         calendarLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Date",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       mapPinCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [mapPinGlyph, mapPinLabel],
@@ -404,15 +467,15 @@ export styleGuide = frame {
         }
 
         mapPinLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Lieu",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       ticketCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [ticketGlyph, ticketLabel],
@@ -425,15 +488,15 @@ export styleGuide = frame {
         }
 
         ticketLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Billet",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       musicCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [musicGlyph, musicLabel],
@@ -446,15 +509,15 @@ export styleGuide = frame {
         }
 
         musicLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Groupe",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       usersCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [usersGlyph, usersLabel],
@@ -467,15 +530,15 @@ export styleGuide = frame {
         }
 
         usersLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Accompagnants",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       thumbsUpCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [thumbsUpGlyph, thumbsUpLabel],
@@ -488,15 +551,15 @@ export styleGuide = frame {
         }
 
         thumbsUpLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Pouce levé",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       thumbsDownCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [thumbsDownGlyph, thumbsDownLabel],
@@ -509,15 +572,15 @@ export styleGuide = frame {
         }
 
         thumbsDownLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Pouce baissé",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       checkCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [checkGlyph, checkLabel],
@@ -530,15 +593,15 @@ export styleGuide = frame {
         }
 
         checkLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Confirmer",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       xCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [xGlyph, xLabel],
@@ -551,15 +614,15 @@ export styleGuide = frame {
         }
 
         xLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Annuler",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       arrowLeftCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [arrowLeftGlyph, arrowLeftLabel],
@@ -572,15 +635,15 @@ export styleGuide = frame {
         }
 
         arrowLeftLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Retour",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       chevronRightCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [chevronRightGlyph, chevronRightLabel],
@@ -593,15 +656,15 @@ export styleGuide = frame {
         }
 
         chevronRightLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Suivant",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
 
       chevronDownCell = frame {
-        width: 96px,
+        width: 104px,
         height: .auto,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [chevronDownGlyph, chevronDownLabel],
@@ -614,10 +677,10 @@ export styleGuide = frame {
         }
 
         chevronDownLabel = text {
-          fill: c.colors.text-on-paper,
+          fill: c.colors.ink,
           contents: "Replier",
-          font-size: 13,
-          font-family: f.fonts.body
+          font-size: 14,
+          font-family: f.fonts.ui
         }
       }
     }
@@ -628,71 +691,88 @@ export styleGuide = frame {
     height: .auto,
     layout: {direction: .column, item-gap: l.lengths.space-m},
     padding: l.lengths.space-l,
-    children: [shapesTitle, shapesNote, shapesRow],
+    children: [shapesTitle, shapesNote, buttonRow, cardSample],
 
     shapesTitle = text {
-      transform: [1, -0.2, 10, 0, 1, 0],
-      fill: c.colors.text-on-paper,
-      contents: "FORMES",
-      font-size: 40,
-      font-family: f.fonts.display
+      fill: c.colors.ink,
+      contents: "Formes et composants",
+      font-size: 28,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
     }
 
     shapesNote = text {
       width: 100%,
-      fill: c.colors.text-on-paper,
-      contents: "Rayons : 18 px pour les cartes et les gros boutons, 10 px pour les éléments à l'intérieur d'une carte, 6 px pour les pastilles. Écran en rose, cartes en papier.",
+      fill: c.colors.ink,
+      contents: "Rayons : 18 px pour les cartes et les gros boutons, 10 px pour les éléments dans une carte, 6 px pour les pastilles. Action principale en encre pleine, action secondaire en contour encre.",
       font-size: 14,
-      font-family: f.fonts.body
+      font-family: f.fonts.ui
     }
 
-    shapesRow = frame {
+    buttonRow = frame {
       width: 100%,
       height: .auto,
-      layout: {align-items: .center, item-gap: l.lengths.space-m},
-      children: [primaryButton, eventCard],
+      layout: {item-gap: l.lengths.space-m},
+      children: [primaryButton, secondaryButton],
 
       primaryButton = frame {
-        width: 240px,
+        width: 200px,
         height: l.lengths.tap,
         layout: {justify-content: .center, align-items: .center},
-        fill: c.colors.ink,
-        corner-radius: l.lengths.radius-l,
-        children: buttonLabel,
+        fill: c.colors.action,
+        corner-radius: l.lengths.radius-m,
+        children: primaryLabel,
 
-        buttonLabel = text {
-          fill: c.colors.paper,
-          contents: "Ajouter un event",
-          font-size: 14,
-          font-family: f.fonts.body,
+        primaryLabel = text {
+          fill: c.colors.on-action,
+          contents: "Action principale",
+          font-size: 16,
+          font-family: f.fonts.ui,
           font-style: "Bold"
         }
       }
 
-      eventCard = frame {
-        width: 392px,
-        height: .auto,
-        layout: {direction: .column, item-gap: 4px},
-        fill: c.colors.surface-card,
-        corner-radius: l.lengths.radius-l,
-        padding: l.lengths.space-m,
-        children: [cardTitle, cardMeta],
+      secondaryButton = frame {
+        width: 200px,
+        height: l.lengths.tap,
+        layout: {justify-content: .center, align-items: .center},
+        border: c.colors.action-secondary,
+        corner-radius: l.lengths.radius-m,
+        children: secondaryLabel,
 
-        cardTitle = text {
-          transform: [1, -0.2, 8, 0, 1, 0],
-          fill: c.colors.text-on-paper,
-          contents: "GHOST",
-          font-size: 32,
-          font-family: f.fonts.display
+        secondaryLabel = text {
+          fill: c.colors.ink,
+          contents: "Action secondaire",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Bold"
         }
+      }
+    }
 
-        cardMeta = text {
-          width: 100%,
-          fill: c.colors.text-on-paper,
-          contents: "Concert | 12 décembre 2026 | Forest National, Bruxelles",
-          font-size: 14,
-          font-family: f.fonts.body
-        }
+    cardSample = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 4px},
+      fill: c.colors.surface-card,
+      corner-radius: l.lengths.radius-l,
+      padding: l.lengths.space-m,
+      children: [cardTitle, cardMeta],
+
+      cardTitle = text {
+        fill: c.colors.ink,
+        contents: "Ghost",
+        font-size: 18,
+        font-family: f.fonts.ui,
+        font-style: "Bold"
+      }
+
+      cardMeta = text {
+        width: 100%,
+        fill: c.colors.ink,
+        contents: "Concert | 12 décembre | Forest National, Bruxelles",
+        font-size: 14,
+        font-family: f.fonts.ui
       }
     }
   }

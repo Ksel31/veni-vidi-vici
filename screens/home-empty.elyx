@@ -1,44 +1,30 @@
-use "fonts/ROYALHefanaRegular.woff"
 use "fonts/Archivo.ttf"
 
-import "icons/lucide/plus.svg" as addIcon
+import "components/screen-header.elyx" as headers
+import "icons/lucide/plus.svg" as plusIcon
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
 
 // Accueil au premier lancement : aucun event. Une seule action principale.
-homeEmpty = frame {
+export homeEmpty = frame {
   title: "Accueil, premier lancement",
   caption: "Aucun event enregistré",
   left: 0px,
-  top: 0px,
+  top: 1000px,
   width: 390px,
   height: 844px,
   layout: {direction: .column},
   fill: c.colors.surface-screen,
   children: [header, content],
 
-  header = frame {
-    width: 100%,
-    height: .auto,
-    layout: {align-items: .center},
-    padding: [24px, 20px, 8px],
-    children: appName,
-
-    appName = text {
-      transform: [1, -0.2, 8, 0, 1, 0],
-      fill: c.colors.ink,
-      contents: "VENI VIDI VICI",
-      font-size: 36,
-      font-family: f.fonts.display
-    }
-  }
+  header = frame : headers.brandHeader {}
 
   content = frame {
     width: 100%,
     height: 100%,
     layout: {direction: .column, justify-content: .center, item-gap: 32px},
-    padding: [0px, 20px, 120px],
+    padding: [0px, 20px, 80px],
     children: [message, addButton],
 
     message = frame {
@@ -52,11 +38,11 @@ homeEmpty = frame {
 
       emptyTitle = text {
         width: 100%,
-        transform: [1, -0.2, 10, 0, 1, 0],
         fill: c.colors.ink,
-        contents: "AUCUN EVENT POUR L'INSTANT",
-        font-size: 36,
-        font-family: f.fonts.display
+        contents: "Aucun event pour l'instant",
+        font-size: 28,
+        font-family: f.fonts.ui,
+        font-style: "Bold"
       }
 
       emptyText = text {
@@ -64,7 +50,7 @@ homeEmpty = frame {
         fill: c.colors.ink,
         contents: "Ajoute un concert ou un festival, à venir ou déjà vu. Tes prochains events et ton historique s'afficheront ici.",
         font-size: 16,
-        font-family: f.fonts.body,
+        font-family: f.fonts.ui,
         line-height: 1.4
       }
     }
@@ -73,22 +59,22 @@ homeEmpty = frame {
       width: 100%,
       height: 56px,
       layout: {justify-content: .center, align-items: .center, item-gap: 8px},
-      fill: c.colors.ink,
+      fill: c.colors.action,
       corner-radius: l.lengths.radius-l,
       children: [plus, addLabel],
 
       plus = asset {
         width: 24px,
         height: 24px,
-        fill: c.colors.paper,
-        contents: addIcon
+        fill: c.colors.on-action,
+        contents: plusIcon
       }
 
       addLabel = text {
-        fill: c.colors.paper,
+        fill: c.colors.on-action,
         contents: "Ajouter mon premier event",
         font-size: 16,
-        font-family: f.fonts.body,
+        font-family: f.fonts.ui,
         font-style: "Bold"
       }
     }

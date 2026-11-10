@@ -1,0 +1,119 @@
+use "fonts/Archivo.ttf"
+
+import "components/event-card.elyx" as cards
+import "components/tab-bar.elyx" as nav
+import "icons/lucide/x.svg" as crossIcon
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+
+// Historique : une seule intention, retrouver les events passés, filtrés par année.
+export history = frame {
+  title: "Historique",
+  caption: "Events vus et ratés, du plus récent au plus ancien, filtrés par année.",
+  left: 1080px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column},
+  fill: c.colors.surface-screen,
+  children: [content, tabs],
+
+  content = frame {
+    width: 100%,
+    height: 100%,
+    layout: {direction: .column, item-gap: l.lengths.space-m},
+    padding: [28px, 20px, 0px],
+    children: [screenTitle, years, row1, row2, row3],
+
+    screenTitle = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Historique",
+      font-size: 28,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+
+    years = frame {
+      width: 100%,
+      height: .auto,
+      layout: {item-gap: 8px},
+      children: [yearAll, year2026, year2025],
+
+      yearAll = frame : cards.yearChip {
+        yearLabel {
+          contents: "Toutes"
+        }
+      }
+
+      year2026 = frame : cards.yearChipActive {}
+
+      year2025 = frame : cards.yearChip {}
+    }
+
+    row1 = frame : cards.historyCard {
+      info {
+        eventTitle {
+          contents: "Arcade Fire"
+        }
+
+        eventMeta {
+          contents: "Concert | 3 octobre | Forest National, Bruxelles"
+        }
+      }
+    }
+
+    row2 = frame : cards.historyCard {
+      status {
+        statusIcon {
+          contents: crossIcon
+        }
+
+        statusLabel {
+          contents: "Raté"
+        }
+      }
+
+      info {
+        eventTitle {
+          contents: "Dour Festival"
+        }
+
+        eventMeta {
+          contents: "Festival, 4 jours | 16 au 19 juillet | Dour"
+        }
+      }
+    }
+
+    row3 = frame : cards.historyCard {
+      info {
+        eventTitle {
+          contents: "Pukkelpop"
+        }
+
+        eventMeta {
+          contents: "Festival, 3 jours | 14 au 16 août | Hasselt"
+        }
+      }
+    }
+  }
+
+  tabs = frame : nav.tabBar {
+    tabHome {
+      opacity: 0.6
+
+      homeLabel {
+        font-style: "Regular"
+      }
+    }
+
+    tabHistory {
+      opacity: 1
+
+      historyLabel {
+        font-style: "Bold"
+      }
+    }
+  }
+}

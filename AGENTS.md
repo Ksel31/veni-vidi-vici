@@ -42,11 +42,13 @@ Le propriétaire du projet est designer UI/UX avec des bases en code, pas dével
 
 **Login factice :** un écran de connexion où n'importe quel identifiant fonctionne. Il sert seulement à faire exister l'étape dans le parcours.
 
-**Style :** minimal mais dans l'esprit final, sans y passer de temps.
-- Fond rose fluo `#ff2e88`, texte et accents en encre brun-noir `#2b1118`, blanc cassé `#f5f1ea` réservé aux très grands titres. Source : `tokens/colors.elyx` (refs dans `references/`, non versionné).
-- Titres : Fraunces italique gras (Google Fonts), mixte majuscules/minuscules. Texte : Archivo regular. Alternative envisagée pour les titres : ROYAL Hefana.
+**Style :** minimal mais dans l'esprit final, sans y passer de temps. Référence : `screens/style-guide.elyx`.
+- Couleurs (`tokens/colors.elyx`) : rose fluo `#ff2e88` = fond d'écran et marque ; encre brun-noir `#2b1118` = texte et actions (pleine = principale, contour = secondaire) ; papier `#f5f1ea` = pastilles d'information ; blanc = cartes. Le fond d'écran et les cartes ne sont jamais de la couleur d'action.
+- Titres d'interface : Archivo gras. Texte : Archivo regular. ROYAL Hefana uniquement pour le logo et le branding (illisible en interface).
+- Icônes : Lucide, trait de 2 px, en encre. Rayons : 18 px (cartes, gros boutons), 10 px (éléments dans une carte), 6 px (pastilles).
+- Un écran = une intention : accueil (à venir), à confirmer, historique, avec une barre d'onglets en bas.
 - Mobile d'abord (largeur ~390 px), utilisable sur desktop.
-- Pas d'animations, pas d'icônes élaborées.
+- Pas d'animations.
 
 ---
 

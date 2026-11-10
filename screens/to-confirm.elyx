@@ -1,0 +1,69 @@
+use "fonts/Archivo.ttf"
+
+import "components/event-card.elyx" as cards
+import "components/screen-header.elyx" as headers
+import "components/tab-bar.elyx" as nav
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+
+// À confirmer : une seule intention, dire pour chaque event passé si on y était.
+export toConfirm = frame {
+  title: "À confirmer",
+  caption: "Chaque event passé reçoit une réponse : Vu ou Raté.",
+  left: 540px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column},
+  fill: c.colors.surface-screen,
+  children: [header, content, tabs],
+
+  header = frame : headers.pageHeader {
+    pageTitle {
+      contents: "À confirmer"
+    }
+  }
+
+  content = frame {
+    width: 100%,
+    height: 100%,
+    layout: {direction: .column, item-gap: l.lengths.space-m},
+    padding: [20px, 20px, 0px],
+    children: [help, row1, row2],
+
+    help = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Ces events sont passés. Dis si tu y étais.",
+      font-size: 16,
+      font-family: f.fonts.ui
+    }
+
+    row1 = frame : cards.confirmCard {
+      info {
+        eventTitle {
+          contents: "Gojira"
+        }
+
+        eventMeta {
+          contents: "Concert | 2 novembre | Forest National, Bruxelles"
+        }
+      }
+    }
+
+    row2 = frame : cards.confirmCard {
+      info {
+        eventTitle {
+          contents: "Fontaines D.C."
+        }
+
+        eventMeta {
+          contents: "Concert | 6 novembre | Vooruit, Gand"
+        }
+      }
+    }
+  }
+
+  tabs = frame : nav.tabBar {}
+}
