@@ -1,0 +1,19 @@
+// Couleurs tirées des refs (livre « Heavy Metal ») : rose fluo, encre brun-noir, papier blanc cassé.
+export colors = tokens {
+  pink: #FF2E88,
+  ink: #2B1118,
+  paper: #F5F1EA,
+
+  // Rôles
+  surface-pink: pink,
+  surface-paper: paper,
+
+  // Écran en rose, cartes en papier
+  surface-screen: pink,
+  surface-card: paper,
+  text-on-pink: ink,
+  text-on-paper: ink,
+  text-reverse: paper,
+  accent: pink,
+  line: ink
+}

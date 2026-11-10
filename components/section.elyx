@@ -1,0 +1,98 @@
+use "fonts/ROYALHefanaRegular.woff"
+use "fonts/Archivo.ttf"
+
+import "icons/lucide/chevron-down.svg" as arrowDown
+import "icons/lucide/chevron-right.svg" as arrowRight
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+
+// En-tête d'une carte groupée : titre, nombre d'events et bouton de repli.
+// Toute la ligne sert à replier ; le bouton (flèche bas = ouvert, flèche droite = replié) l'indique.
+export sectionHeader = frame {
+  left: 0px,
+  top: 0px,
+  width: 100%,
+  height: 64px,
+  layout: {align-items: .center, item-gap: 12px},
+  children: [headerTitle, headerCount, headerToggle],
+
+  headerTitle = text {
+    width: 100%,
+    transform: [1, -0.2, 7, 0, 1, 0],
+    fill: c.colors.ink,
+    contents: "SECTION",
+    font-size: 28,
+    font-family: f.fonts.display
+  }
+
+  // Nombre d'events du groupe
+  headerCount = frame {
+    width: .auto,
+    height: 28px,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.ink,
+    corner-radius: l.lengths.radius-s,
+    padding: [0px, 10px],
+    children: countLabel,
+
+    countLabel = text {
+      fill: c.colors.paper,
+      contents: "0",
+      font-size: 14,
+      font-family: f.fonts.body,
+      font-style: "Bold"
+    }
+  }
+
+  headerToggle = frame {
+    width: 44px,
+    height: 44px,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.surface-pink,
+    corner-radius: l.lengths.radius-m,
+    children: toggleIcon,
+
+    toggleIcon = asset {
+      width: 28px,
+      height: 28px,
+      fill: c.colors.ink,
+      contents: arrowDown
+    }
+  }
+}
+
+// Séparation discrète entre deux lignes d'une carte groupée
+export sectionDivider = frame {
+  left: 0px,
+  top: 100px,
+  width: 100%,
+  height: 1px,
+  fill: c.colors.ink,
+  opacity: 0.15
+}
+
+// Lien de fin de carte, avec flèche
+export sectionLink = frame {
+  left: 0px,
+  top: 200px,
+  width: 100%,
+  height: 52px,
+  layout: {justify-content: .space-between, align-items: .center},
+  children: [linkLabel, linkIcon],
+
+  linkLabel = text {
+    fill: c.colors.ink,
+    contents: "Voir tout",
+    font-size: 14,
+    font-family: f.fonts.body,
+    font-style: "Bold"
+  }
+
+  linkIcon = asset {
+    width: 24px,
+    height: 24px,
+    fill: c.colors.ink,
+    contents: arrowRight
+  }
+}

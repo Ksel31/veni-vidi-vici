@@ -1,0 +1,5 @@
+// Titres : ROYAL Hefana, toujours en capitales (fichier dans fonts/). Texte : Archivo regular.
+export fonts = tokens {
+  display: "ROYAL Hefana",
+  body: "Archivo"
+}

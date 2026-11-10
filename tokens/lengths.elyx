@@ -1,0 +1,13 @@
+export lengths = tokens {
+  space-s: 8px,
+  space-m: 16px,
+  space-l: 24px,
+
+  // Rayons : cartes et gros boutons 18, éléments à l'intérieur d'une carte 10, pastilles 6
+  radius-s: 6px,
+  radius-m: 10px,
+  radius-l: 18px,
+
+  line-width: 1px,
+  tap: 44px
+}

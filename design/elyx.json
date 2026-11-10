@@ -1,0 +1,4 @@
+{
+  "assets": { "include": ["images"] },
+  "dependencies": { "app": "../src/lib" }
+}

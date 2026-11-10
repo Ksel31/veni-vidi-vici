@@ -1,0 +1,66 @@
+import "icons/lucide/check.svg" as checkIcon
+import "icons/lucide/x.svg" as crossIcon
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+
+// Réponse à la question « y étais-tu ? » : croix = raté, check = vu. Boutons de 44 px.
+export confirmActions = frame {
+  left: 0px,
+  top: 200px,
+  width: .auto,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 8px},
+  children: [missedButton, seenButton],
+
+  // Action secondaire : icône seule, sans fond
+  missedButton = frame {
+    width: 44px,
+    height: 44px,
+    layout: {justify-content: .center, align-items: .center},
+    corner-radius: l.lengths.radius-m,
+    children: missedIcon,
+
+    missedIcon = asset {
+      width: 28px,
+      height: 28px,
+      fill: c.colors.ink,
+      contents: crossIcon
+    }
+  }
+
+  // Action principale : bouton rose plein
+  seenButton = frame {
+    width: 44px,
+    height: 44px,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.surface-pink,
+    corner-radius: l.lengths.radius-m,
+    children: seenIcon,
+
+    seenIcon = asset {
+      width: 28px,
+      height: 28px,
+      fill: c.colors.ink,
+      contents: checkIcon
+    }
+  }
+}
+
+// Statut d'un event déjà confirmé (non interactif), accompagné d'un libellé « Vu » ou « Raté »
+export seenMark = asset {
+  left: 0px,
+  top: 300px,
+  width: 28px,
+  height: 28px,
+  fill: c.colors.ink,
+  contents: checkIcon
+}
+
+export missedMark = asset {
+  left: 0px,
+  top: 350px,
+  width: 28px,
+  height: 28px,
+  fill: c.colors.ink,
+  contents: crossIcon
+}
