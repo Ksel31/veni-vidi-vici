@@ -1,11 +1,10 @@
 use "fonts/Archivo.ttf"
 
 import "components/event-card.elyx" as cards
+import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
 import "components/screen-header.elyx" as headers
 import "components/tab-bar.elyx" as nav
-import "tokens/colors.elyx" as c
-import "tokens/lengths.elyx" as l
-import "tokens/fonts.elyx" as f
 
 // Accueil : une seule intention, voir ce qui arrive. Le bandeau rose mène à « À confirmer ».
 export home = frame {
@@ -16,95 +15,280 @@ export home = frame {
   width: 390px,
   height: 844px,
   layout: {direction: .column},
-  fill: c.colors.surface-screen,
-  children: [header, content, tabs],
+  fill: {
+    linear-gradient: {
+      angle: 180deg,
+      stops: [stop(0%, c.colors.black-raised), stop(70%, c.colors.black)]
+    }
+  },
+  corner-radius: 48px,
+  children: [tile, content, tabs, addButton],
 
-  header = frame : headers.brandHeader {}
-
-  content = frame {
+  // Grande tuile qui coiffe l'écran : logo, bandeau à confirmer, prochain event. Son coin bas arrondi la sépare de la liste. Un cran au-dessus du fond ; le rose reste réservé aux éléments (logo, bandeau, tampon), jamais en aplat.
+  tile = frame {
     width: 100%,
-    height: 100%,
-    layout: {direction: .column, item-gap: l.lengths.space-m},
-    padding: [20px, 20px, 0px],
-    children: [banner, upcomingTitle, row1, row2, row3],
+    height: .auto,
+    layout: {direction: .column, item-gap: 12px},
+    fill: {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [stop(0%, c.colors.grey-dark), stop(100%, c.colors.black-raised)]
+      }
+    },
+    shadow: [
+      {
+        drop-shadow: {
+          color: rgb(0%, 0%, 0%, 70.1961%),
+          offset: point(0px, 12px),
+          blur-radius: 24px
+        }
+      },
+      {
+        inner-shadow: {
+          color: rgb(100%, 100%, 100%, 12.1569%),
+          offset: point(0px, 1px),
+          blur-radius: 0px
+        }
+      }
+    ],
+    corner-radius: [0px, 0px, 36px, 36px],
+    padding: [0px, 20px, 28px],
+    children: [header, hero, banner, next],
 
-    banner = frame : cards.confirmBanner {}
+    header = frame : headers.brandHeader {
+      padding-top: 24px,
+      padding-left: 0px,
+      padding-bottom: 4px,
+      padding-right: 0px,
+      fill[0].visible: .false,
 
-    upcomingTitle = text {
+      logo {
+        fill[0].color: c.colors.brand
+      }
+    }
+
+    // Hero : dit en une phrase ce qui se passe et ce qu'on peut faire ici
+    hero = frame {
       width: 100%,
-      fill: c.colors.ink,
-      contents: "À venir",
-      font-size: 28,
-      font-family: f.fonts.ui,
-      font-style: "Bold"
+      height: .auto,
+      layout: {direction: .column, item-gap: 6px},
+      padding: [8px, 0px],
+      children: [heroTitle, heroText],
+
+      heroTitle = text {
+        width: 100%,
+        fill: c.colors.paper,
+        contents: "Nick Cave dans 4 jours",
+        font-size: 32,
+        font-family: f.fonts.ui,
+        font-style: "Bold",
+        line-height: 1.05,
+        letter-spacing: -2%
+      }
+
+      heroText = text {
+        width: 100%,
+        fill: c.colors.paper,
+        contents: "2 events passés attendent ta réponse.",
+        font-size: 16,
+        font-family: f.fonts.ui,
+        line-height: 1.3
+      }
     }
 
-    row1 = frame : cards.eventCard {
-      countdown {
-        countdownLabel {
-          contents: "Dans 4 jours"
+    banner = frame : cards.confirmBanner {
+      fill[0].color: c.colors.brand,
+      shadow[0].drop-shadow.blur-radius: 10px,
+      shadow[0].drop-shadow.color: rgb(0%, 0%, 0%, 40%),
+      shadow[0].drop-shadow.offset: [0px, 4px],
+      shadow[1].inner-shadow.blur-radius: 0px,
+      shadow[1].inner-shadow.color: rgb(100%, 100%, 100%, 34.9%),
+      shadow[1].inner-shadow.offset: [0px, 1px],
+
+      bannerLabel {
+        contents: "Confirmer mes 2 events"
+      }
+    }
+
+    // Le prochain event, en grand
+    next = frame : cards.eventCard {
+      shadow[0].drop-shadow.blur-radius: 16px,
+      shadow[0].drop-shadow.color: rgb(0%, 0%, 0%, 50.1961%),
+      shadow[0].drop-shadow.offset: [0px, 8px],
+
+      notchBottom {
+        fill[0].color: c.colors.surface-dark-raised
+      }
+
+      notchTop {
+        fill[0].color: c.colors.surface-dark-raised
+      }
+
+      stub {
+        countdown {
+          fill[0].color: c.colors.brand,
+
+          countdownLabel {
+            fill[0].color: c.colors.ink
+          }
         }
       }
 
       info {
-        eventTitle {
-          contents: "Nick Cave"
-        }
-
         eventMeta {
-          contents: "Concert | 14 novembre | Ancienne Belgique, Bruxelles"
+          contents: "Ancienne Belgique, Bruxelles"
         }
 
-        ticketState {
-          contents: "Billet acheté"
-        }
-      }
-    }
-
-    row2 = frame : cards.eventCard {
-      countdown {
-        countdownLabel {
-          contents: "Dans 32 jours"
-        }
-      }
-
-      info {
         eventTitle {
-          contents: "Ghost"
-        }
-
-        eventMeta {
-          contents: "Concert | 12 décembre | Forest National, Bruxelles"
-        }
-
-        ticketState {
-          contents: "Billet non acheté"
-        }
-      }
-    }
-
-    row3 = frame : cards.eventCard {
-      countdown {
-        countdownLabel {
-          contents: "Dans 249 jours"
-        }
-      }
-
-      info {
-        eventTitle {
-          contents: "Rock Werchter"
-        }
-
-        eventMeta {
-          contents: "Festival, 4 jours | 17 au 20 juillet | Werchter"
-        }
-
-        ticketState {
-          contents: "Billet non acheté"
+          contents: "NICK CAVE"
         }
       }
     }
   }
 
-  tabs = frame : nav.tabBar {}
+  content = frame {
+    width: 100%,
+    height: 100%,
+    layout: {direction: .column, item-gap: 16px},
+    padding: [24px, 20px, 0px],
+    children: [upcomingTitle, row2, row3],
+
+    upcomingTitle = text {
+      width: 100%,
+      fill: c.colors.paper,
+      contents: "Ensuite",
+      font-size: 28,
+      font-family: f.fonts.ui,
+      font-style: "Bold"
+    }
+
+    row2 = frame : cards.eventRow {
+      fill[0].linear-gradient.from: [50%, 0%],
+      fill[0].linear-gradient.stops[0].color: c.colors.grey-dark,
+      fill[0].linear-gradient.stops[0].position: 0%,
+      fill[0].linear-gradient.stops[1].color: c.colors.black-raised,
+      fill[0].linear-gradient.stops[1].position: 100%,
+      fill[0].linear-gradient.to: [50%, 100%],
+      shadow[0].drop-shadow.blur-radius: 12px,
+      shadow[0].drop-shadow.color: rgb(0%, 0%, 0%, 60%),
+      shadow[0].drop-shadow.offset: [0px, 6px],
+      shadow[1].inner-shadow.blur-radius: 0px,
+      shadow[1].inner-shadow.color: rgb(100%, 100%, 100%, 7.84%),
+      shadow[1].inner-shadow.offset: [0px, 1px],
+
+      info {
+        ticketState {
+          ticketLabel {
+            contents: "Billet non acheté"
+          }
+        }
+
+        eventMeta {
+          contents: "Forest National, Bruxelles"
+        }
+
+        eventTitle {
+          contents: "Ghost"
+        }
+      }
+    }
+
+    row3 = frame : cards.eventRow {
+      fill[0].linear-gradient.from: [50%, 0%],
+      fill[0].linear-gradient.stops[0].color: c.colors.grey-dark,
+      fill[0].linear-gradient.stops[0].position: 0%,
+      fill[0].linear-gradient.stops[1].color: c.colors.black-raised,
+      fill[0].linear-gradient.stops[1].position: 100%,
+      fill[0].linear-gradient.to: [50%, 100%],
+      shadow[0].drop-shadow.blur-radius: 12px,
+      shadow[0].drop-shadow.color: rgb(0%, 0%, 0%, 60%),
+      shadow[0].drop-shadow.offset: [0px, 6px],
+      shadow[1].inner-shadow.blur-radius: 0px,
+      shadow[1].inner-shadow.color: rgb(100%, 100%, 100%, 7.84%),
+      shadow[1].inner-shadow.offset: [0px, 1px],
+
+      countdown {
+        countdownLabel {
+          contents: "J-249"
+        }
+      }
+
+      info {
+        ticketState {
+          ticketLabel {
+            contents: "Billet non acheté"
+          }
+        }
+
+        eventMeta {
+          contents: "Festival, 4 jours, Werchter"
+        }
+
+        eventTitle {
+          contents: "Rock Werchter"
+        }
+      }
+
+      dateBlock {
+        dateMonth {
+          contents: "JUIL"
+        }
+
+        dateDay {
+          contents: "17"
+        }
+      }
+    }
+  }
+
+  // Barre d'onglets en négatif : surface un cran au-dessus du fond encre, onglet actif en papier
+  tabs = frame : nav.tabBar {
+    left: 20px,
+    bottom: 32px,
+    ignore-stack: .true,
+    fill[0].linear-gradient.from: [50%, 0%],
+    fill[0].linear-gradient.stops[0].color: c.colors.grey-dark,
+    fill[0].linear-gradient.stops[0].position: 0%,
+    fill[0].linear-gradient.stops[1].color: c.colors.black-raised,
+    fill[0].linear-gradient.stops[1].position: 100%,
+    fill[0].linear-gradient.to: [50%, 100%],
+    shadow[0].drop-shadow.blur-radius: 12px,
+    shadow[0].drop-shadow.color: rgb(0%, 0%, 0%, 60%),
+    shadow[0].drop-shadow.offset: [0px, 6px],
+    shadow[1].inner-shadow.blur-radius: 0px,
+    shadow[1].inner-shadow.color: rgb(100%, 100%, 100%, 7.84%),
+    shadow[1].inner-shadow.offset: [0px, 1px],
+
+    tabHistory {
+      historyGlyph {
+        fill[0].color: c.colors.paper
+      }
+    }
+
+    tabHome {
+      fill[0].color: c.colors.paper,
+
+      homeGlyph {
+        fill[0].color: c.colors.ink
+      }
+    }
+  }
+
+  // Action principale en négatif : papier plein sur fond encre, ronde, sur la ligne de la barre d'onglets
+  addButton = frame : nav.addButton {
+    right: 20px,
+    bottom: 32px,
+    ignore-stack: .true,
+    fill[0].color: c.colors.paper,
+    shadow[0].drop-shadow.blur-radius: 12px,
+    shadow[0].drop-shadow.color: rgb(0%, 0%, 0%, 70.1961%),
+    shadow[0].drop-shadow.offset: [0px, 6px],
+    shadow[1].inner-shadow.blur-radius: 0px,
+    shadow[1].inner-shadow.color: rgb(100%, 100%, 100%, 80%),
+    shadow[1].inner-shadow.offset: [0px, 1px],
+
+    addGlyph {
+      fill[0].color: c.colors.ink
+    }
+  }
 }

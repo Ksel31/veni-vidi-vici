@@ -1,11 +1,11 @@
 use "fonts/Archivo.ttf"
 
 import "components/event-card.elyx" as cards
-import "components/screen-header.elyx" as headers
-import "components/tab-bar.elyx" as nav
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
+import "components/screen-header.elyx" as headers
+import "components/tab-bar.elyx" as nav
 
 // À confirmer : une seule intention, dire pour chaque event passé si on y était.
 export toConfirm = frame {
@@ -17,7 +17,7 @@ export toConfirm = frame {
   height: 844px,
   layout: {direction: .column},
   fill: c.colors.surface-screen,
-  children: [header, content, tabs],
+  children: [header, content, tabs, addButton],
 
   header = frame : headers.pageHeader {
     pageTitle {
@@ -65,5 +65,15 @@ export toConfirm = frame {
     }
   }
 
-  tabs = frame : nav.tabBar {}
+  tabs = frame : nav.tabBar {
+    left: 20px,
+    bottom: 32px,
+    ignore-stack: .true
+  }
+
+  addButton = frame : nav.addButton {
+    right: 20px,
+    bottom: 32px,
+    ignore-stack: .true
+  }
 }

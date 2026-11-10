@@ -1,1 +1,11 @@
-{ "fonts": { "include": ["fonts"] } }
+{
+  "canvasColor": {
+    "file": "tokens/colors.elyx",
+    "token": "colors.surface-canvas"
+  },
+  "fonts": {
+    "include": [
+      "fonts"
+    ]
+  }
+}

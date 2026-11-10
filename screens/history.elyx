@@ -1,11 +1,11 @@
 use "fonts/Archivo.ttf"
 
 import "components/event-card.elyx" as cards
-import "components/tab-bar.elyx" as nav
 import "icons/lucide/x.svg" as crossIcon
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
+import "components/tab-bar.elyx" as nav
 
 // Historique : une seule intention, retrouver les events passés, filtrés par année.
 export history = frame {
@@ -17,7 +17,7 @@ export history = frame {
   height: 844px,
   layout: {direction: .column},
   fill: c.colors.surface-screen,
-  children: [content, tabs],
+  children: [content, tabs, addButton],
 
   content = frame {
     width: 100%,
@@ -100,20 +100,30 @@ export history = frame {
   }
 
   tabs = frame : nav.tabBar {
-    tabHome {
-      opacity: 0.6
-
-      homeLabel {
-        font-style: "Regular"
-      }
-    }
+    left: 20px,
+    bottom: 32px,
+    ignore-stack: .true,
 
     tabHistory {
-      opacity: 1
+      fill[0].color: c.colors.action,
 
-      historyLabel {
-        font-style: "Bold"
+      historyGlyph {
+        fill[0].color: c.colors.on-action
       }
     }
+
+    tabHome {
+      fill[0].color: c.colors.surface-card,
+
+      homeGlyph {
+        fill[0].color: c.colors.ink
+      }
+    }
+  }
+
+  addButton = frame : nav.addButton {
+    right: 20px,
+    bottom: 32px,
+    ignore-stack: .true
   }
 }

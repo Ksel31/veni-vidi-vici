@@ -108,7 +108,7 @@ export styleGuide = frame {
 
         pinkSwatchHex = text {
           fill: c.colors.ink,
-          contents: "#FF2E88",
+          contents: "#FF0088",
           font-size: 14,
           font-family: f.fonts.ui
         }

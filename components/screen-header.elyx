@@ -6,15 +6,15 @@ import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
 
-// Logo en tête de l'accueil, en Hefana : seul endroit où la police de marque apparaît. Sur le fond rose, sans bandeau.
+// Logo en tête de l'accueil, en Hefana sur une ligne : seul endroit où la police de marque apparaît.
 export brandHeader = frame {
   left: 0px,
   top: 0px,
   width: 100%,
   height: .auto,
-  layout: {align-items: .center},
+  layout: {direction: .column},
   fill: c.colors.brand,
-  padding: [28px, 20px, 20px],
+  padding: [24px, 20px, 12px],
   children: logo,
 
   logo = text {

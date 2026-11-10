@@ -1,11 +1,13 @@
 // Rose = marque et fond d'écran. Encre = texte et actions (pleine = principale, contour = secondaire). Papier = pastilles d'information. Blanc = cartes.
 // Le fond d'écran et les cartes ne sont jamais de la couleur d'action.
 export colors = tokens {
-  pink: #FF2E88,
-  ink: #2B1118,
-  paper: #F5F1EA,
-  white: #FFFFFF,
-
+  pink: rgb(100%, 14%, 59.8667%),
+  ink: rgb(16.86%, 6.6667%, 9.41%),
+  paper: rgb(96.0784%, 94.5098%, 91.76%),
+  white: .white,
+  black: rgb(4.31%, 3.92%, 4.31%),
+  black-raised: rgb(12.94%, 12.1569%, 12.94%),
+  grey-dark: rgb(17.6471%, 17.25%, 17.6471%),
   // Rôles
   brand: pink,
   action: ink,
@@ -13,6 +15,11 @@ export colors = tokens {
   action-secondary: ink,
   surface-screen: pink,
   surface-card: white,
+  // Zone sombre (négatif) : fond noir, cartes un cran au-dessus, texte papier
+  surface-dark: black,
+  surface-dark-raised: black-raised,
+  // Fond du canvas Elyx (voir elyx.json)
+  surface-canvas: grey-dark,
   text: ink,
   line: ink
 }

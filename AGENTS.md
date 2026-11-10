@@ -43,7 +43,7 @@ Le propriétaire du projet est designer UI/UX avec des bases en code, pas dével
 **Login factice :** un écran de connexion où n'importe quel identifiant fonctionne. Il sert seulement à faire exister l'étape dans le parcours.
 
 **Style :** minimal mais dans l'esprit final, sans y passer de temps. Référence : `screens/style-guide.elyx`.
-- Couleurs (`tokens/colors.elyx`) : rose fluo `#ff2e88` = fond d'écran et marque ; encre brun-noir `#2b1118` = texte et actions (pleine = principale, contour = secondaire) ; papier `#f5f1ea` = pastilles d'information ; blanc = cartes. Le fond d'écran et les cartes ne sont jamais de la couleur d'action.
+- Couleurs (`tokens/colors.elyx`) : rose fluo `#ff0088` = fond d'écran et marque ; encre brun-noir `#2b1118` = texte et actions (pleine = principale, contour = secondaire) ; papier `#f5f1ea` = pastilles d'information ; blanc = cartes. Le fond d'écran et les cartes ne sont jamais de la couleur d'action.
 - Titres d'interface : Archivo gras. Texte : Archivo regular. ROYAL Hefana uniquement pour le logo et le branding (illisible en interface).
 - Icônes : Lucide, trait de 2 px, en encre. Rayons : 18 px (cartes, gros boutons), 10 px (éléments dans une carte), 6 px (pastilles).
 - Un écran = une intention : accueil (à venir), à confirmer, historique, avec une barre d'onglets en bas.
@@ -172,3 +172,9 @@ Ne pas faire : vrai backend, vrais comptes, photos, billets PDF, intégration se
 - [ ] Je modifie la date d'un event et son statut s'adapte.
 - [ ] Je retrouve tout dans l'historique, filtré par année.
 - [ ] Le tout est utilisable en vue mobile.
+
+---
+
+## Notes de design (à faire)
+
+- **Photos de concert** : chercher des photos (libres de droits ou perso) pour habiller le fond de l'app (accueil, fiche event). Rose réservé aux éléments, pas aux aplats ; fond sombre avec dégradés et reliefs.

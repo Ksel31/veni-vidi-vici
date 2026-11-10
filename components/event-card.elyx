@@ -3,31 +3,213 @@ use "fonts/Archivo.ttf"
 import "icons/lucide/chevron-right.svg" as chevronRight
 import "icons/lucide/check.svg" as checkIcon
 import "icons/lucide/x.svg" as crossIcon
+import "icons/lucide/ticket.svg" as ticketIcon
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
 
-// Event à venir : nom, type | date | lieu, état du billet, compte à rebours.
-export eventCard = frame {
+// Pastille d'information sur le billet : icône + texte (l'état n'est jamais porté par l'icône seule).
+export ticketPill = frame {
   left: 0px,
   top: 0px,
+  width: .auto,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 6px},
+  fill: c.colors.paper,
+  corner-radius: l.lengths.radius-s,
+  padding: [4px, 8px],
+  children: [ticketGlyph, ticketLabel],
+
+  ticketGlyph = asset {
+    width: 16px,
+    height: 16px,
+    fill: c.colors.ink,
+    contents: ticketIcon
+  }
+
+  ticketLabel = text {
+    fill: c.colors.ink,
+    contents: "Billet acheté",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Bold"
+  }
+}
+
+// Prochain event, en grand : c'est la seule carte avec une ombre et un titre XXL.
+// Ticket : corps à gauche (type, titre, lieu, billet), talon papier à droite (jour, mois, compte à rebours)
+// séparé par une perforation. Les deux encoches sont des disques de la couleur du fond d'écran, coupés par les bords de la carte.
+export eventCard = frame {
+  left: 0px,
+  top: 60px,
   width: 100%,
   height: .auto,
-  layout: {align-items: .center, item-gap: l.lengths.space-m},
+  layout: {align-items: .stretch},
   fill: c.colors.surface-card,
   corner-radius: l.lengths.radius-l,
-  padding: l.lengths.space-m,
-  children: [info, countdown],
+  children: [info, stub, notchTop, notchBottom],
 
   info = frame {
     width: 100%,
     height: .auto,
-    layout: {direction: .column, item-gap: 4px},
-    children: [eventTitle, eventMeta, ticketState],
+    layout: {direction: .column, item-gap: 6px},
+    padding: [18px, 16px],
+    children: [eventType, eventTitle, eventMeta, ticketState],
+
+    eventType = text {
+      fill: c.colors.ink,
+      contents: "CONCERT",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Bold",
+      letter-spacing: 8%
+    }
 
     eventTitle = text {
       width: 100%,
       fill: c.colors.ink,
+      contents: "TITRE",
+      font-size: 34,
+      font-family: f.fonts.ui,
+      font-style: "Bold",
+      line-height: 1,
+      letter-spacing: -2%
+    }
+
+    eventMeta = text {
+      width: 100%,
+      fill: c.colors.ink,
+      contents: "Lieu",
+      font-size: 14,
+      font-family: f.fonts.ui
+    }
+
+    ticketState = frame : ticketPill {}
+  }
+
+  // Information, pas une action : fond papier
+  stub = frame {
+    width: 120px,
+    height: .auto,
+    layout: {
+      direction: .column,
+      justify-content: .center,
+      align-items: .center,
+      item-gap: 4px
+    },
+    fill: c.colors.paper,
+    border: {color: c.colors.ink, width: 2px, dash: [6px, 5px], sides: .left},
+    padding: [12px, 8px],
+    children: [dateDay, dateMonth, countdown],
+
+    dateDay = text {
+      fill: c.colors.ink,
+      contents: "14",
+      font-size: 56,
+      font-family: f.fonts.ui,
+      font-style: "Bold",
+      line-height: 1
+    }
+
+    dateMonth = text {
+      fill: c.colors.ink,
+      contents: "NOV",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Bold",
+      letter-spacing: 8%
+    }
+
+    // Tampon incliné, comme un cachet sur le billet
+    countdown = frame {
+      width: .auto,
+      height: .auto,
+      transform: [0.99, 0.1, 0, -0.1, 0.99, 0],
+      layout: {justify-content: .center, align-items: .center},
+      fill: c.colors.ink,
+      corner-radius: l.lengths.radius-s,
+      padding: [6px, 12px],
+      children: countdownLabel,
+
+      countdownLabel = text {
+        fill: c.colors.paper,
+        contents: "J-4",
+        font-size: 20,
+        font-family: f.fonts.ui,
+        font-style: "Bold"
+      }
+    }
+  }
+
+  notchTop = frame {
+    top: -10px,
+    right: 110px,
+    width: 20px,
+    height: 20px,
+    ignore-stack: .true,
+    fill: c.colors.brand,
+    corner-radius: 10px
+  }
+
+  notchBottom = frame {
+    right: 110px,
+    bottom: -10px,
+    width: 20px,
+    height: 20px,
+    ignore-stack: .true,
+    fill: c.colors.brand,
+    corner-radius: 10px
+  }
+}
+
+// Event à venir suivant : ligne compacte, sans ombre. Date à gauche, compte à rebours à droite. Négatif : posée sur le fond encre, en carte un cran plus claire, texte papier.
+export eventRow = frame {
+  left: 0px,
+  top: 1050px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 12px},
+  fill: c.colors.surface-dark-raised,
+  corner-radius: l.lengths.radius-l,
+  padding: 12px,
+  children: [dateBlock, info, countdown],
+
+  dateBlock = frame {
+    width: 60px,
+    height: 60px,
+    layout: {direction: .column, justify-content: .center, align-items: .center},
+    fill: c.colors.surface-dark,
+    corner-radius: l.lengths.radius-m,
+    children: [dateDay, dateMonth],
+
+    dateDay = text {
+      fill: c.colors.paper,
+      contents: "12",
+      font-size: 24,
+      font-family: f.fonts.ui,
+      font-style: "Bold",
+      line-height: 1
+    }
+
+    dateMonth = text {
+      fill: c.colors.paper,
+      contents: "DÉC",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Bold",
+      letter-spacing: 4%
+    }
+  }
+
+  info = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 2px},
+    children: [eventTitle, eventMeta, ticketState],
+
+    eventTitle = text {
+      width: 100%,
+      fill: c.colors.paper,
       contents: "Titre",
       font-size: 18,
       font-family: f.fonts.ui,
@@ -36,35 +218,37 @@ export eventCard = frame {
 
     eventMeta = text {
       width: 100%,
-      fill: c.colors.ink,
-      contents: "Concert | Date | Lieu",
+      fill: c.colors.paper,
+      contents: "Lieu",
       font-size: 14,
       font-family: f.fonts.ui
     }
 
-    ticketState = text {
-      width: 100%,
-      fill: c.colors.ink,
-      contents: "Billet",
-      font-size: 14,
-      font-family: f.fonts.ui,
-      font-style: "Bold"
+    ticketState = frame : ticketPill {
+      fill[0].color: c.colors.surface-dark,
+
+      ticketLabel {
+        fill[0].color: c.colors.paper
+      }
+
+      ticketGlyph {
+        fill[0].color: c.colors.paper
+      }
     }
   }
 
-  // Information, pas une action : fond papier
   countdown = frame {
     width: .auto,
     height: .auto,
     layout: {justify-content: .center, align-items: .center},
     fill: c.colors.paper,
     corner-radius: l.lengths.radius-s,
-    padding: [6px, 10px],
+    padding: [4px, 8px],
     children: countdownLabel,
 
     countdownLabel = text {
       fill: c.colors.ink,
-      contents: "Dans 0 jours",
+      contents: "J-32",
       font-size: 14,
       font-family: f.fonts.ui,
       font-style: "Bold"
@@ -234,20 +418,20 @@ export historyCard = frame {
   }
 }
 
-// Bandeau de l'accueil : action principale (encre pleine) qui mène à l'écran « À confirmer »
+// Bandeau de l'accueil, tout en haut : c'est ce qui demande une réponse. Fond papier (information), mène à « À confirmer ».
 export confirmBanner = frame {
   left: 0px,
   top: 800px,
   width: 100%,
-  height: 56px,
+  height: 52px,
   layout: {justify-content: .space-between, align-items: .center},
-  fill: c.colors.action,
+  fill: c.colors.paper,
   corner-radius: l.lengths.radius-l,
   padding: [0px, 16px],
   children: [bannerLabel, bannerIcon],
 
   bannerLabel = text {
-    fill: c.colors.on-action,
+    fill: c.colors.ink,
     contents: "2 events à confirmer",
     font-size: 16,
     font-family: f.fonts.ui,
@@ -257,7 +441,7 @@ export confirmBanner = frame {
   bannerIcon = asset {
     width: 24px,
     height: 24px,
-    fill: c.colors.on-action,
+    fill: c.colors.ink,
     contents: chevronRight
   }
 }
