@@ -192,13 +192,27 @@ body {
 }
 
 /* Colonne mobile, centrée dès que l'écran est plus large.
-   Dégradé noir de l'accueil (screens/home.elyx) : 45 % en haut, 55 % à 38 %, 92 % à 75 %. */
+   Photo et dégradé de l'accueil (screens/home.elyx, exports/02-home.png) :
+   hero-concert, noir 45 % en haut, 55 % à 38 %, 92 % à 75 %.
+   Le fond est calé sur la hauteur de l'écran, comme le cadre 844 px de la maquette. */
 .app-shell {
+	position: relative;
 	width: 100%;
 	max-width: 390px;
 	min-height: 100vh;
 	min-height: 100dvh;
 	margin-inline: auto;
+}
+
+.app-shell::before {
+	content: "";
+	position: fixed;
+	z-index: 0;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	width: min(100%, 390px);
+	transform: translateX(-50%);
 	background-color: var(--surface-dark);
 	background-image:
 		linear-gradient(
@@ -207,10 +221,16 @@ body {
 			rgb(0% 0% 0% / 55%) 38%,
 			rgb(0% 0% 0% / 92%) 75%
 		),
-		url("/images/bg-login.jpg");
+		url("/images/hero-concert.jpg");
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
+	pointer-events: none;
+}
+
+.app-shell > * {
+	position: relative;
+	z-index: 1;
 }
 
 /* Page temporaire : échantillons pour vérifier polices et couleurs.
@@ -223,8 +243,9 @@ body {
 	padding: var(--space-l) var(--space-m) var(--space-l);
 }
 
+/* Même taille que le logo des écrans téléphone (components/screen-header.elyx : 150×53). */
 .sample-logo {
-	width: 180px;
+	width: 150px;
 	height: auto;
 }
 
