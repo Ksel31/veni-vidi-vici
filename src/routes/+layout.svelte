@@ -14,9 +14,19 @@
 	const loggedIn = $derived(Boolean($data.userId));
 	const show = $derived(ready && ((path === '/login' && !loggedIn) || (path !== '/login' && loggedIn)));
 
-	const background = $derived(
-		path === '/login' ? 'bg-login' : path === '/' ? 'bg-home' : path === '/to-confirm' ? 'bg-confirm' : path === '/history' ? 'bg-history' : 'bg-plain'
-	);
+	const background = $derived(backgroundFor(path));
+
+	/** @param {string} current */
+	function backgroundFor(current) {
+		if (current === '/login') return 'bg-login';
+		if (current === '/') return 'bg-home';
+		if (current === '/to-confirm') return 'bg-confirm';
+		if (current === '/history') return 'bg-history';
+		if (current === '/add') return 'bg-add-type';
+		if (current.startsWith('/add/concert')) return 'bg-add-concert';
+		if (current.startsWith('/add/festival')) return 'bg-add-festival';
+		return 'bg-plain';
+	}
 
 	onMount(() => {
 		restoreSession();

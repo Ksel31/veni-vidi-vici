@@ -259,9 +259,10 @@ export function addArtist(name) {
 
 /**
  * @param {Partial<Event> & Pick<Event, 'type' | 'startDate' | 'venueId'>} input
+ * @param {Array<{ artistId: string, billing?: Performance['billing'], day?: string | null, status?: Performance['status'] }>} [bandList]
  * @returns {string | null}
  */
-export function addEvent(input) {
+export function addEvent(input, bandList = []) {
 	const state = get(data);
 	if (!state.userId) return null;
 
@@ -280,7 +281,19 @@ export function addEvent(input) {
 		companions: [],
 		...input
 	});
-	const performances = applyPerformanceRules(event, state.performances);
+	const performances = applyPerformanceRules(event, [
+		...state.performances,
+		...bandList.map((band) => ({
+			id: crypto.randomUUID(),
+			eventId: event.id,
+			artistId: band.artistId,
+			billing: band.billing ?? null,
+			day: band.day ?? null,
+			status: band.status ?? 'to_see',
+			thumb: null,
+			setlist: ''
+		}))
+	]);
 	commit({ ...state, events: [...state.events, event], performances });
 	return event.id;
 }
