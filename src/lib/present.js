@@ -83,8 +83,17 @@ export function eventTitle(event, performances, artists) {
 
 /**
  * @param {import('./store.js').Venue[]} venues
- * @param {string} venueId
+ * @param {string | null | undefined} venueId
  */
 export function findVenue(venues, venueId) {
+	if (!venueId) return null;
 	return venues.find((venue) => venue.id === venueId) ?? null;
+}
+
+/** « Ancienne Belgique, Bruxelles », ou le nom seul si la ville est vide.
+ * @param {import('./store.js').Venue | null} venue
+ */
+export function venueLine(venue) {
+	if (!venue?.name) return null;
+	return venue.city ? `${venue.name}, ${venue.city}` : venue.name;
 }

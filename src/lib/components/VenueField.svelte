@@ -26,7 +26,7 @@
 </script>
 
 <div class="field">
-	<label for="venue-name">Lieu *</label>
+	<label for="venue-name">Lieu</label>
 	<div class="field-box">
 		<span class="icon" style:width="20px" style:height="20px" style:--icon="url('/icons/map-pin.svg')"></span>
 		<input id="venue-name" value={name} autocomplete="off" oninput={(event) => onName(event.currentTarget.value)} />
@@ -44,7 +44,7 @@
 
 {#if name.trim() && !venueId}
 	<div class="field">
-		<label for="venue-city">Ville *</label>
+		<label for="venue-city">Ville</label>
 		<div class="field-box">
 			<span class="icon" style:width="20px" style:height="20px" style:--icon="url('/icons/map-pin.svg')"></span>
 			<input id="venue-city" bind:value={city} autocomplete="off" />

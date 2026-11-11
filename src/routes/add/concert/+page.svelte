@@ -24,11 +24,13 @@
 
 	const headliners = $derived(bands.filter((band) => band.billing === 'headliner'));
 	const supports = $derived(bands.filter((band) => band.billing === 'support'));
-	const canSave = $derived(Boolean(date) && venueReady() && bands.length > 0);
+	const canSave = $derived(Boolean(date));
 
-	function venueReady() {
-		if (venueId) return true;
-		return Boolean(venueName.trim() && venueCity.trim());
+	/** Lieu connu, lieu nouveau (ville facultative), ou rien. */
+	function venueForSave() {
+		if (venueId) return venueId;
+		if (!venueName.trim()) return null;
+		return addVenue({ name: venueName.trim(), city: venueCity.trim(), country: 'Belgique' });
 	}
 
 	/** @param {string} name */
@@ -94,10 +96,8 @@
 
 	function save() {
 		if (!canSave) return;
-		const id =
-			venueId ??
-			addVenue({ name: venueName.trim(), city: venueCity.trim(), country: 'Belgique' });
-		if (!id) return;
+		const id = venueForSave();
+		if (venueName.trim() && !id) return;
 		const past = daysUntil(date) < 0;
 		const eventId = addEvent(
 			{
@@ -110,12 +110,11 @@
 				ticketBought,
 				ticketPrice: parsePrice()
 			},
-			bands.map((band) => ({
-				artistId: addArtist(band.name) ?? '',
-				billing: band.billing,
-				day: null,
-				status: past ? 'seen' : 'to_see'
-			}))
+			bands.flatMap((band) => {
+				const artistId = addArtist(band.name);
+				if (!artistId) return [];
+				return [{ artistId, billing: band.billing, day: null, status: past ? 'seen' : 'to_see' }];
+			})
 		);
 		if (eventId) goto(`/event/${eventId}`);
 	}
@@ -143,7 +142,7 @@
 	</div>
 
 	<div class="glass-card">
-		<p class="card-title">Groupes *</p>
+		<p class="card-title">Groupes</p>
 		<div class="zone" data-zone="headliner">
 			<p class="zone-label">Tête d'affiche</p>
 			{#each headliners as band (band.key)}

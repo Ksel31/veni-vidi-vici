@@ -1,6 +1,6 @@
 <script>
 	import Icon from './Icon.svelte';
-	import { dateParts, dayCount, eventTitle, findVenue } from '#lib/present.js';
+	import { dateParts, dayCount, eventTitle, findVenue, venueLine } from '#lib/present.js';
 
 	/** @type {{ event: import('#lib/store.js').Event, performances: import('#lib/store.js').Performance[], artists: import('#lib/store.js').Artist[], venues: import('#lib/store.js').Venue[] }} */
 	let { event, performances, artists, venues } = $props();
@@ -11,13 +11,14 @@
 	const href = $derived(`/event/${event.id}`);
 
 	const meta = $derived.by(() => {
-		if (!venue) return event.type === 'festival' ? 'Festival' : 'Concert';
 		if (event.type === 'festival') {
 			const count = dayCount(event.startDate, event.endDate);
 			const word = count > 1 ? 'jours' : 'jour';
-			return `Festival, ${count} ${word}, ${venue.city}`;
+			const where = venue?.city || venue?.name || 'Lieu à venir';
+			return `Festival, ${count} ${word}, ${where}`;
 		}
-		return `Concert, ${venue.name}, ${venue.city}`;
+		const place = venueLine(venue);
+		return place ? `Concert, ${place}` : 'Lieu à venir';
 	});
 </script>
 

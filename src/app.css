@@ -1317,6 +1317,74 @@ button {
 	gap: var(--space-s);
 }
 
+/* Ligne de festival : ouverte (choix du jour) ou repliée (nom + pilule). */
+.festival-band {
+	padding: 0 12px;
+	background: var(--surface-dark);
+	border: var(--line-width) solid var(--glass-border);
+	border-radius: var(--radius-m);
+}
+
+.band-line {
+	display: flex;
+	align-items: center;
+	gap: var(--space-s);
+	min-height: var(--tap);
+}
+
+.day-pill {
+	flex: none;
+	min-height: var(--tap);
+	padding: 0 14px;
+	border: 0;
+	border-radius: var(--radius-pill);
+	background: var(--light);
+	color: var(--neutral-1);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.day-pill:hover {
+		background: var(--light-hover);
+	}
+}
+
+.day-pill:active {
+	background: var(--light-pressed);
+}
+
+.day-panel {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 180ms ease-out;
+}
+
+.day-panel-open {
+	grid-template-rows: 1fr;
+}
+
+.day-panel-inner {
+	overflow: hidden;
+	min-height: 0;
+}
+
+.day-panel-open .day-panel-inner {
+	padding-bottom: 10px;
+}
+
+.festival-band .day-label,
+.festival-band .day-chips {
+	flex: none;
+	width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.day-panel {
+		transition: none;
+	}
+}
+
 .check-row {
 	display: flex;
 	align-items: center;
