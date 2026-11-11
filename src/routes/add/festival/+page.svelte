@@ -23,7 +23,7 @@
 	const festivalDays = $derived(daysFrom(startDate, endDate));
 	const canSave = $derived(
 		Boolean(title.trim() && startDate && endDate && endDate >= startDate && venueReady() && bands.length > 0) &&
-			bands.every((band) => band.day && festivalDays.includes(band.day))
+			bands.every((band) => chosenDay(band))
 	);
 
 	function venueReady() {
@@ -39,18 +39,15 @@
 		bands = [...bands, { key: crypto.randomUUID(), name: trimmed, day: null }];
 	}
 
+	/** @param {{ day: string | null }} band */
+	function chosenDay(band) {
+		return band.day && festivalDays.includes(band.day) ? band.day : null;
+	}
+
 	/** @param {string} key @param {string} day */
 	function chooseDay(key, day) {
 		bands = bands.map((band) => (band.key === key ? { ...band, day } : band));
 	}
-
-	// Un jour qui sort de la plage n'est plus valable.
-	$effect(() => {
-		const allowed = new Set(festivalDays);
-		if (bands.some((band) => band.day && !allowed.has(band.day))) {
-			bands = bands.map((band) => (band.day && allowed.has(band.day) ? band : { ...band, day: null }));
-		}
-	});
 
 	function parsePrice() {
 		const cleaned = priceText.trim().replace(',', '.').replace(/[^\d.]/g, '');
@@ -118,16 +115,16 @@
 					<Icon name="x" size={20} />
 				</button>
 				{#if festivalDays.length === 0}
-					<p class="hint">Indique d'abord le début et la fin.</p>
+					<p class="hint">Indique d'abord les dates.</p>
 				{:else}
-					<p class="day-label">Jour *</p>
-				<div class="day-chips" role="group" aria-label="Jour de {band.name}">
+					<p class="day-label">{chosenDay(band) ? 'Jour *' : 'Choisis un jour *'}</p>
+					<div class="day-chips" role="group" aria-label="Jour de {band.name}">
 						{#each festivalDays as day (day)}
 							<button
 								class="chip"
-								class:chip-on={band.day === day}
+								class:chip-on={chosenDay(band) === day}
 								type="button"
-								aria-pressed={band.day === day}
+								aria-pressed={chosenDay(band) === day}
 								onclick={() => chooseDay(band.key, day)}
 							>
 								{dayChipLabel(day)}
