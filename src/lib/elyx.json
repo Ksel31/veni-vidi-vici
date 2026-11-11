@@ -1,4 +1,0 @@
-{
-  "assets": { "include": ["assets"] },
-  "exports": { "./assets/*": "./assets/*" }
-}
