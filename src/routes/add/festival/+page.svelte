@@ -17,18 +17,20 @@
 	let ticketBought = $state(false);
 	let priceText = $state('');
 
-	/** @type {{ key: string, name: string, day: string | null }[]} */
+	/** @type {{ key: string, name: string, day: string | null, picking: boolean }[]} */
 	let bands = $state([]);
 
 	const festivalDays = $derived(daysFrom(startDate, endDate));
 	const canSave = $derived(
-		Boolean(title.trim() && startDate && endDate && endDate >= startDate && venueReady() && bands.length > 0) &&
+		Boolean(title.trim() && startDate && endDate && endDate >= startDate) &&
 			bands.every((band) => chosenDay(band))
 	);
 
-	function venueReady() {
-		if (venueId) return true;
-		return Boolean(venueName.trim() && venueCity.trim());
+	/** Lieu connu, lieu nouveau (ville facultative), ou rien. */
+	function venueForSave() {
+		if (venueId) return venueId;
+		if (!venueName.trim()) return null;
+		return addVenue({ name: venueName.trim(), city: venueCity.trim(), country: 'Belgique' });
 	}
 
 	/** @param {string} name */
@@ -36,7 +38,7 @@
 		const trimmed = name.trim();
 		if (!trimmed) return;
 		if (bands.some((band) => band.name.toLowerCase() === trimmed.toLowerCase())) return;
-		bands = [...bands, { key: crypto.randomUUID(), name: trimmed, day: null }];
+		bands = [...bands, { key: crypto.randomUUID(), name: trimmed, day: null, picking: false }];
 	}
 
 	/** @param {{ day: string | null }} band */
@@ -46,7 +48,12 @@
 
 	/** @param {string} key @param {string} day */
 	function chooseDay(key, day) {
-		bands = bands.map((band) => (band.key === key ? { ...band, day } : band));
+		bands = bands.map((band) => (band.key === key ? { ...band, day, picking: false } : band));
+	}
+
+	/** @param {string} key */
+	function reopenDay(key) {
+		bands = bands.map((band) => (band.key === key ? { ...band, picking: true } : band));
 	}
 
 	function parsePrice() {
@@ -58,10 +65,8 @@
 
 	function save() {
 		if (!canSave) return;
-		const id =
-			venueId ??
-			addVenue({ name: venueName.trim(), city: venueCity.trim(), country: 'Belgique' });
-		if (!id) return;
+		const id = venueForSave();
+		if (venueName.trim() && !id) return;
 		const past = daysUntil(endDate) < 0;
 		const eventId = addEvent(
 			{
@@ -74,12 +79,11 @@
 				ticketBought,
 				ticketPrice: parsePrice()
 			},
-			bands.map((band) => ({
-				artistId: addArtist(band.name) ?? '',
-				billing: null,
-				day: band.day,
-				status: 'to_see'
-			}))
+			bands.flatMap((band) => {
+				const artistId = addArtist(band.name);
+				if (!artistId) return [];
+				return [{ artistId, billing: null, day: band.day, status: 'to_see' }];
+			})
 		);
 		if (eventId) goto(`/event/${eventId}`);
 	}
@@ -107,31 +111,44 @@
 	</div>
 
 	<div class="glass-card">
-		<p class="card-title">Line-up à voir *</p>
+		<p class="card-title">Line-up à voir</p>
 		{#each bands as band (band.key)}
-			<div class="band-row festival-band">
-				<span class="band-name">{band.name}</span>
-				<button class="icon-button band-remove" type="button" aria-label="Retirer {band.name}" onclick={() => (bands = bands.filter((item) => item.key !== band.key))}>
-					<Icon name="x" size={20} />
-				</button>
-				{#if festivalDays.length === 0}
-					<p class="hint">Indique d'abord les dates.</p>
-				{:else}
-					<p class="day-label">{chosenDay(band) ? 'Jour *' : 'Choisis un jour *'}</p>
-					<div class="day-chips" role="group" aria-label="Jour de {band.name}">
-						{#each festivalDays as day (day)}
-							<button
-								class="chip"
-								class:chip-on={chosenDay(band) === day}
-								type="button"
-								aria-pressed={chosenDay(band) === day}
-								onclick={() => chooseDay(band.key, day)}
-							>
-								{dayChipLabel(day)}
-							</button>
-						{/each}
+			{@const day = chosenDay(band)}
+			{@const choosing = !day || band.picking}
+			<div class="festival-band">
+				<div class="band-line">
+					<span class="band-name">{band.name}</span>
+					{#if day && !band.picking}
+						<button class="day-pill" type="button" aria-expanded="false" aria-label="Changer le jour de {band.name}" onclick={() => reopenDay(band.key)}>
+							{dayChipLabel(day)}
+						</button>
+					{/if}
+					<button class="icon-button band-remove" type="button" aria-label="Retirer {band.name}" onclick={() => (bands = bands.filter((item) => item.key !== band.key))}>
+						<Icon name="x" size={20} />
+					</button>
+				</div>
+				<div class="day-panel" class:day-panel-open={choosing} inert={!choosing}>
+					<div class="day-panel-inner">
+						{#if festivalDays.length === 0}
+							<p class="hint">Indique d'abord les dates.</p>
+						{:else}
+							<p class="day-label">{day ? 'Jour *' : 'Choisis un jour *'}</p>
+							<div class="day-chips" role="group" aria-label="Jour de {band.name}">
+								{#each festivalDays as option (option)}
+									<button
+										class="chip"
+										class:chip-on={day === option}
+										type="button"
+										aria-pressed={day === option}
+										onclick={() => chooseDay(band.key, option)}
+									>
+										{dayChipLabel(option)}
+									</button>
+								{/each}
+							</div>
+						{/if}
 					</div>
-				{/if}
+				</div>
 			</div>
 		{/each}
 

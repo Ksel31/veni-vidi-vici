@@ -35,7 +35,7 @@ const browser = typeof localStorage !== 'undefined';
  * @property {string | null} title
  * @property {string} startDate
  * @property {string | null} endDate
- * @property {string} venueId
+ * @property {string | null} venueId
  * @property {EventStatus} status
  * @property {boolean} ticketBought
  * @property {number | null} ticketPrice
@@ -258,7 +258,7 @@ export function addArtist(name) {
 }
 
 /**
- * @param {Partial<Event> & Pick<Event, 'type' | 'startDate' | 'venueId'>} input
+ * @param {Partial<Event> & Pick<Event, 'type' | 'startDate'>} input
  * @param {Array<{ artistId: string, billing?: Performance['billing'], day?: string | null, status?: Performance['status'] }>} [bandList]
  * @returns {string | null}
  */
@@ -270,6 +270,7 @@ export function addEvent(input, bandList = []) {
 		id: crypto.randomUUID(),
 		title: null,
 		endDate: null,
+		venueId: null,
 		status: 'planned',
 		ticketBought: false,
 		ticketPrice: null,

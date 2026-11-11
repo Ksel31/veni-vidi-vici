@@ -1,5 +1,5 @@
 <script>
-	import { dateParts, countdownText, daysUntil, eventTitle, findVenue } from '#lib/present.js';
+	import { dateParts, countdownText, daysUntil, eventTitle, findVenue, venueLine } from '#lib/present.js';
 
 	/** @type {{ event: import('#lib/store.js').Event, performances: import('#lib/store.js').Performance[], artists: import('#lib/store.js').Artist[], venues: import('#lib/store.js').Venue[] }} */
 	let { event, performances, artists, venues } = $props();
@@ -8,7 +8,7 @@
 	const venue = $derived(findVenue(venues, event.venueId));
 	const date = $derived(dateParts(event.startDate));
 	const days = $derived(daysUntil(event.startDate));
-	const place = $derived(venue ? `${venue.name}, ${venue.city}` : '');
+	const place = $derived(venueLine(venue) ?? 'Lieu à venir');
 </script>
 
 <a class="event-row" href="/event/{event.id}">
