@@ -41,6 +41,79 @@ export function dayCount(start, end) {
 }
 
 const WEEKDAYS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+const WEEKDAYS_LONG = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+const MONTHS_LONG = [
+	'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+	'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+];
+
+/** @param {string} iso */
+function calendarDate(iso) {
+	const { year, month, day } = dateParts(iso);
+	return new Date(year, month - 1, day);
+}
+
+/** Passé = la date de fin (ou de début) est avant aujourd'hui. Le jour même reste à venir.
+ * @param {Pick<import('./store.js').Event, 'startDate' | 'endDate'>} event
+ */
+export function eventIsPast(event) {
+	return daysUntil(event.endDate || event.startDate) < 0;
+}
+
+/** « Sam 14 novembre 2026 ». @param {string} iso */
+export function spokenDate(iso) {
+	const { year, month, day } = dateParts(iso);
+	return `${WEEKDAYS[calendarDate(iso).getDay()]} ${day} ${MONTHS_LONG[month - 1]} ${year}`;
+}
+
+/** « Samedi 17 octobre ». @param {string} iso */
+export function dayHeading(iso) {
+	const { month, day } = dateParts(iso);
+	const name = WEEKDAYS_LONG[calendarDate(iso).getDay()];
+	return `${name.charAt(0).toUpperCase()}${name.slice(1)} ${day} ${MONTHS_LONG[month - 1]}`;
+}
+
+/** « Samedi ». @param {string} iso */
+export function weekdayName(iso) {
+	const name = WEEKDAYS_LONG[calendarDate(iso).getDay()];
+	return `${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+}
+
+/** « 17 et 18 octobre 2026 ». @param {string} start @param {string | null} end */
+export function rangePhrase(start, end) {
+	const a = dateParts(start);
+	if (!end || end === start) return `${a.day} ${MONTHS_LONG[a.month - 1]} ${a.year}`;
+	const b = dateParts(end);
+	if (a.year === b.year && a.month === b.month) {
+		return `${a.day} et ${b.day} ${MONTHS_LONG[a.month - 1]} ${a.year}`;
+	}
+	if (a.year === b.year) {
+		return `${a.day} ${MONTHS_LONG[a.month - 1]} et ${b.day} ${MONTHS_LONG[b.month - 1]} ${a.year}`;
+	}
+	return `${a.day} ${MONTHS_LONG[a.month - 1]} ${a.year} et ${b.day} ${MONTHS_LONG[b.month - 1]} ${b.year}`;
+}
+
+/** Ligne sous le titre. Sans lieu : « Lieu à venir ».
+ * @param {import('./store.js').Event} event
+ * @param {import('./store.js').Venue | null} venue
+ */
+export function eventSummary(event, venue) {
+	const place = venue?.city || venue?.name || 'Lieu à venir';
+	if (event.type === 'festival') {
+		return `Festival, ${rangePhrase(event.startDate, event.endDate)}, ${place}`;
+	}
+	return `Concert, ${spokenDate(event.startDate)}, ${venueLine(venue) ?? 'Lieu à venir'}`;
+}
+
+/** @param {number | null} value */
+export function priceLabel(value) {
+	if (value == null) return '';
+	const formatted = new Intl.NumberFormat('fr-FR', {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2
+	}).format(value);
+	return `${formatted} €`;
+}
 
 /** Libellé de puce, comme « Jeu 17 ». @param {string} iso */
 export function dayChipLabel(iso) {
