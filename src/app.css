@@ -1090,6 +1090,103 @@ button {
 	color-scheme: dark;
 }
 
+.add-artist {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: var(--tap);
+	height: var(--tap);
+	margin-right: -8px;
+	border: 0;
+	background: transparent;
+	color: var(--text-on-dark);
+}
+
+.range-field {
+	width: 100%;
+	color: var(--text-on-dark);
+	text-align: left;
+}
+
+.range-empty {
+	color: var(--text-on-dark-muted);
+}
+
+.calendar {
+	padding: var(--space-s) 0 0;
+}
+
+.cal-nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.cal-nav p {
+	margin: 0;
+	font-weight: 500;
+}
+
+.cal-nav button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--tap);
+	height: var(--tap);
+	border: 0;
+	border-radius: var(--radius-pill);
+	background: transparent;
+	color: var(--text-on-dark);
+}
+
+.cal-heads,
+.cal-grid {
+	display: grid;
+	grid-template-columns: repeat(7, var(--tap));
+	justify-content: space-between;
+}
+
+.cal-heads span {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 28px;
+	color: var(--text-on-dark-muted);
+	font-size: 12px;
+}
+
+.cal-day {
+	width: var(--tap);
+	height: var(--tap);
+	border: 0;
+	border-radius: var(--radius-s);
+	background: transparent;
+	color: var(--text-on-dark);
+	font-size: 16px;
+}
+
+.cal-empty {
+	pointer-events: none;
+}
+
+.cal-day-on {
+	background: var(--light);
+	color: var(--neutral-1);
+}
+
+.cal-day-in {
+	background: var(--state-hover);
+}
+
+.day-label {
+	flex: 1 0 100%;
+	margin: 0;
+	color: var(--text-on-dark-muted);
+	font-size: 13px;
+	font-weight: 500;
+}
+
 .suggestions {
 	display: flex;
 	flex-direction: column;
