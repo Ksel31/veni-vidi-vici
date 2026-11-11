@@ -113,7 +113,7 @@ function isPast(event, today = todayIso()) {
 }
 
 /**
- * Si la date n'est plus passée, l'event redevient `planned`.
+ * Aujourd'hui ou plus tard : l'event redevient `planned`.
  * @param {Event} event
  * @returns {Event}
  */
@@ -125,12 +125,19 @@ function normalizeEvent(event) {
 }
 
 /**
- * Festival entier marqué « Raté » : tous ses passages passent en `missed`.
+ * Aujourd'hui ou plus tard : les passages de cet event repassent en `to_see`.
+ * Festival entier marqué « Raté » (date passée) : tous ses passages passent en `missed`.
  * @param {Event} event
  * @param {Performance[]} performances
  * @returns {Performance[]}
  */
-function applyMissedFestival(event, performances) {
+function applyPerformanceRules(event, performances) {
+	if (!isPast(event)) {
+		return performances.map((performance) => {
+			if (performance.eventId !== event.id || performance.status === 'to_see') return performance;
+			return { ...performance, status: 'to_see' };
+		});
+	}
 	if (event.type !== 'festival' || event.status !== 'missed') return performances;
 	return performances.map((performance) => {
 		if (performance.eventId !== event.id || performance.status === 'missed') return performance;
@@ -266,7 +273,7 @@ export function addEvent(input) {
 		companions: [],
 		...input
 	});
-	const performances = applyMissedFestival(event, state.performances);
+	const performances = applyPerformanceRules(event, state.performances);
 	commit({ ...state, events: [...state.events, event], performances });
 	return event.id;
 }
@@ -282,7 +289,7 @@ export function updateEvent(id, changes) {
 
 	const event = normalizeEvent({ ...current, ...changes, id: current.id });
 	const events = state.events.map((item) => (item.id === id ? event : item));
-	const performances = applyMissedFestival(event, state.performances);
+	const performances = applyPerformanceRules(event, state.performances);
 	commit({ ...state, events, performances });
 }
 
