@@ -191,12 +191,25 @@ body {
 	outline-offset: var(--focus-ring-width);
 }
 
-/* Colonne mobile, centrée dès que l'écran est plus large.
-   Photo et dégradé de l'accueil (screens/home.elyx, exports/02-home.png) :
-   hero-concert, noir 45 % en haut, 55 % à 38 %, 92 % à 75 %.
-   Le fond est calé sur la hauteur de l'écran, comme le cadre 844 px de la maquette. */
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+button,
+input {
+	font: inherit;
+	color: inherit;
+}
+
+button {
+	cursor: pointer;
+}
+
+/* Colonne ~390 px. Le fond (photo + dégradé) dépend de l'écran. */
 .app-shell {
 	position: relative;
+	z-index: 1;
 	width: 100%;
 	max-width: 390px;
 	min-height: 100vh;
@@ -214,244 +227,650 @@ body {
 	width: min(100%, 390px);
 	transform: translateX(-50%);
 	background-color: var(--surface-dark);
-	background-image:
-		linear-gradient(
-			180deg,
-			rgb(0% 0% 0% / 45%) 0%,
-			rgb(0% 0% 0% / 55%) 38%,
-			rgb(0% 0% 0% / 92%) 75%
-		),
-		url("/images/hero-concert.jpg");
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
-	pointer-events: none;
 }
 
-.app-shell > * {
+/* Accueil : screens/home.elyx */
+.bg-home::before {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 45%) 0%, rgb(0% 0% 0% / 55%) 38%, rgb(0% 0% 0% / 92%) 75%),
+		url("/images/hero-concert.jpg");
+}
+
+/* Connexion : screens/login.elyx */
+.bg-login::before {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 40%) 0%, rgb(0% 0% 0% / 55%) 45%, rgb(0% 0% 0% / 92%) 100%),
+		url("/images/bg-login.jpg");
+}
+
+/* À confirmer : screens/to-confirm.elyx */
+.bg-confirm::before {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 50%) 0%, rgb(0% 0% 0% / 58%) 40%, rgb(0% 0% 0% / 78%) 100%),
+		url("/images/bg-to-confirm.jpg");
+}
+
+.screen {
 	position: relative;
 	z-index: 1;
-}
-
-/* Page temporaire : échantillons pour vérifier polices et couleurs.
-   Les tailles (36, 26, 18, 16, 14, 48) et l'interlettrage -3 % viennent
-   des échantillons de screens/style-guide.elyx, pas d'un token de longueur. */
-.sample {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-m);
-	padding: var(--space-l) var(--space-m) var(--space-l);
+	min-height: 100dvh;
+	padding: var(--space-l) var(--space-m) 190px;
 }
 
-/* Même taille que le logo des écrans téléphone (components/screen-header.elyx : 150×53). */
-.sample-logo {
-	width: 150px;
-	height: auto;
+.screen-login {
+	justify-content: space-between;
+	gap: 0;
+	padding: 32px var(--space-m) 40px;
 }
 
-.sample h1,
-.sample p {
+.screen-pad {
+	padding-top: var(--space-s);
+}
+
+.hint {
 	margin: 0;
-}
-
-.type-section {
-	font-weight: 500;
-	font-size: 36px;
-	line-height: 1;
-	letter-spacing: -0.03em;
-}
-
-.type-profile {
-	font-weight: 500;
-	font-size: 26px;
-	line-height: 1;
-}
-
-.type-card {
-	font-weight: 500;
-	font-size: 18px;
-}
-
-.type-body {
-	font-weight: 400;
-	font-size: 16px;
-	line-height: 1.35;
-}
-
-.type-meta {
-	font-weight: 400;
+	color: var(--text-on-dark-muted);
 	font-size: 14px;
+	line-height: 1.3;
+}
+
+.empty-title {
+	margin: 0;
+	font-size: 16px;
+}
+
+/* Icône Lucide : le fichier reste noir, la couleur affichée est celle du texte. */
+.icon,
+.mini-icon {
+	display: block;
+	flex: none;
+	background: currentColor;
+	mask: var(--icon) center / contain no-repeat;
+	-webkit-mask: var(--icon) center / contain no-repeat;
+}
+
+.mini-icon {
+	width: 16px;
+	height: 16px;
+}
+
+/* Boutons : principal = lime, secondaire = verre + filet (ui.elyx).
+   Survol seulement à la souris. Pressé = :active. Focus = anneau global. */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	width: 100%;
+	min-height: var(--tap);
+	height: 52px;
+	border-radius: var(--radius-l);
+	font-weight: 500;
+	font-size: 16px;
+}
+
+.btn-primary {
+	border: 0;
+	background: var(--cta);
+	color: var(--on-cta);
+}
+
+.btn-secondary {
+	background: var(--glass-strong);
+	border: 1.5px solid var(--border);
+	color: var(--text-on-dark);
+}
+
+.btn:disabled {
+	background: var(--disabled-bg);
+	border-color: transparent;
+	color: var(--disabled-text);
+	cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.btn-primary:hover:not(:disabled) {
+		background: var(--cta-hover);
+	}
+
+	.btn-secondary:hover:not(:disabled) {
+		background: var(--state-hover);
+	}
+}
+
+.btn-primary:active:not(:disabled) {
+	background: var(--cta-pressed);
+}
+
+.btn-secondary:active:not(:disabled) {
+	background: var(--state-pressed);
+}
+
+/* Champ : libellé 13, boîte 48 px (ui.elyx). */
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.field label {
+	color: var(--text-on-dark-muted);
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.field-box {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	height: 48px;
+	padding: 0 14px;
+	background: var(--surface-dark);
+	border: var(--line-width) solid var(--glass-border);
+	border-radius: var(--radius-m);
 	color: var(--text-on-dark-muted);
 }
 
-.type-ticket {
-	font-family: var(--font-display);
-	font-weight: 700;
-	font-size: 48px;
-	line-height: 1;
-	letter-spacing: 0;
+.field-box input {
+	width: 100%;
+	min-width: 0;
+	border: 0;
+	background: transparent;
+	color: var(--text-on-dark);
+	font-size: 16px;
+	outline: none;
+}
+
+.field-box:focus-within {
+	outline: var(--focus-ring-width) solid var(--focus-ring);
+	outline-offset: var(--focus-ring-width);
 }
 
 .glass-card {
 	display: flex;
 	flex-direction: column;
-	gap: var(--space-s);
+	gap: 14px;
 	padding: var(--space-m);
 	background: var(--glass);
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-xl);
 }
 
-.accent {
-	color: var(--text-accent);
-	font-weight: 500;
+.brand-logo {
+	width: 150px;
+	height: auto;
+	margin: var(--space-l) var(--space-s) 12px;
 }
 
-.pills {
+.login-form {
 	display: flex;
-	flex-wrap: wrap;
-	gap: var(--space-s);
-	margin: 0;
-	padding: 0;
-	list-style: none;
+	flex-direction: column;
+	gap: 20px;
+	padding: 0 var(--space-s);
 }
 
-.pill {
+.login-intro {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-s);
+}
+
+.login-intro h1 {
+	margin: 0;
+	font-size: 44px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: -0.03em;
+}
+
+.login-intro p,
+.login-note {
+	margin: 0;
+	color: var(--text-on-dark-muted);
+	font-size: 16px;
+	line-height: 1.3;
+}
+
+.login-note {
+	font-size: 13px;
+}
+
+/* En-tête d'écran secondaire (screen-header.elyx). */
+.page-header {
+	display: flex;
+	align-items: center;
+	gap: var(--space-m);
+	padding: 20px var(--space-s) 0;
+}
+
+.page-header h1 {
+	margin: 0;
+	font-size: 32px;
+	font-weight: 500;
+	letter-spacing: -0.03em;
+}
+
+.icon-button,
+.search-button,
+.tab,
+.add-button {
 	display: inline-flex;
 	align-items: center;
-	min-height: var(--tap);
-	padding: 0 var(--space-m);
-	border-radius: var(--radius-pill);
-	font-weight: 500;
-	font-size: 14px;
+	justify-content: center;
+	flex: none;
+	border: var(--line-width) solid transparent;
+	color: var(--text-on-dark);
 }
 
-.pill-brand {
-	background: var(--brand);
+.icon-button,
+.search-button,
+.tab {
+	width: 48px;
+	height: 48px;
+	border-radius: var(--radius-pill);
+}
+
+.icon-button {
+	background: var(--glass-strong);
+	border-color: var(--glass-border);
+}
+
+.search-button {
+	background: var(--light);
+	color: var(--neutral-1);
+}
+
+.tab {
+	background: transparent;
+}
+
+.tab-active {
+	background: var(--light);
+	color: var(--neutral-1);
+}
+
+.add-button {
+	width: 64px;
+	height: 64px;
+	border-radius: var(--radius-pill);
+	background: var(--cta);
 	color: var(--on-cta);
 }
 
-.pill-missed {
-	background: var(--danger);
-	color: var(--on-danger);
+@media (hover: hover) and (pointer: fine) {
+	.icon-button:hover,
+	.tab:hover:not(.tab-active) {
+		background: var(--state-hover);
+	}
+
+	.search-button:hover,
+	.tab-active:hover {
+		background: var(--light-hover);
+	}
+
+	.add-button:hover {
+		background: var(--cta-hover);
+	}
+
+	.event-row:hover,
+	.pending-head:hover {
+		background: var(--glass-strong);
+		border-color: var(--border);
+	}
 }
 
-.pill-pending {
-	background: var(--warning);
-	color: var(--on-warning);
+.icon-button:active,
+.tab:active:not(.tab-active) {
+	background: var(--state-pressed);
 }
 
-.pill-seen {
-	background: var(--success);
-	color: var(--on-success);
+.search-button:active,
+.tab-active:active {
+	background: var(--light-pressed);
 }
 
-.scale-block {
+.add-button:active {
+	background: var(--cta-pressed);
+}
+
+.event-row:active,
+.pending-head:active {
+	background: var(--surface-dark-raised);
+	border-color: var(--border);
+}
+
+/* Barre flottante : home.elyx, bas 32 px, côtés 20 px. */
+.dock {
+	position: fixed;
+	z-index: 3;
+	right: 0;
+	bottom: 32px;
+	left: 0;
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	width: min(100%, 390px);
+	margin-inline: auto;
+	padding: 0 20px;
+	pointer-events: none;
+}
+
+.dock > * {
+	pointer-events: auto;
+}
+
+.bottom-fade {
+	position: fixed;
+	z-index: 2;
+	bottom: 0;
+	left: 50%;
+	width: min(100%, 390px);
+	height: 190px;
+	transform: translateX(-50%);
+	pointer-events: none;
+	background: linear-gradient(180deg, rgb(6.7% 6.7% 6.7% / 0%) 0%, rgb(6.7% 6.7% 6.7% / 92%) 70%);
+}
+
+.tab-bar {
+	display: flex;
+	align-items: center;
+	gap: var(--space-s);
+	height: 64px;
+	padding: var(--space-s);
+	background: var(--glass-strong);
+	border: var(--line-width) solid var(--glass-border);
+	border-radius: var(--radius-pill);
+}
+
+/* Profil (profile.elyx). */
+.profile {
 	display: flex;
 	flex-direction: column;
-	gap: var(--space-s);
+	gap: 14px;
+	padding: 0 6px;
 }
 
-.scale-label {
+.profile-row,
+.who,
+.stats {
+	display: flex;
+	align-items: center;
+}
+
+.profile-row {
+	justify-content: space-between;
+}
+
+.who {
+	gap: 12px;
+}
+
+.avatar {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 52px;
+	height: 52px;
+	border: 2px solid var(--text-on-dark);
+	border-radius: var(--radius-pill);
+	background: var(--neutral-12);
+	color: var(--neutral-1);
+	font-size: 24px;
 	font-weight: 500;
+}
+
+.profile-name {
+	font-size: 26px;
+	font-weight: 500;
+}
+
+.stats {
+	width: 100%;
+}
+
+.stats p {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 2px;
+	margin: 0;
+}
+
+.stats p + p {
+	padding-left: var(--space-m);
+	border-left: var(--line-width) solid var(--divider);
+}
+
+.stat-value {
+	font-size: 26px;
+	font-weight: 500;
+	line-height: 1;
+}
+
+.stat-label {
 	font-size: 14px;
 }
 
-.scale {
-	display: flex;
-	border-radius: var(--radius-s);
-	overflow: hidden;
-}
-
-.swatch {
-	flex: 1;
-	aspect-ratio: 1;
-}
-
-.steps {
-	display: flex;
-}
-
-.steps span {
-	flex: 1;
-	text-align: center;
-	font-size: 12px;
+.logout {
+	align-self: flex-start;
+	min-height: var(--tap);
+	padding: 0;
+	border: 0;
+	background: transparent;
 	color: var(--text-on-dark-muted);
+	font-size: 14px;
 }
 
-/* Panneau temporaire de l'étape 2. Il disparaîtra avec le vrai écran de connexion. */
-.debug {
+/* Titres de section de l'accueil : Medium 36, interlettrage -3 %. */
+.section-title {
+	margin: 0;
+	font-size: 36px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: -0.03em;
+}
+
+.upcoming-block,
+.card-list {
 	display: flex;
 	flex-direction: column;
-	gap: var(--space-s);
-	padding: var(--space-m);
+	gap: 12px;
+}
+
+.confirm-pill {
+	display: inline-flex;
+	align-items: center;
+	align-self: flex-start;
+	gap: 6px;
+	min-height: var(--tap);
+	padding: 0 12px 0 14px;
+	border: 1.5px solid var(--brand);
+	border-radius: var(--radius-l);
+	background: var(--neutral-1);
+	color: var(--brand);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.event-row,
+.pending-head {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px;
 	background: var(--glass);
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-xl);
 }
 
-.debug h2,
-.debug p {
-	margin: 0;
+.date-block {
+	display: flex;
+	flex: none;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 60px;
+	height: 60px;
+	border-radius: var(--radius-m);
+	background: var(--surface-dark);
 }
 
-.debug h2 {
+.date-day {
+	font-size: 24px;
+	font-weight: 500;
+	line-height: 1;
+}
+
+.date-month {
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: 0.04em;
+}
+
+.event-info {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.event-row-title {
 	font-size: 18px;
 	font-weight: 500;
 }
 
-.debug form {
-	display: flex;
-	flex-direction: column;
-	gap: var(--space-s);
+.event-row-meta {
+	font-size: 14px;
 }
 
-.debug label {
-	display: flex;
-	flex-direction: column;
-	gap: var(--space-s);
+.countdown,
+.ticket-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 8px;
+	border-radius: var(--radius-s);
 	font-size: 14px;
 	font-weight: 500;
 }
 
-.debug input,
-.debug button {
-	font: inherit;
-	min-height: var(--tap);
-	border-radius: var(--radius-m);
+.countdown {
+	flex: none;
+	background: var(--neutral-12);
+	color: var(--neutral-1);
 }
 
-.debug input {
-	padding: 0 var(--space-m);
+.ticket-pill {
+	align-self: flex-start;
+	background: var(--surface-dark);
+	color: var(--neutral-12);
+}
+
+/* Billet du prochain event : image holographique 366×152 (event-card.elyx). */
+.ticket {
+	position: relative;
+	display: block;
+	aspect-ratio: 366 / 152;
+	color: var(--neutral-1);
+	filter: drop-shadow(0 10px 18px rgb(0% 0% 0% / 55%));
+}
+
+.ticket-bg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.ticket-body,
+.ticket-stub {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.ticket-body {
+	left: 0;
+	width: 67%;
+	gap: 3px;
+	padding: 0 20px;
+}
+
+.ticket-stub {
+	right: 0;
+	align-items: center;
+	width: 33%;
+	border-left: 2px dashed var(--neutral-1);
+}
+
+.ticket-type {
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.ticket-title {
+	font-size: 38px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: -0.02em;
+}
+
+.ticket-place {
+	font-size: 11px;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+
+.ticket-pill-on-green {
+	background: var(--neutral-1);
+	color: var(--neutral-12);
+}
+
+.ticket-day {
+	font-family: var(--font-display);
+	font-size: 74px;
+	font-weight: 700;
+	line-height: 0.85;
+}
+
+.ticket-month {
+	font-family: var(--font-display);
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.pending-card {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding: var(--space-m);
+	background: var(--glass);
 	border: var(--line-width) solid var(--glass-border);
-	background: var(--glass-strong);
-	color: var(--text-on-dark);
+	border-radius: var(--radius-xl);
 }
 
-.debug button {
-	border: 0;
-	border-radius: var(--radius-pill);
-	background: var(--brand);
-	color: var(--on-cta);
-	font-weight: 500;
-	cursor: pointer;
-}
-
-.debug button:disabled {
-	background: var(--disabled-bg);
-	color: var(--disabled-text);
-	cursor: default;
-}
-
-.debug-list {
-	display: flex;
-	flex-direction: column;
-	gap: var(--space-s);
-	margin: 0;
+.pending-head {
 	padding: 0;
-	list-style: none;
+	border: 0;
+	background: transparent;
 }
 
-.debug-list li {
-	font-size: 14px;
+.pending-actions {
+	display: flex;
+	gap: 12px;
+}
+
+.pending-actions .btn {
+	height: 48px;
 }

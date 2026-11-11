@@ -206,6 +206,13 @@ export function restoreSession() {
 	if (userId) login(userId);
 }
 
+/** Ferme la session. Les données du compte restent dans le navigateur. */
+export function logout() {
+	if (!browser) return;
+	localStorage.removeItem(SESSION_KEY);
+	data.set(loggedOut());
+}
+
 /**
  * Crée un lieu, ou renvoie celui qui a déjà le même nom et la même ville.
  * @param {{ name: string, city: string, country: string }} input
