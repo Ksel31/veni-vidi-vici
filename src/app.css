@@ -202,6 +202,13 @@ input {
 	color: inherit;
 }
 
+button,
+a,
+input,
+label {
+	-webkit-tap-highlight-color: transparent;
+}
+
 button {
 	cursor: pointer;
 }
@@ -1107,6 +1114,11 @@ button {
 	border: 0;
 	background: transparent;
 	color: var(--text-on-dark);
+}
+
+.add-artist:active {
+	background: var(--state-pressed);
+	border-radius: var(--radius-m);
 }
 
 .range-field {
