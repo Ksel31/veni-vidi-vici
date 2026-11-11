@@ -2,8 +2,15 @@
 	import Icon from './Icon.svelte';
 	import { dateParts } from '#lib/present.js';
 
-	/** @type {{ start?: string, end?: string }} */
-	let { start = $bindable(''), end = $bindable('') } = $props();
+	/** @type {{ start?: string, end?: string, mode?: 'single' | 'range', label?: string, inputId?: string, placeholder?: string }} */
+	let {
+		start = $bindable(''),
+		end = $bindable(''),
+		mode = 'range',
+		label: fieldLabel = 'Dates *',
+		inputId = 'date-range',
+		placeholder = 'Choisir les dates'
+	} = $props();
 
 	const MONTHS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
 	const MONTHS_LONG = [
@@ -17,7 +24,7 @@
 	let viewYear = $state(today.getFullYear());
 	let viewMonth = $state(today.getMonth() + 1);
 
-	const label = $derived(formatRange(start, end));
+	const rangeText = $derived(formatRange(start, end));
 	const cells = $derived(monthCells(viewYear, viewMonth));
 
 	/** @param {string} iso */
@@ -87,10 +94,14 @@
 		}
 	}
 
-	/** Premier toucher = début, second = fin. Un nouveau toucher après une plage recommence.
-	 * @param {string} iso
-	 */
+	/** @param {string} iso */
 	function pick(iso) {
+		if (mode === 'single') {
+			start = iso;
+			end = '';
+			open = false;
+			return;
+		}
 		if (!start || (start && end)) {
 			start = iso;
 			end = '';
@@ -115,10 +126,10 @@
 </script>
 
 <div class="field">
-	<label for="festival-dates">Dates *</label>
-	<button id="festival-dates" class="field-box range-field" type="button" aria-expanded={open} onclick={toggle}>
+	<label for={inputId}>{fieldLabel}</label>
+	<button id={inputId} class="field-box range-field" type="button" aria-expanded={open} onclick={toggle}>
 		<Icon name="calendar" size={20} />
-		<span class:range-empty={!label}>{label || 'Choisir les dates'}</span>
+		<span class:range-empty={!rangeText}>{rangeText || placeholder}</span>
 	</button>
 	{#if open}
 		<div class="calendar">

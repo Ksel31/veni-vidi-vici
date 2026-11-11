@@ -13,6 +13,7 @@
 			.slice(0, 6);
 	});
 
+	/** @param {string} [name] */
 	function commit(name = query) {
 		const trimmed = name.trim();
 		if (!trimmed) return;
@@ -20,23 +21,15 @@
 		query = '';
 	}
 
-	/** @param {KeyboardEvent} event */
-	function onKey(event) {
-		if (event.key !== 'Enter') return;
+	/** Le clavier Android envoie souvent « Entrée » comme envoi du formulaire. */
+	/** @param {SubmitEvent} event */
+	function onSubmit(event) {
 		event.preventDefault();
 		commit();
 	}
-
-	// Sur téléphone, le premier toucher ferme le clavier et le clic n'arrive pas.
-	// On ajoute donc au pointerdown, avant que le champ perde le focus.
-	/** @param {PointerEvent} event @param {string} name */
-	function pick(event, name) {
-		event.preventDefault();
-		commit(name);
-	}
 </script>
 
-<div class="field">
+<form class="field" onsubmit={onSubmit}>
 	<label class="visually-hidden" for="artist-query">Ajouter un groupe</label>
 	<div class="field-box">
 		<input
@@ -46,9 +39,8 @@
 			autocomplete="off"
 			autocapitalize="off"
 			enterkeyhint="done"
-			onkeydown={onKey}
 		/>
-		<button class="add-artist" type="button" aria-label="Ajouter le groupe" onclick={() => commit()}>
+		<button class="add-artist" type="submit" aria-label="Ajouter le groupe">
 			<span class="icon" style:width="20px" style:height="20px" style:--icon="url('/icons/plus.svg')"></span>
 		</button>
 	</div>
@@ -56,9 +48,11 @@
 		<ul class="suggestions">
 			{#each matches as artist (artist.id)}
 				<li>
-					<button type="button" onpointerdown={(event) => pick(event, artist.name)}>{artist.name}</button>
+					<button type="button" onpointerdown={(event) => event.preventDefault()} onclick={() => commit(artist.name)}>
+						{artist.name}
+					</button>
 				</li>
 			{/each}
 		</ul>
 	{/if}
-</div>
+</form>
