@@ -4,6 +4,8 @@
 	import { dayChipLabel, daysFrom, daysUntil } from '#lib/present.js';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import VenueField from '#lib/components/VenueField.svelte';
+	import ArtistField from '#lib/components/ArtistField.svelte';
+	import DateRangeField from '#lib/components/DateRangeField.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 
 	let title = $state('');
@@ -14,27 +16,15 @@
 	let venueId = $state(/** @type {string | null} */ (null));
 	let ticketBought = $state(false);
 	let priceText = $state('');
-	let artistQuery = $state('');
 
 	/** @type {{ key: string, name: string, day: string | null }[]} */
 	let bands = $state([]);
 
 	const festivalDays = $derived(daysFrom(startDate, endDate));
-	const artistMatches = $derived(artistSuggestions(artistQuery));
 	const canSave = $derived(
 		Boolean(title.trim() && startDate && endDate && endDate >= startDate && venueReady() && bands.length > 0) &&
 			bands.every((band) => band.day && festivalDays.includes(band.day))
 	);
-
-	/** @param {string} query */
-	function artistSuggestions(query) {
-		const text = query.trim().toLowerCase();
-		if (!text) return [];
-		const taken = new Set(bands.map((band) => band.name.toLowerCase()));
-		return $data.artists
-			.filter((artist) => artist.name.toLowerCase().includes(text) && !taken.has(artist.name.toLowerCase()))
-			.slice(0, 6);
-	}
 
 	function venueReady() {
 		if (venueId) return true;
@@ -47,7 +37,6 @@
 		if (!trimmed) return;
 		if (bands.some((band) => band.name.toLowerCase() === trimmed.toLowerCase())) return;
 		bands = [...bands, { key: crypto.randomUUID(), name: trimmed, day: null }];
-		artistQuery = '';
 	}
 
 	/** @param {string} key @param {string} day */
@@ -97,13 +86,6 @@
 		);
 		if (eventId) goto(`/event/${eventId}`);
 	}
-
-	/** @param {KeyboardEvent} event */
-	function onArtistKey(event) {
-		if (event.key !== 'Enter') return;
-		event.preventDefault();
-		addBand(artistQuery);
-	}
 </script>
 
 <svelte:head>
@@ -112,37 +94,23 @@
 
 <section class="screen screen-pad add-form">
 	<ScreenHeader title="Nouveau festival" backHref="/add" />
+	<p class="hint">* Obligatoire</p>
 
 	<div class="glass-card">
 		<p class="card-title">Le festival</p>
 		<div class="field">
-			<label for="festival-title">Titre</label>
+			<label for="festival-title">Titre *</label>
 			<div class="field-box">
 				<Icon name="tent" size={20} />
-				<input id="festival-title" bind:value={title} placeholder="Rock Werchter" autocomplete="off" />
+				<input id="festival-title" bind:value={title} placeholder="Ex. Desertfest" autocomplete="off" />
 			</div>
 		</div>
-		<div class="date-pair">
-			<div class="field">
-				<label for="festival-start">Début</label>
-				<div class="field-box">
-					<Icon name="calendar" size={20} />
-					<input id="festival-start" type="date" bind:value={startDate} />
-				</div>
-			</div>
-			<div class="field">
-				<label for="festival-end">Fin</label>
-				<div class="field-box">
-					<Icon name="calendar" size={20} />
-					<input id="festival-end" type="date" bind:value={endDate} />
-				</div>
-			</div>
-		</div>
+		<DateRangeField bind:start={startDate} bind:end={endDate} />
 		<VenueField venues={$data.venues} bind:name={venueName} bind:city={venueCity} bind:venueId />
 	</div>
 
 	<div class="glass-card">
-		<p class="card-title">Line-up à voir</p>
+		<p class="card-title">Line-up à voir *</p>
 		{#each bands as band (band.key)}
 			<div class="band-row festival-band">
 				<span class="band-name">{band.name}</span>
@@ -152,7 +120,8 @@
 				{#if festivalDays.length === 0}
 					<p class="hint">Indique d'abord le début et la fin.</p>
 				{:else}
-					<div class="day-chips" role="group" aria-label="Jour de {band.name}">
+					<p class="day-label">Jour *</p>
+				<div class="day-chips" role="group" aria-label="Jour de {band.name}">
 						{#each festivalDays as day (day)}
 							<button
 								class="chip"
@@ -169,26 +138,12 @@
 			</div>
 		{/each}
 
-		<div class="field">
-			<label class="visually-hidden" for="festival-artist">Ajouter un groupe</label>
-			<div class="field-box">
-				<Icon name="plus" size={20} />
-				<input
-					id="festival-artist"
-					bind:value={artistQuery}
-					placeholder="Ajouter un groupe et son jour"
-					autocomplete="off"
-					onkeydown={onArtistKey}
-				/>
-			</div>
-			{#if artistMatches.length > 0}
-				<ul class="suggestions">
-					{#each artistMatches as artist (artist.id)}
-						<li><button type="button" onclick={() => addBand(artist.name)}>{artist.name}</button></li>
-					{/each}
-				</ul>
-			{/if}
-		</div>
+		<ArtistField
+			artists={$data.artists}
+			taken={bands.map((band) => band.name)}
+			placeholder="Ajouter un groupe et son jour"
+			onAdd={addBand}
+		/>
 	</div>
 
 	<div class="glass-card">
