@@ -1,5 +1,5 @@
 <script>
-	import { dateParts, daysUntil, eventTitle, findVenue } from '#lib/present.js';
+	import { dateParts, countdownText, daysUntil, eventTitle, findVenue } from '#lib/present.js';
 
 	/** @type {{ event: import('#lib/store.js').Event, performances: import('#lib/store.js').Performance[], artists: import('#lib/store.js').Artist[], venues: import('#lib/store.js').Venue[] }} */
 	let { event, performances, artists, venues } = $props();
@@ -27,5 +27,5 @@
 			</span>
 		{/if}
 	</span>
-	<span class="countdown">J-{days}</span>
+	<span class="countdown">{countdownText(days)}</span>
 </a>

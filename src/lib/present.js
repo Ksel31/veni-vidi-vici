@@ -26,6 +26,14 @@ export function untilHeading(days) {
 	return `Dans ${days} jours`;
 }
 
+/** Pastille de compte à rebours. Le jour même : « Aujourd'hui », jamais « J-0 ».
+ * @param {number} days
+ */
+export function countdownText(days) {
+	if (days <= 0) return "Aujourd'hui";
+	return `J-${days}`;
+}
+
 /** @param {string} start @param {string | null} end */
 export function dayCount(start, end) {
 	if (!end || end === start) return 1;
