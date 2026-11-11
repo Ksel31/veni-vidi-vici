@@ -5,6 +5,7 @@
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import VenueField from '#lib/components/VenueField.svelte';
 	import ArtistField from '#lib/components/ArtistField.svelte';
+	import DateRangeField from '#lib/components/DateRangeField.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 
 	let date = $state('');
@@ -130,13 +131,7 @@
 
 	<div class="glass-card">
 		<p class="card-title">Quand et où</p>
-		<div class="field">
-			<label for="concert-date">Date *</label>
-			<div class="field-box">
-				<Icon name="calendar" size={20} />
-				<input id="concert-date" type="date" bind:value={date} />
-			</div>
-		</div>
+			<DateRangeField mode="single" label="Date *" inputId="concert-date" placeholder="Choisir la date" bind:start={date} />
 		<VenueField venues={$data.venues} bind:name={venueName} bind:city={venueCity} bind:venueId />
 		<div class="field">
 			<label for="concert-title">Titre (optionnel)</label>

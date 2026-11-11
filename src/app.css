@@ -217,15 +217,20 @@ button {
 	margin-inline: auto;
 }
 
+/* Calque fixe derrière le contenu. 100lvh ne bouge pas avec la barre d'adresse.
+   Pas de transform : sur Android il intercepte les touches. */
 .app-shell::before {
 	content: "";
 	position: fixed;
 	z-index: 0;
 	top: 0;
-	bottom: 0;
-	left: 50%;
+	right: 0;
+	left: 0;
 	width: min(100%, 390px);
-	transform: translateX(-50%);
+	height: 100svh;
+	height: 100lvh;
+	margin-inline: auto;
+	pointer-events: none;
 	background-color: var(--surface-dark);
 	background-size: cover;
 	background-position: center;
@@ -317,6 +322,7 @@ button {
 	display: block;
 	flex: none;
 	background: currentColor;
+	pointer-events: none;
 	mask: var(--icon) center / contain no-repeat;
 	-webkit-mask: var(--icon) center / contain no-repeat;
 }
