@@ -565,16 +565,26 @@ button {
 	pointer-events: auto;
 }
 
+/* Le fondu reste sous les contrôles : il assombrit le contenu qui défile, pas la barre ni le « + ». */
 .bottom-fade {
 	position: fixed;
-	z-index: 2;
+	z-index: 0;
 	bottom: 0;
 	left: 50%;
 	width: min(100%, 390px);
 	height: 190px;
 	transform: translateX(-50%);
-	pointer-events: none;
 	background: linear-gradient(180deg, rgb(6.7% 6.7% 6.7% / 0%) 0%, rgb(6.7% 6.7% 6.7% / 92%) 70%);
+}
+
+.dock > .bottom-fade {
+	pointer-events: none;
+}
+
+.tab-bar,
+.add-button {
+	position: relative;
+	z-index: 1;
 }
 
 .tab-bar {
