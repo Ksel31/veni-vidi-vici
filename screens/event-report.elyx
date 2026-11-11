@@ -1,0 +1,320 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-event-report.jpg" as bgPhoto
+import "components/screen-header.elyx" as headers
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+import "components/ui.elyx" as ui
+import "icons/lucide/thumbs-up.svg" as thumbsUpIcon
+import "images/bg-add-concert.jpg" as photoA
+import "images/bg-event-upcoming.jpg" as photoB
+import "images/bg-add-type.jpg" as photoC
+import "icons/lucide/euro.svg" as euroIcon
+import "icons/lucide/thumbs-down.svg" as thumbsDownIcon
+
+// Fiche d'un event vu, avec son compte rendu : pouce global, avis d'une ligne, accompagnants, pouce par groupe, setlist.
+// Le compte rendu n'existe qu'une fois l'event marqué « Vu ». Dernier écran du parcours : retour à l'accueil par la flèche.
+export eventReport = frame {
+  title: "Fiche : compte rendu",
+  caption: "Event vu : pouces, avis, accompagnants, setlist. Rien n'est obligatoire.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: .auto,
+  layout: {direction: .column},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 45%)),
+          stop(40%, rgb(0%, 0%, 0%, 70%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 40px],
+  children: [header, body],
+
+  header = frame : headers.pageHeader {
+    padding-top: 8px,
+    padding-left: 8px,
+    padding-bottom: 0px,
+    padding-right: 8px,
+
+    pageTitle {
+      contents: "Compte rendu"
+    }
+  }
+
+  body = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 14px},
+    padding: [24px, 8px, 0px],
+    children: [
+      identity,
+      opinion,
+      companions,
+      bands,
+      setlist,
+      photos,
+      ticketCard
+    ],
+
+    identity = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 10px},
+      padding: [0px, 6px],
+      children: [badge, eventTitle, eventMeta],
+
+      badge = frame : ui.statusBadge {}
+
+      eventTitle = text {
+        width: 100%,
+        fill: c.colors.text-on-dark,
+        contents: "Messa",
+        font-size: 40,
+        font-family: f.fonts.ui,
+        font-style: "Medium",
+        line-height: 1,
+        letter-spacing: -3%
+      }
+
+      eventMeta = text {
+        width: 100%,
+        fill: c.colors.text-on-dark-muted,
+        contents: "Concert, Ven 19 mars 2026, Trix, Anvers",
+        font-size: 14,
+        font-family: f.fonts.ui
+      }
+    }
+
+    opinion = frame : ui.glassCard {
+      overrides: [
+        insert(thumbs, after = ui.glassCard.cardTitle),
+        insert(comment, after = thumbs)
+      ],
+
+      cardTitle {
+        contents: "Ton avis"
+      }
+
+      thumbs = frame {
+        width: 100%,
+        height: .auto,
+        layout: {item-gap: 10px},
+        children: [thumbUp, thumbDown],
+
+        thumbUp = frame : ui.thumbButtonOn {}
+
+        thumbDown = frame : ui.thumbButton {
+          thumbGlyph {
+            contents: thumbsDownIcon
+          }
+
+          thumbLabel {
+            contents: "Bof"
+          }
+        }
+      }
+
+      comment = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            display: .none
+          }
+
+          fieldValue {
+            contents: "Un mur de son, le rappel valait le déplacement."
+          }
+        }
+
+        fieldLabel {
+          contents: "En une ligne"
+        }
+      }
+    }
+
+    companions = frame : ui.glassCard {
+      overrides: [insert(people, after = ui.glassCard.cardTitle)],
+
+      cardTitle {
+        contents: "Avec qui ?"
+      }
+
+      people = frame {
+        width: 100%,
+        height: .auto,
+        layout: {item-gap: 8px, wrap: .true, line-gap: 8px},
+        children: [julie, marc, addPerson],
+
+        julie = frame : ui.chipOn {
+          chipLabel {
+            contents: "Julie"
+          }
+        }
+
+        marc = frame : ui.chipOn {
+          chipLabel {
+            contents: "Marc"
+          }
+        }
+
+        addPerson = frame : ui.chip {
+          chipLabel {
+            contents: "+ Prénom"
+          }
+        }
+      }
+    }
+
+    bands = frame : ui.glassCard {
+      overrides: [
+        insert(headliner, after = ui.glassCard.cardTitle),
+        insert(support, after = headliner)
+      ],
+
+      cardTitle {
+        contents: "Groupes"
+      }
+
+      headliner = frame : ui.lineupRow {
+        bandRemove {
+          fill[0].color: c.colors.text-on-dark,
+          contents: thumbsUpIcon
+        }
+
+        bandName {
+          contents: "Messa"
+        }
+      }
+
+      support = frame : ui.lineupRow {
+        bandRole {
+          fill[0].color: c.colors.glass-strong,
+          border[0].color: c.colors.border,
+
+          bandRoleLabel {
+            fill[0].color: c.colors.text-on-dark,
+            contents: "Première partie"
+          }
+        }
+
+        bandRemove {
+          contents: thumbsUpIcon
+        }
+
+        bandName {
+          contents: "Wiegedood"
+        }
+      }
+    }
+
+    setlist = frame : ui.glassCard {
+      overrides: [insert(songs, after = ui.glassCard.cardTitle)],
+
+      cardTitle {
+        contents: "Setlist de Messa"
+      }
+
+      songs = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 6px},
+        fill: c.colors.surface-dark,
+        border: c.colors.glass-border,
+        corner-radius: l.lengths.radius-m,
+        padding: 14px,
+        children: songsText,
+
+        songsText = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "1. Suspended in Lament\n2. Hour of the Wolf\n3. Leah\n4. Rubedo\n5. Immolation",
+          font-size: 15,
+          font-family: f.fonts.ui,
+          line-height: 1.45
+        }
+      }
+    }
+
+    photos = frame : ui.glassCard {
+      overrides: [insert(photoGrid, after = ui.glassCard.cardTitle)],
+
+      cardTitle {
+        contents: "Photos souvenirs"
+      }
+
+      photoGrid = frame {
+        width: 100%,
+        height: .auto,
+        layout: {item-gap: 9px, wrap: .true, line-gap: 9px},
+        children: [photo1, photo2, photo3, addPhoto],
+
+        photo1 = frame {
+          width: 100px,
+          height: 100px,
+          fill: {image: {ref: photoA}},
+          corner-radius: l.lengths.radius-m
+        }
+
+        photo2 = frame {
+          width: 100px,
+          height: 100px,
+          fill: {image: {ref: photoB}},
+          corner-radius: l.lengths.radius-m
+        }
+
+        photo3 = frame {
+          width: 100px,
+          height: 100px,
+          fill: {image: {ref: photoC}},
+          corner-radius: l.lengths.radius-m
+        }
+
+        addPhoto = frame : ui.photoAdd {}
+      }
+    }
+
+    ticketCard = frame : ui.glassCard {
+      overrides: [
+        insert(priceInfo, after = ui.glassCard.cardTitle),
+        insert(ticketFile, after = priceInfo)
+      ],
+
+      cardTitle {
+        contents: "Billet"
+      }
+
+      priceInfo = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: euroIcon
+          }
+
+          fieldValue {
+            contents: "38,00 €"
+          }
+        }
+
+        fieldLabel {
+          contents: "Prix du billet"
+        }
+      }
+
+      ticketFile = frame : ui.fileRow {
+        fileTexts {
+          fileName {
+            contents: "messa-billet.pdf"
+          }
+        }
+      }
+    }
+  }
+}

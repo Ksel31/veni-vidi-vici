@@ -1,100 +1,188 @@
-use "fonts/Archivo.ttf"
+use "fonts/CabinetGrotesk-Variable.ttf"
 
-import "components/event-card.elyx" as cards
+import "images/bg-history.jpg" as bgPhoto
+import "components/ui.elyx" as ui
 import "icons/lucide/x.svg" as crossIcon
 import "tokens/colors.elyx" as c
-import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
 import "components/tab-bar.elyx" as nav
+import "screens/event-report.elyx" as eventReport
 
-// Historique : une seule intention, retrouver les events passés, filtrés par année.
+// Historique : events vus et ratés, du plus récent au plus ancien, filtrés par année. Onglet « historique » actif.
 export history = frame {
   title: "Historique",
-  caption: "Events vus et ratés, du plus récent au plus ancien, filtrés par année.",
-  left: 1080px,
+  caption: "Vidi : tout ce qui est passé. Filtre par année ; un event vu mène à son compte rendu.",
+  left: 0px,
   top: 0px,
   width: 390px,
   height: 844px,
   layout: {direction: .column},
-  fill: c.colors.surface-screen,
-  children: [content, tabs, addButton],
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 55%)),
+          stop(40%, rgb(0%, 0%, 0%, 68%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 0px],
+  children: [top, list, bottomFade, tabs, addButton],
 
-  content = frame {
+  top = frame {
     width: 100%,
-    height: 100%,
-    layout: {direction: .column, item-gap: l.lengths.space-m},
-    padding: [28px, 20px, 0px],
-    children: [screenTitle, years, row1, row2, row3],
+    height: .auto,
+    layout: {direction: .column, item-gap: 18px},
+    padding: [32px, 6px, 0px],
+    children: [pageTitle, years],
 
-    screenTitle = text {
+    pageTitle = text {
       width: 100%,
-      fill: c.colors.ink,
+      fill: c.colors.text-on-dark,
       contents: "Historique",
-      font-size: 28,
+      font-size: 36,
       font-family: f.fonts.ui,
-      font-style: "Bold"
+      line-height: 1,
+      letter-spacing: -3%
     }
 
     years = frame {
       width: 100%,
       height: .auto,
       layout: {item-gap: 8px},
-      children: [yearAll, year2026, year2025],
+      children: [year2026, year2025, year2024],
 
-      yearAll = frame : cards.yearChip {
-        yearLabel {
-          contents: "Toutes"
+      year2026 = frame : ui.chipOn {
+        chipLabel {
+          contents: "2026"
         }
       }
 
-      year2026 = frame : cards.yearChipActive {}
-
-      year2025 = frame : cards.yearChip {}
-    }
-
-    row1 = frame : cards.historyCard {
-      info {
-        eventTitle {
-          contents: "Arcade Fire"
+      year2025 = frame : ui.chip {
+        chipLabel {
+          contents: "2025"
         }
+      }
 
-        eventMeta {
-          contents: "Concert | 3 octobre | Forest National, Bruxelles"
+      year2024 = frame : ui.chip {
+        chipLabel {
+          contents: "2024"
         }
       }
     }
+  }
 
-    row2 = frame : cards.historyCard {
-      status {
-        statusIcon {
-          contents: crossIcon
-        }
+  list = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 12px},
+    padding: [20px, 0px, 0px],
+    children: [dour, alcest, messa],
 
-        statusLabel {
-          contents: "Raté"
-        }
-      }
-
+    dour = frame : ui.pastRow {
       info {
         eventTitle {
           contents: "Dour Festival"
         }
 
         eventMeta {
-          contents: "Festival, 4 jours | 16 au 19 juillet | Dour"
+          contents: "Festival, 4 jours, Dour"
+        }
+      }
+
+      dateBlock {
+        dateDay {
+          contents: "16"
+        }
+
+        dateMonth {
+          contents: "JUIL"
         }
       }
     }
 
-    row3 = frame : cards.historyCard {
+    alcest = frame : ui.pastRow {
+      status {
+        fill[0].color: c.colors.danger-bg,
+        border[0].color: c.colors.danger-border,
+
+        badgeGlyph {
+          fill[0].color: c.colors.danger-text,
+          contents: crossIcon
+        }
+
+        badgeLabel {
+          fill[0].color: c.colors.danger-text,
+          contents: "Raté"
+        }
+      }
+
       info {
         eventTitle {
-          contents: "Pukkelpop"
+          contents: "Alcest"
         }
 
         eventMeta {
-          contents: "Festival, 3 jours | 14 au 16 août | Hasselt"
+          contents: "Botanique, Bruxelles"
         }
+      }
+
+      dateBlock {
+        dateDay {
+          contents: "02"
+        }
+
+        dateMonth {
+          contents: "MAI"
+        }
+      }
+    }
+
+    messa = frame : ui.pastRow {
+      connections[0].label: "Compte rendu",
+      connections[0].target: eventReport.eventReport,
+
+      info {
+        eventMeta {
+          contents: "Trix, Anvers"
+        }
+
+        eventTitle {
+          contents: "Messa"
+        }
+      }
+
+      dateBlock {
+        dateMonth {
+          contents: "MARS"
+        }
+
+        dateDay {
+          contents: "19"
+        }
+      }
+    }
+  }
+
+  // Fondu noir sous la barre d'onglets, comme sur l'accueil
+  bottomFade = frame {
+    left: 0px,
+    bottom: 0px,
+    width: 100%,
+    height: 190px,
+    ignore-stack: .true,
+    fill: {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(6.7%, 6.7%, 6.7%, 0%)),
+          stop(70%, rgb(6.7%, 6.7%, 6.7%, 92%))
+        ]
       }
     }
   }
@@ -105,18 +193,18 @@ export history = frame {
     ignore-stack: .true,
 
     tabHistory {
-      fill[0].color: c.colors.action,
+      fill[0].color: c.colors.light,
 
-      historyGlyph {
-        fill[0].color: c.colors.on-action
+      glyph {
+        fill[0].color: c.colors.neutral-1
       }
     }
 
     tabHome {
-      fill[0].color: c.colors.surface-card,
+      fill[0].color: .transparent,
 
-      homeGlyph {
-        fill[0].color: c.colors.ink
+      glyph {
+        fill[0].color: c.colors.text-on-dark
       }
     }
   }

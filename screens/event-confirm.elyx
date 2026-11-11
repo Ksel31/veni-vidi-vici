@@ -1,0 +1,174 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-event-confirm.jpg" as bgPhoto
+import "components/screen-header.elyx" as headers
+import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
+import "components/ui.elyx" as ui
+import "icons/lucide/x.svg" as crossIcon
+import "screens/event-report.elyx" as eventReport
+import "icons/lucide/calendar.svg" as calendarIcon
+import "icons/lucide/map-pin.svg" as mapPinIcon
+
+// Fiche d'un concert passé, encore « prévu » : on confirme la présence. « Vu » ouvre le compte rendu ;
+// « Raté » classe l'event dans l'historique, sans compte rendu. Les groupes suivent le statut de l'event.
+export eventConfirm = frame {
+  title: "Fiche : confirmer la présence (concert)",
+  caption: "Après la date : une seule question, « Tu y étais ? ». Les passages suivent la réponse.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 50%)),
+          stop(40%, rgb(0%, 0%, 0%, 64%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 40px],
+  children: [header, body],
+
+  header = frame : headers.pageHeader {
+    padding-top: 8px,
+    padding-left: 8px,
+    padding-bottom: 0px,
+    padding-right: 8px,
+
+    pageTitle {
+      contents: "Fiche de l'event"
+    }
+  }
+
+  body = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 14px},
+    padding: [24px, 8px, 0px],
+    children: [identity, infos, lineup, question],
+
+    identity = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 10px},
+      padding: [0px, 6px],
+      children: [badge, eventTitle],
+
+      badge = frame : ui.statusBadgePending {}
+
+      eventTitle = text {
+        width: 100%,
+        fill: c.colors.text-on-dark,
+        contents: "Wolves in the Throne Room",
+        font-size: 40,
+        font-family: f.fonts.ui,
+        font-style: "Medium",
+        line-height: 1,
+        letter-spacing: -3%
+      }
+    }
+
+    infos = frame : ui.glassCard {
+      overrides: [
+        insert(dateInfo, after = ui.glassCard.cardTitle),
+        insert(venueInfo, after = dateInfo)
+      ],
+
+      cardTitle {
+        display: .none
+      }
+
+      dateInfo = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: calendarIcon
+          }
+
+          fieldValue {
+            contents: "Mer 28 octobre 2026"
+          }
+        }
+
+        fieldLabel {
+          contents: "Date"
+        }
+      }
+
+      venueInfo = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: mapPinIcon
+          }
+
+          fieldValue {
+            contents: "Botanique, Bruxelles"
+          }
+        }
+
+        fieldLabel {
+          contents: "Lieu"
+        }
+      }
+    }
+
+    lineup = frame : ui.glassCard {
+      overrides: [insert(headliner, after = ui.glassCard.cardTitle)],
+
+      cardTitle {
+        contents: "Line-up"
+      }
+
+      headliner = frame : ui.lineupRow {
+        bandRemove {
+          display: .none
+        }
+
+        bandName {
+          contents: "Wolves in the Throne Room"
+        }
+      }
+    }
+
+    question = frame : ui.glassCard {
+      overrides: [insert(answers, after = ui.glassCard.cardTitle)],
+
+      cardTitle {
+        contents: "Tu y étais ?"
+      }
+
+      answers = frame {
+        width: 100%,
+        height: .auto,
+        layout: {item-gap: 12px},
+        children: [missed, seen],
+
+        missed = frame : ui.secondaryButton {
+          buttonGlyph {
+            contents: crossIcon
+          }
+
+          buttonLabel {
+            contents: "Raté"
+          }
+        }
+
+        seen = frame : ui.primaryButton {
+          connections[0].label: "Vu : compte rendu",
+          connections[0].target: eventReport.eventReport,
+
+          buttonLabel {
+            contents: "Vu"
+          }
+        }
+      }
+    }
+  }
+}

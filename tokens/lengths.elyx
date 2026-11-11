@@ -1,13 +1,15 @@
 export lengths = tokens {
-  space-s: 8px,
-  space-m: 16px,
-  space-l: 24px,
-
-  // Rayons : cartes et gros boutons 18, éléments à l'intérieur d'une carte 10, pastilles 6
-  radius-s: 6px,
-  radius-m: 10px,
-  radius-l: 18px,
-
-  line-width: 1px,
-  tap: 44px
+  space-s: 8,
+  space-m: 16,
+  space-l: 24,
+  // Rayons : pastilles 6, éléments dans une carte 10, cartes 18, cartes sur photo 24, pilules et boutons ronds 32
+  radius-s: 6,
+  radius-m: 10,
+  radius-l: 18,
+  // Cartes sur photo (verre sombre) et boutons ronds
+  radius-xl: 24,
+  radius-pill: 32,
+  line-width: 1,
+  focus-ring-width: 2,
+  tap: 44
 }

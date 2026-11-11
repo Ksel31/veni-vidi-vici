@@ -1,6 +1,7 @@
-// brand : ROYAL Hefana, uniquement pour le logo et le branding (illisible en interface).
-// ui : Archivo, pour tous les titres et textes de l'interface (gras pour les titres).
+// ui : Cabinet Grotesk (variable), seulement Regular et Medium, pour tout le texte de l'interface.
+// display : Wagon (Bold), pour les grands chiffres du billet (jour, mois).
 export fonts = tokens {
-  brand: "ROYAL Hefana",
-  ui: "Archivo"
+  ui: "Cabinet Grotesk Variable",
+  display: "Wagon",
+  brand: "Cabinet Grotesk Variable"
 }

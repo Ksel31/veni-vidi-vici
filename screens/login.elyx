@@ -1,0 +1,144 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-login.jpg" as bgPhoto
+import "components/screen-header.elyx" as headers
+import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
+import "components/ui.elyx" as ui
+import "icons/lucide/chevron-right.svg" as arrowIcon
+import "screens/home.elyx" as home
+import "icons/lucide/user.svg" as userIcon
+import "icons/lucide/lock.svg" as lockIcon
+
+// Connexion factice : n'importe quel identifiant fonctionne. Le logo en haut, le formulaire à portée du pouce, en bas.
+export login = frame {
+  title: "Connexion",
+  caption: "Étape 1 du parcours. Identifiant et mot de passe factices : n'importe quelle valeur mène à l'accueil.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 40%)),
+          stop(45%, rgb(0%, 0%, 0%, 55%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [32px, 12px, 40px],
+  children: [brand, form],
+
+  brand = frame : headers.brandHeader {
+    padding-top: 24px,
+    padding-left: 8px,
+    padding-bottom: 12px,
+    padding-right: 8px
+  }
+
+  form = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 20px},
+    padding: [0px, 8px],
+    children: [intro, fields, submit, note],
+
+    intro = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 8px},
+      children: [introTitle, introText],
+
+      introTitle = text {
+        width: 100%,
+        fill: c.colors.text-on-dark,
+        contents: "Veni, vidi, vici.",
+        font-size: 44,
+        font-family: f.fonts.ui,
+        font-style: "Medium",
+        line-height: 1,
+        letter-spacing: -3%
+      }
+
+      introText = text {
+        width: 100%,
+        fill: c.colors.text-on-dark-muted,
+        contents: "Tes concerts et festivals, à venir et déjà vécus.",
+        font-size: 16,
+        font-family: f.fonts.ui,
+        line-height: 1.3
+      }
+    }
+
+    fields = frame : ui.glassCard {
+      overrides: [
+        insert(loginField, after = ui.glassCard.cardTitle),
+        insert(passwordField, after = loginField)
+      ],
+
+      cardTitle {
+        display: .none
+      }
+
+      loginField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: userIcon
+          }
+
+          fieldValue {
+            contents: "axel"
+          }
+        }
+
+        fieldLabel {
+          contents: "Identifiant"
+        }
+      }
+
+      passwordField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: lockIcon
+          }
+
+          fieldValue {
+            contents: "••••••••"
+          }
+        }
+
+        fieldLabel {
+          contents: "Mot de passe"
+        }
+      }
+    }
+
+    submit = frame : ui.primaryButton {
+      connections[0].label: "Se connecter",
+      connections[0].target: home.home,
+
+      buttonGlyph {
+        contents: arrowIcon
+      }
+
+      buttonLabel {
+        contents: "Se connecter"
+      }
+    }
+
+    note = text {
+      width: 100%,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Phase 1 : prototype, aucun compte réel.",
+      font-size: 13,
+      font-family: f.fonts.ui
+    }
+  }
+}

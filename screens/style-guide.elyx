@@ -1,247 +1,2593 @@
-use "fonts/ROYALHefanaRegular.woff"
-use "fonts/Archivo.ttf"
+use "fonts/CabinetGrotesk-Variable.ttf"
+use "fonts/Wagon-Bold.otf"
 
+import "images/hero-cowboy.jpg" as headerPhoto
+import "images/hero-bass.jpg" as componentsPhoto
+import "images/logo-white.svg" as logoImage
+import "components/event-card.elyx" as cards
+import "icons/lucide/chevron-right.svg" as chevronRightIcon
+import "icons/lucide/check.svg" as checkIcon
+import "icons/lucide/x.svg" as xIcon
+import "icons/lucide/ticket.svg" as ticketIcon
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
+import "components/profile.elyx" as profileParts
+import "icons/lucide/search.svg" as searchIcon
+import "components/tab-bar.elyx" as nav
 import "icons/lucide/house.svg" as houseIcon
 import "icons/lucide/history.svg" as historyIcon
 import "icons/lucide/plus.svg" as plusIcon
+import "components/screen-header.elyx" as headers
+import "icons/lucide/arrow-left.svg" as arrowLeftIcon
 import "icons/lucide/calendar.svg" as calendarIcon
 import "icons/lucide/map-pin.svg" as mapPinIcon
-import "icons/lucide/ticket.svg" as ticketIcon
 import "icons/lucide/music.svg" as musicIcon
 import "icons/lucide/users.svg" as usersIcon
 import "icons/lucide/thumbs-up.svg" as thumbsUpIcon
 import "icons/lucide/thumbs-down.svg" as thumbsDownIcon
-import "icons/lucide/check.svg" as checkIcon
-import "icons/lucide/x.svg" as xIcon
-import "icons/lucide/arrow-left.svg" as arrowLeftIcon
-import "icons/lucide/chevron-right.svg" as chevronRightIcon
 import "icons/lucide/chevron-down.svg" as chevronDownIcon
 
-// Style guide : palette, typographies, icônes (Lucide), formes et composants.
-// Règles : un écran = une intention ; le fond et les cartes ne sont jamais de la couleur d'action ;
-// l'encre est l'action secondaire ; la police de marque ne sert que pour le logo.
+// Style guide Veni Vidi Vici : palette, typographies, icônes, formes, effets et composants (instances vivantes du design system).
+// Règles : interface sombre sur photo de concert ; le vert est rare (billet, « + », alerte) ; texte en Cabinet Grotesk Regular ou Medium seulement ;
+// Wagon uniquement pour les grands chiffres du billet ; icônes Lucide à trait de 2 px.
 export styleGuide = frame {
   title: "Style guide",
-  caption: "Palette, typographies, icônes Lucide, formes et composants de Veni Vidi Vici.",
-  left: 0px,
-  top: 1100px,
+  caption: "Palette, typographies, icônes Lucide, formes, effets et composants de Veni Vidi Vici.",
+  left: 540px,
+  top: 0px,
   width: 720px,
   height: .auto,
   layout: {direction: .column},
-  fill: c.colors.paper,
-  children: [header, colors, typography, icons, shapes],
+  fill: c.colors.neutral-1,
+  corner-radius: 24px,
+  children: [
+    header,
+    colors,
+    states,
+    typography,
+    icons,
+    shapes,
+    effects,
+    components
+  ],
 
   header = frame {
     width: 100%,
     height: .auto,
-    layout: {direction: .row},
-    fill: c.colors.brand,
-    padding: [48px, 24px],
-    children: headerTitle,
+    layout: {justify-content: .space-between, align-items: .center},
+    fill: [
+      {
+        image: {
+          ref: headerPhoto,
+          sizing: {scale: 0.2368, offset: [0px, -207.09px]}
+        }
+      },
+      {
+        linear-gradient: {
+          angle: 180deg,
+          stops: [
+            stop(0%, rgb(0%, 0%, 0%, 35%)),
+            stop(100%, c.colors.neutral-1)
+          ]
+        }
+      }
+    ],
+    padding: [64px, 32px, 40px],
+    children: [headerLogo, headerTitle],
+
+    headerLogo = asset {
+      width: 180px,
+      height: 64px,
+      contents: logoImage
+    }
 
     headerTitle = text {
-      transform: [1, -0.2, 17, 0, 1, 0],
-      fill: c.colors.ink,
-      contents: "VENI VIDI VICI",
-      font-size: 72,
-      font-family: f.fonts.brand
+      fill: c.colors.text-on-dark,
+      contents: "Style guide",
+      font-size: 40,
+      font-family: f.fonts.ui,
+      font-style: "Medium",
+      letter-spacing: -3%
     }
   }
 
   colors = frame {
     width: 100%,
     height: .auto,
-    layout: {direction: .column, item-gap: l.lengths.space-m},
-    padding: l.lengths.space-l,
-    children: [colorsTitle, colorsNote, colorRow],
+    layout: {direction: .column, item-gap: 20px},
+    padding: [40px, 32px],
+    children: [
+      colorsTitle,
+      colorsNote,
+      neutralScale,
+      limeScale,
+      redScale,
+      amberScale,
+      greenScale,
+      pairsTitle,
+      pairsNote,
+      pairList
+    ],
 
     colorsTitle = text {
-      fill: c.colors.ink,
+      fill: c.colors.text-on-dark,
       contents: "Couleurs",
-      font-size: 28,
+      font-size: 32,
       font-family: f.fonts.ui,
-      font-style: "Bold"
+      font-style: "Medium"
     }
 
     colorsNote = text {
       width: 100%,
-      fill: c.colors.ink,
-      contents: "Le fond d'écran et les cartes ne sont jamais de la couleur d'action : le rose est le fond d'écran et la marque, l'encre porte les actions.",
+      fill: c.colors.text-on-dark,
+      contents: "Cinq échelles de 12 steps (méthode Radix Colors). 1-2 fonds · 3-5 composants · 6-8 bordures · 9-10 aplats pleins · 11-12 textes. Le lime n'est jamais un aplat de fond d'écran. Rouge, ambre et vert disent un état, jamais de la décoration.",
       font-size: 16,
-      font-family: f.fonts.ui
+      font-family: f.fonts.ui,
+      line-height: 1.35
     }
 
-    colorRow = frame {
+    neutralScale = frame {
       width: 100%,
       height: .auto,
-      layout: {item-gap: l.lengths.space-m},
-      children: [pinkSwatch, inkSwatch, paperSwatch, whiteSwatch],
+      layout: {direction: .column, item-gap: 8px},
+      children: [neutralLabel, neutralRow],
 
-      pinkSwatch = frame {
-        width: 156px,
+      neutralLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "Neutre · fonds, bordures, textes",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      neutralRow = frame {
+        width: 100%,
         height: .auto,
-        layout: {direction: .column, item-gap: 8px},
+        layout: {justify-content: .space-between},
         children: [
-          pinkSwatchChip,
-          pinkSwatchName,
-          pinkSwatchHex,
-          pinkSwatchRole
+          neutralStep1,
+          neutralStep2,
+          neutralStep3,
+          neutralStep4,
+          neutralStep5,
+          neutralStep6,
+          neutralStep7,
+          neutralStep8,
+          neutralStep9,
+          neutralStep10,
+          neutralStep11,
+          neutralStep12
         ],
 
-        pinkSwatchChip = frame {
-          width: 100%,
-          height: 96px,
-          fill: c.colors.pink,
-          corner-radius: l.lengths.radius-l
+        neutralStep1 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep1Chip, neutralStep1Num],
+
+          neutralStep1Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-1,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep1Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "1",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
         }
 
-        pinkSwatchName = text {
-          fill: c.colors.ink,
-          contents: "Rose",
+        neutralStep2 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep2Chip, neutralStep2Num],
+
+          neutralStep2Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-2,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep2Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "2",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        neutralStep3 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep3Chip, neutralStep3Num],
+
+          neutralStep3Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-3,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep3Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "3",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        neutralStep4 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep4Chip, neutralStep4Num],
+
+          neutralStep4Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-4,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep4Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "4",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        neutralStep5 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep5Chip, neutralStep5Num],
+
+          neutralStep5Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-5,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep5Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "5",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        neutralStep6 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep6Chip, neutralStep6Num],
+
+          neutralStep6Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-6,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep6Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "6",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        neutralStep7 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep7Chip, neutralStep7Num],
+
+          neutralStep7Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-7,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep7Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "7",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        neutralStep8 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep8Chip, neutralStep8Num],
+
+          neutralStep8Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-8,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep8Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "8",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        neutralStep9 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep9Chip, neutralStep9Num],
+
+          neutralStep9Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-9,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep9Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "9",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        neutralStep10 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep10Chip, neutralStep10Num],
+
+          neutralStep10Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-10,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep10Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "10",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        neutralStep11 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep11Chip, neutralStep11Num],
+
+          neutralStep11Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-11,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep11Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "11",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        neutralStep12 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [neutralStep12Chip, neutralStep12Num],
+
+          neutralStep12Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.neutral-12,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          neutralStep12Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "12",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+      }
+    }
+
+    limeScale = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 8px},
+      children: [limeLabel, limeRow],
+
+      limeLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "Lime · la marque, rare",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      limeRow = frame {
+        width: 100%,
+        height: .auto,
+        layout: {justify-content: .space-between},
+        children: [
+          limeStep1,
+          limeStep2,
+          limeStep3,
+          limeStep4,
+          limeStep5,
+          limeStep6,
+          limeStep7,
+          limeStep8,
+          limeStep9,
+          limeStep10,
+          limeStep11,
+          limeStep12
+        ],
+
+        limeStep1 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep1Chip, limeStep1Num],
+
+          limeStep1Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-1,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep1Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "1",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep2 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep2Chip, limeStep2Num],
+
+          limeStep2Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-2,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep2Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "2",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep3 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep3Chip, limeStep3Num],
+
+          limeStep3Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-3,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep3Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "3",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep4 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep4Chip, limeStep4Num],
+
+          limeStep4Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-4,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep4Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "4",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep5 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep5Chip, limeStep5Num],
+
+          limeStep5Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-5,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep5Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "5",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep6 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep6Chip, limeStep6Num],
+
+          limeStep6Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-6,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep6Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "6",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep7 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep7Chip, limeStep7Num],
+
+          limeStep7Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-7,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep7Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "7",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep8 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep8Chip, limeStep8Num],
+
+          limeStep8Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-8,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep8Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "8",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep9 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep9Chip, limeStep9Num],
+
+          limeStep9Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-9,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep9Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "9",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep10 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep10Chip, limeStep10Num],
+
+          limeStep10Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-10,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep10Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "10",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep11 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep11Chip, limeStep11Num],
+
+          limeStep11Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-11,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep11Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "11",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        limeStep12 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [limeStep12Chip, limeStep12Num],
+
+          limeStep12Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.lime-12,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          limeStep12Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "12",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+      }
+    }
+
+    redScale = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 8px},
+      children: [redLabel, redRow],
+
+      redLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "Rouge · danger, raté",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      redRow = frame {
+        width: 100%,
+        height: .auto,
+        layout: {justify-content: .space-between},
+        children: [
+          redStep1,
+          redStep2,
+          redStep3,
+          redStep4,
+          redStep5,
+          redStep6,
+          redStep7,
+          redStep8,
+          redStep9,
+          redStep10,
+          redStep11,
+          redStep12
+        ],
+
+        redStep1 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep1Chip, redStep1Num],
+
+          redStep1Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-1,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep1Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "1",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep2 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep2Chip, redStep2Num],
+
+          redStep2Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-2,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep2Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "2",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep3 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep3Chip, redStep3Num],
+
+          redStep3Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-3,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep3Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "3",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep4 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep4Chip, redStep4Num],
+
+          redStep4Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-4,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep4Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "4",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep5 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep5Chip, redStep5Num],
+
+          redStep5Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-5,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep5Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "5",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep6 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep6Chip, redStep6Num],
+
+          redStep6Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-6,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep6Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "6",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep7 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep7Chip, redStep7Num],
+
+          redStep7Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-7,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep7Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "7",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep8 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep8Chip, redStep8Num],
+
+          redStep8Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-8,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep8Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "8",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep9 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep9Chip, redStep9Num],
+
+          redStep9Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-9,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep9Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "9",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep10 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep10Chip, redStep10Num],
+
+          redStep10Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-10,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep10Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "10",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep11 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep11Chip, redStep11Num],
+
+          redStep11Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-11,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep11Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "11",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        redStep12 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [redStep12Chip, redStep12Num],
+
+          redStep12Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.red-12,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          redStep12Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "12",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+      }
+    }
+
+    amberScale = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 8px},
+      children: [amberLabel, amberRow],
+
+      amberLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "Ambre · à confirmer, alerte",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      amberRow = frame {
+        width: 100%,
+        height: .auto,
+        layout: {justify-content: .space-between},
+        children: [
+          amberStep1,
+          amberStep2,
+          amberStep3,
+          amberStep4,
+          amberStep5,
+          amberStep6,
+          amberStep7,
+          amberStep8,
+          amberStep9,
+          amberStep10,
+          amberStep11,
+          amberStep12
+        ],
+
+        amberStep1 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep1Chip, amberStep1Num],
+
+          amberStep1Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-1,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep1Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "1",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep2 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep2Chip, amberStep2Num],
+
+          amberStep2Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-2,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep2Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "2",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep3 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep3Chip, amberStep3Num],
+
+          amberStep3Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-3,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep3Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "3",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep4 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep4Chip, amberStep4Num],
+
+          amberStep4Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-4,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep4Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "4",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep5 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep5Chip, amberStep5Num],
+
+          amberStep5Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-5,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep5Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "5",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep6 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep6Chip, amberStep6Num],
+
+          amberStep6Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-6,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep6Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "6",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep7 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep7Chip, amberStep7Num],
+
+          amberStep7Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-7,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep7Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "7",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep8 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep8Chip, amberStep8Num],
+
+          amberStep8Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-8,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep8Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "8",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep9 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep9Chip, amberStep9Num],
+
+          amberStep9Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-9,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep9Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "9",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep10 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep10Chip, amberStep10Num],
+
+          amberStep10Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-10,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep10Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "10",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep11 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep11Chip, amberStep11Num],
+
+          amberStep11Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-11,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep11Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "11",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        amberStep12 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [amberStep12Chip, amberStep12Num],
+
+          amberStep12Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.amber-12,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          amberStep12Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "12",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+      }
+    }
+
+    greenScale = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 8px},
+      children: [greenLabel, greenRow],
+
+      greenLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "Vert · succès, vu",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      greenRow = frame {
+        width: 100%,
+        height: .auto,
+        layout: {justify-content: .space-between},
+        children: [
+          greenStep1,
+          greenStep2,
+          greenStep3,
+          greenStep4,
+          greenStep5,
+          greenStep6,
+          greenStep7,
+          greenStep8,
+          greenStep9,
+          greenStep10,
+          greenStep11,
+          greenStep12
+        ],
+
+        greenStep1 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep1Chip, greenStep1Num],
+
+          greenStep1Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-1,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep1Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "1",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep2 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep2Chip, greenStep2Num],
+
+          greenStep2Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-2,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep2Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "2",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep3 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep3Chip, greenStep3Num],
+
+          greenStep3Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-3,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep3Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "3",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep4 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep4Chip, greenStep4Num],
+
+          greenStep4Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-4,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep4Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "4",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep5 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep5Chip, greenStep5Num],
+
+          greenStep5Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-5,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep5Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "5",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep6 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep6Chip, greenStep6Num],
+
+          greenStep6Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-6,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep6Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "6",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep7 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep7Chip, greenStep7Num],
+
+          greenStep7Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-7,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep7Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "7",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep8 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep8Chip, greenStep8Num],
+
+          greenStep8Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-8,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep8Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "8",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep9 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep9Chip, greenStep9Num],
+
+          greenStep9Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-9,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep9Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "9",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep10 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep10Chip, greenStep10Num],
+
+          greenStep10Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-10,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep10Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "10",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep11 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep11Chip, greenStep11Num],
+
+          greenStep11Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-11,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep11Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "11",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+
+        greenStep12 = frame {
+          width: 48px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 4px},
+          children: [greenStep12Chip, greenStep12Num],
+
+          greenStep12Chip = frame {
+            width: 48px,
+            height: 48px,
+            fill: c.colors.green-12,
+            border: c.colors.glass-border,
+            corner-radius: 6px
+          }
+
+          greenStep12Num = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "12",
+            font-size: 12,
+            font-family: f.fonts.ui
+          }
+        }
+      }
+    }
+
+    pairsTitle = text {
+      fill: c.colors.text-on-dark,
+      contents: "Paires validées",
+      font-size: 24,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    pairsNote = text {
+      width: 100%,
+      fill: c.colors.text-on-dark,
+      contents: "Rapport de contraste WCAG entre un texte et son fond. Minimum visé : 4,5:1. Sur un aplat step 9, le texte est toujours neutral-1.",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      line-height: 1.35
+    }
+
+    pairList = frame {
+      width: 100%,
+      height: .auto,
+      layout: {item-gap: 12px, wrap: .true},
+      children: [
+        pair0,
+        pair1,
+        pair2,
+        pair3,
+        pair4,
+        pair5,
+        pair6,
+        pair7,
+        pair8,
+        pair9
+      ],
+
+      pair0 = frame {
+        width: 316px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 2px},
+        fill: c.colors.surface-dark,
+        border: c.colors.glass-border,
+        corner-radius: 10px,
+        padding: 12px,
+        children: [pair0Title, pair0Meta],
+
+        pair0Title = text {
+          fill: c.colors.text-on-dark,
+          contents: "Texte principal",
           font-size: 16,
           font-family: f.fonts.ui,
-          font-style: "Bold"
+          font-style: "Medium"
         }
 
-        pinkSwatchHex = text {
-          fill: c.colors.ink,
-          contents: "#FF0088",
-          font-size: 14,
-          font-family: f.fonts.ui
-        }
-
-        pinkSwatchRole = text {
-          width: 100%,
-          fill: c.colors.ink,
-          contents: "Fond d'écran, marque.",
-          font-size: 14,
+        pair0Meta = text {
+          fill: c.colors.text-on-dark,
+          contents: "text-on-dark sur surface-dark · 16,1:1",
+          font-size: 13,
           font-family: f.fonts.ui
         }
       }
 
-      inkSwatch = frame {
-        width: 156px,
+      pair1 = frame {
+        width: 316px,
         height: .auto,
-        layout: {direction: .column, item-gap: 8px},
-        children: [inkSwatchChip, inkSwatchName, inkSwatchHex, inkSwatchRole],
+        layout: {direction: .column, item-gap: 2px},
+        fill: c.colors.neutral-2,
+        border: c.colors.glass-border,
+        corner-radius: 10px,
+        padding: 12px,
+        children: [pair1Title, pair1Meta],
 
-        inkSwatchChip = frame {
-          width: 100%,
-          height: 96px,
-          fill: c.colors.ink,
-          corner-radius: l.lengths.radius-l
-        }
-
-        inkSwatchName = text {
-          fill: c.colors.ink,
-          contents: "Encre",
+        pair1Title = text {
+          fill: c.colors.text-on-dark-muted,
+          contents: "Texte secondaire",
           font-size: 16,
           font-family: f.fonts.ui,
-          font-style: "Bold"
+          font-style: "Medium"
         }
 
-        inkSwatchHex = text {
-          fill: c.colors.ink,
-          contents: "#2B1118",
-          font-size: 14,
-          font-family: f.fonts.ui
-        }
-
-        inkSwatchRole = text {
-          width: 100%,
-          fill: c.colors.ink,
-          contents: "Texte, icônes, actions.",
-          font-size: 14,
+        pair1Meta = text {
+          fill: c.colors.text-on-dark-muted,
+          contents: "text-on-dark-muted sur neutral-2 · 8,4:1",
+          font-size: 13,
           font-family: f.fonts.ui
         }
       }
 
-      paperSwatch = frame {
-        width: 156px,
+      pair2 = frame {
+        width: 316px,
         height: .auto,
-        layout: {direction: .column, item-gap: 8px},
-        children: [
-          paperSwatchChip,
-          paperSwatchName,
-          paperSwatchHex,
-          paperSwatchRole
-        ],
+        layout: {direction: .column, item-gap: 2px},
+        fill: c.colors.lime-2,
+        border: c.colors.glass-border,
+        corner-radius: 10px,
+        padding: 12px,
+        children: [pair2Title, pair2Meta],
 
-        paperSwatchChip = frame {
-          width: 100%,
-          height: 96px,
-          fill: c.colors.paper,
-          border: c.colors.ink,
-          corner-radius: l.lengths.radius-l
-        }
-
-        paperSwatchName = text {
-          fill: c.colors.ink,
-          contents: "Papier",
+        pair2Title = text {
+          fill: c.colors.text-accent,
+          contents: "Texte lime",
           font-size: 16,
           font-family: f.fonts.ui,
-          font-style: "Bold"
+          font-style: "Medium"
         }
 
-        paperSwatchHex = text {
-          fill: c.colors.ink,
-          contents: "#F5F1EA",
-          font-size: 14,
-          font-family: f.fonts.ui
-        }
-
-        paperSwatchRole = text {
-          width: 100%,
-          fill: c.colors.ink,
-          contents: "Pastilles d'information.",
-          font-size: 14,
+        pair2Meta = text {
+          fill: c.colors.text-accent,
+          contents: "text-accent sur lime-2 · 12,3:1",
+          font-size: 13,
           font-family: f.fonts.ui
         }
       }
 
-      whiteSwatch = frame {
-        width: 156px,
+      pair3 = frame {
+        width: 316px,
         height: .auto,
-        layout: {direction: .column, item-gap: 8px},
-        children: [
-          whiteSwatchChip,
-          whiteSwatchName,
-          whiteSwatchHex,
-          whiteSwatchRole
-        ],
+        layout: {direction: .column, item-gap: 2px},
+        fill: c.colors.cta,
+        border: c.colors.glass-border,
+        corner-radius: 10px,
+        padding: 12px,
+        children: [pair3Title, pair3Meta],
 
-        whiteSwatchChip = frame {
-          width: 100%,
-          height: 96px,
-          fill: c.colors.white,
-          border: c.colors.ink,
-          corner-radius: l.lengths.radius-l
-        }
-
-        whiteSwatchName = text {
-          fill: c.colors.ink,
-          contents: "Blanc",
+        pair3Title = text {
+          fill: c.colors.on-cta,
+          contents: "Bouton « + »",
           font-size: 16,
           font-family: f.fonts.ui,
-          font-style: "Bold"
+          font-style: "Medium"
         }
 
-        whiteSwatchHex = text {
-          fill: c.colors.ink,
-          contents: "#FFFFFF",
-          font-size: 14,
+        pair3Meta = text {
+          fill: c.colors.on-cta,
+          contents: "on-cta sur cta · 15,2:1",
+          font-size: 13,
           font-family: f.fonts.ui
         }
+      }
 
-        whiteSwatchRole = text {
+      pair4 = frame {
+        width: 316px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 2px},
+        fill: c.colors.danger-bg,
+        border: c.colors.glass-border,
+        corner-radius: 10px,
+        padding: 12px,
+        children: [pair4Title, pair4Meta],
+
+        pair4Title = text {
+          fill: c.colors.danger-text,
+          contents: "Danger · raté",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        pair4Meta = text {
+          fill: c.colors.danger-text,
+          contents: "danger-text sur danger-bg · 7,7:1",
+          font-size: 13,
+          font-family: f.fonts.ui
+        }
+      }
+
+      pair5 = frame {
+        width: 316px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 2px},
+        fill: c.colors.danger,
+        border: c.colors.glass-border,
+        corner-radius: 10px,
+        padding: 12px,
+        children: [pair5Title, pair5Meta],
+
+        pair5Title = text {
+          fill: c.colors.on-danger,
+          contents: "Danger plein",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        pair5Meta = text {
+          fill: c.colors.on-danger,
+          contents: "on-danger sur danger · 4,8:1",
+          font-size: 13,
+          font-family: f.fonts.ui
+        }
+      }
+
+      pair6 = frame {
+        width: 316px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 2px},
+        fill: c.colors.warning-bg,
+        border: c.colors.glass-border,
+        corner-radius: 10px,
+        padding: 12px,
+        children: [pair6Title, pair6Meta],
+
+        pair6Title = text {
+          fill: c.colors.warning-text,
+          contents: "Alerte · à confirmer",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        pair6Meta = text {
+          fill: c.colors.warning-text,
+          contents: "warning-text sur warning-bg · 10,3:1",
+          font-size: 13,
+          font-family: f.fonts.ui
+        }
+      }
+
+      pair7 = frame {
+        width: 316px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 2px},
+        fill: c.colors.warning,
+        border: c.colors.glass-border,
+        corner-radius: 10px,
+        padding: 12px,
+        children: [pair7Title, pair7Meta],
+
+        pair7Title = text {
+          fill: c.colors.on-warning,
+          contents: "Alerte pleine",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        pair7Meta = text {
+          fill: c.colors.on-warning,
+          contents: "on-warning sur warning · 11,9:1",
+          font-size: 13,
+          font-family: f.fonts.ui
+        }
+      }
+
+      pair8 = frame {
+        width: 316px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 2px},
+        fill: c.colors.success-bg,
+        border: c.colors.glass-border,
+        corner-radius: 10px,
+        padding: 12px,
+        children: [pair8Title, pair8Meta],
+
+        pair8Title = text {
+          fill: c.colors.success-text,
+          contents: "Succès · vu",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        pair8Meta = text {
+          fill: c.colors.success-text,
+          contents: "success-text sur success-bg · 7,9:1",
+          font-size: 13,
+          font-family: f.fonts.ui
+        }
+      }
+
+      pair9 = frame {
+        width: 316px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 2px},
+        fill: c.colors.success,
+        border: c.colors.glass-border,
+        corner-radius: 10px,
+        padding: 12px,
+        children: [pair9Title, pair9Meta],
+
+        pair9Title = text {
+          fill: c.colors.on-success,
+          contents: "Succès plein",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        pair9Meta = text {
+          fill: c.colors.on-success,
+          contents: "on-success sur success · 6,0:1",
+          font-size: 13,
+          font-family: f.fonts.ui
+        }
+      }
+    }
+  }
+
+  states = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 20px},
+    padding: [40px, 32px],
+    children: [
+      statesTitle,
+      statesNote,
+      addBtnGroup,
+      searchBtnGroup,
+      glassBtnGroup,
+      tabItmGroup,
+      tabActiveGroup,
+      eventRowGroup
+    ],
+
+    statesTitle = text {
+      fill: c.colors.text-on-dark,
+      contents: "États",
+      font-size: 32,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    statesNote = text {
+      width: 100%,
+      fill: c.colors.text-on-dark,
+      contents: "Tout élément cliquable a cinq états. Survol = step 4 (pointeur seulement, jamais sur mobile). Pressé = step 5. Focus clavier = anneau neutral-12 de 2 px posé à l'extérieur, jamais retiré. Désactivé = icône step 9 sur fond step 4, sans contraste exigé mais jamais seul pour dire « indisponible ». Zone tactile minimale : 44 px (les boutons font 48 px). Un état n'est jamais porté par la couleur seule.",
+      font-size: 16,
+      font-family: f.fonts.ui,
+      line-height: 1.35
+    }
+
+    addBtnGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [addBtnLabel, addBtnRow],
+
+      addBtnLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "addButton · bouton « + »",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      addBtnRow = frame {
+        width: 100%,
+        height: .auto,
+        layout: {justify-content: .space-between, align-items: .center},
+        fill: c.colors.glass,
+        border: c.colors.glass-border,
+        corner-radius: 18px,
+        padding: [16px, 12px],
+        children: [addBtn0, addBtn1, addBtn2, addBtn3, addBtn4],
+
+        addBtn0 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [addBtn0Sample, addBtn0Cap],
+
+          addBtn0Sample = frame : nav.addButton {
+            left: 0px,
+            top: 0px
+          }
+
+          addBtn0Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Défaut",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        addBtn1 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [addBtn1Sample, addBtn1Cap],
+
+          addBtn1Sample = frame : nav.addButtonHover {
+            left: 0px,
+            top: 0px
+          }
+
+          addBtn1Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Survol",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        addBtn2 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [addBtn2Sample, addBtn2Cap],
+
+          addBtn2Sample = frame : nav.addButtonPressed {
+            left: 0px,
+            top: 0px
+          }
+
+          addBtn2Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Pressé",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        addBtn3 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [addBtn3Sample, addBtn3Cap],
+
+          addBtn3Sample = frame : nav.addButtonFocus {
+            left: 0px,
+            top: 0px
+          }
+
+          addBtn3Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Focus",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        addBtn4 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [addBtn4Sample, addBtn4Cap],
+
+          addBtn4Sample = frame : nav.addButtonDisabled {
+            left: 0px,
+            top: 0px
+          }
+
+          addBtn4Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Désactivé",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+      }
+    }
+
+    searchBtnGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [searchBtnLabel, searchBtnRow],
+
+      searchBtnLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "searchButton · recherche",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      searchBtnRow = frame {
+        width: 100%,
+        height: .auto,
+        layout: {justify-content: .space-between, align-items: .center},
+        fill: c.colors.glass,
+        border: c.colors.glass-border,
+        corner-radius: 18px,
+        padding: [16px, 12px],
+        children: [searchBtn0, searchBtn1, searchBtn2, searchBtn3, searchBtn4],
+
+        searchBtn0 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [searchBtn0Sample, searchBtn0Cap],
+
+          searchBtn0Sample = frame : profileParts.searchButton {
+            left: 0px,
+            top: 0px
+          }
+
+          searchBtn0Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Défaut",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        searchBtn1 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [searchBtn1Sample, searchBtn1Cap],
+
+          searchBtn1Sample = frame : profileParts.searchButtonHover {
+            left: 0px,
+            top: 0px
+          }
+
+          searchBtn1Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Survol",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        searchBtn2 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [searchBtn2Sample, searchBtn2Cap],
+
+          searchBtn2Sample = frame : profileParts.searchButtonPressed {
+            left: 0px,
+            top: 0px
+          }
+
+          searchBtn2Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Pressé",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        searchBtn3 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [searchBtn3Sample, searchBtn3Cap],
+
+          searchBtn3Sample = frame : profileParts.searchButtonFocus {
+            left: 0px,
+            top: 0px
+          }
+
+          searchBtn3Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Focus",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        searchBtn4 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [searchBtn4Sample, searchBtn4Cap],
+
+          searchBtn4Sample = frame : profileParts.searchButtonDisabled {
+            left: 0px,
+            top: 0px
+          }
+
+          searchBtn4Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Désactivé",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+      }
+    }
+
+    glassBtnGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [glassBtnLabel, glassBtnRow],
+
+      glassBtnLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "glassButton · retour, fermer",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      glassBtnRow = frame {
+        width: 100%,
+        height: .auto,
+        layout: {justify-content: .space-between, align-items: .center},
+        fill: c.colors.glass,
+        border: c.colors.glass-border,
+        corner-radius: 18px,
+        padding: [16px, 12px],
+        children: [glassBtn0, glassBtn1, glassBtn2, glassBtn3, glassBtn4],
+
+        glassBtn0 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [glassBtn0Sample, glassBtn0Cap],
+
+          glassBtn0Sample = frame : headers.glassButton {
+            left: 0px,
+            top: 0px
+          }
+
+          glassBtn0Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Défaut",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        glassBtn1 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [glassBtn1Sample, glassBtn1Cap],
+
+          glassBtn1Sample = frame : headers.glassButtonHover {
+            left: 0px,
+            top: 0px
+          }
+
+          glassBtn1Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Survol",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        glassBtn2 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [glassBtn2Sample, glassBtn2Cap],
+
+          glassBtn2Sample = frame : headers.glassButtonPressed {
+            left: 0px,
+            top: 0px
+          }
+
+          glassBtn2Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Pressé",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        glassBtn3 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [glassBtn3Sample, glassBtn3Cap],
+
+          glassBtn3Sample = frame : headers.glassButtonFocus {
+            left: 0px,
+            top: 0px
+          }
+
+          glassBtn3Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Focus",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        glassBtn4 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [glassBtn4Sample, glassBtn4Cap],
+
+          glassBtn4Sample = frame : headers.glassButtonDisabled {
+            left: 0px,
+            top: 0px
+          }
+
+          glassBtn4Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Désactivé",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+      }
+    }
+
+    tabItmGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [tabItmLabel, tabItmRow],
+
+      tabItmLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "tabItem · onglet inactif",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      tabItmRow = frame {
+        width: 100%,
+        height: .auto,
+        layout: {justify-content: .space-between, align-items: .center},
+        fill: c.colors.glass,
+        border: c.colors.glass-border,
+        corner-radius: 18px,
+        padding: [16px, 12px],
+        children: [tabItm0, tabItm1, tabItm2, tabItm3, tabItm4],
+
+        tabItm0 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [tabItm0Sample, tabItm0Cap],
+
+          tabItm0Sample = frame : nav.tabItem {
+            left: 0px,
+            top: 0px
+          }
+
+          tabItm0Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Défaut",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        tabItm1 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [tabItm1Sample, tabItm1Cap],
+
+          tabItm1Sample = frame : nav.tabItemHover {
+            left: 0px,
+            top: 0px
+          }
+
+          tabItm1Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Survol",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        tabItm2 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [tabItm2Sample, tabItm2Cap],
+
+          tabItm2Sample = frame : nav.tabItemPressed {
+            left: 0px,
+            top: 0px
+          }
+
+          tabItm2Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Pressé",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        tabItm3 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [tabItm3Sample, tabItm3Cap],
+
+          tabItm3Sample = frame : nav.tabItemFocus {
+            left: 0px,
+            top: 0px
+          }
+
+          tabItm3Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Focus",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+
+        tabItm4 = frame {
+          width: 112px,
+          height: .auto,
+          layout: {direction: .column, align-items: .center, item-gap: 8px},
+          padding: 4px,
+          children: [tabItm4Sample, tabItm4Cap],
+
+          tabItm4Sample = frame : nav.tabItemDisabled {
+            left: 0px,
+            top: 0px
+          }
+
+          tabItm4Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Désactivé",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+        }
+      }
+    }
+
+    tabActiveGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [tabActiveLabel, tabActiveRow],
+
+      tabActiveLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "tabItemActive · onglet courant",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      tabActiveRow = frame {
+        width: 100%,
+        height: .auto,
+        layout: {align-items: .center},
+        fill: c.colors.glass,
+        border: c.colors.glass-border,
+        corner-radius: 18px,
+        padding: [16px, 12px],
+        children: tabActiveSample,
+
+        tabActiveSample = frame : nav.tabItemActive {
+          left: 0px,
+          top: 0px
+        }
+      }
+    }
+
+    eventRowGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [eventRowLabel, eventRowStates],
+
+      eventRowLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "eventRow · ligne d'event",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      eventRowStates = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 12px},
+        fill: c.colors.neutral-2,
+        border: c.colors.glass-border,
+        corner-radius: 18px,
+        padding: 12px,
+        children: [evState0, evState1, evState2, evState3],
+
+        evState0 = frame {
           width: 100%,
-          fill: c.colors.ink,
-          contents: "Cartes et barre du bas.",
-          font-size: 14,
-          font-family: f.fonts.ui
+          height: .auto,
+          layout: {direction: .column, item-gap: 6px},
+          padding: 4px,
+          children: [evState0Cap, evState0Sample],
+
+          evState0Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Défaut",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+
+          evState0Sample = frame : cards.eventRow {
+            left: 0px,
+            top: 0px
+          }
+        }
+
+        evState1 = frame {
+          width: 100%,
+          height: .auto,
+          layout: {direction: .column, item-gap: 6px},
+          padding: 4px,
+          children: [evState1Cap, evState1Sample],
+
+          evState1Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Survol",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+
+          evState1Sample = frame : cards.eventRowHover {
+            left: 0px,
+            top: 0px
+          }
+        }
+
+        evState2 = frame {
+          width: 100%,
+          height: .auto,
+          layout: {direction: .column, item-gap: 6px},
+          padding: 4px,
+          children: [evState2Cap, evState2Sample],
+
+          evState2Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Pressé",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+
+          evState2Sample = frame : cards.eventRowPressed {
+            left: 0px,
+            top: 0px
+          }
+        }
+
+        evState3 = frame {
+          width: 100%,
+          height: .auto,
+          layout: {direction: .column, item-gap: 6px},
+          padding: 4px,
+          children: [evState3Cap, evState3Sample],
+
+          evState3Cap = text {
+            fill: c.colors.text-on-dark-muted,
+            contents: "Focus",
+            font-size: 13,
+            font-family: f.fonts.ui
+          }
+
+          evState3Sample = frame : cards.eventRowFocus {
+            left: 0px,
+            top: 0px
+          }
         }
       }
     }
@@ -250,111 +2596,116 @@ export styleGuide = frame {
   typography = frame {
     width: 100%,
     height: .auto,
-    layout: {direction: .column, item-gap: l.lengths.space-m},
-    padding: l.lengths.space-l,
-    children: [
-      typoTitle,
-      uiSpecimenTitle,
-      uiSpecimen,
-      uiNote,
-      brandSpecimen,
-      brandNote,
-      sizesNote
-    ],
+    layout: {direction: .column, item-gap: 20px},
+    padding: [40px, 32px],
+    children: [typographyTitle, typographyNote, typeSamples],
 
-    typoTitle = text {
-      fill: c.colors.ink,
+    typographyTitle = text {
+      fill: c.colors.text-on-dark,
       contents: "Typographies",
-      font-size: 28,
+      font-size: 32,
       font-family: f.fonts.ui,
-      font-style: "Bold"
+      font-style: "Medium"
     }
 
-    uiSpecimenTitle = text {
+    typographyNote = text {
       width: 100%,
-      fill: c.colors.ink,
-      contents: "Titre d'écran en Archivo gras",
-      font-size: 28,
-      font-family: f.fonts.ui,
-      font-style: "Bold"
-    }
-
-    uiSpecimen = text {
-      width: 100%,
-      fill: c.colors.ink,
-      contents: "Ancienne Belgique, Bruxelles. AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz 0123456789",
+      fill: c.colors.text-on-dark,
+      contents: "Cabinet Grotesk, Regular et Medium seulement (pas de gras). Wagon pour les grands chiffres du billet.",
       font-size: 16,
-      font-family: f.fonts.ui
+      font-family: f.fonts.ui,
+      line-height: 1.35
     }
 
-    uiNote = text {
+    typeSamples = frame {
       width: 100%,
-      fill: c.colors.ink,
-      contents: "Archivo, pour tous les titres et tous les textes de l'interface. Regular pour le texte, Bold pour les titres, les noms et les boutons.",
-      font-size: 14,
-      font-family: f.fonts.ui
-    }
+      height: .auto,
+      layout: {direction: .column, item-gap: 18px},
+      children: [
+        sectionSample,
+        profileSample,
+        bodySample,
+        metaSample,
+        wagonSample
+      ],
 
-    brandSpecimen = text {
-      transform: [1, -0.2, 18, 0, 1, 0],
-      fill: c.colors.ink,
-      contents: "VENI VIDI VICI",
-      font-size: 44,
-      font-family: f.fonts.brand
-    }
+      sectionSample = text {
+        fill: c.colors.text-on-dark,
+        contents: "Titre de section · Medium 36",
+        font-size: 36,
+        font-family: f.fonts.ui,
+        font-style: "Medium",
+        line-height: 1,
+        letter-spacing: -3%
+      }
 
-    brandNote = text {
-      width: 100%,
-      fill: c.colors.ink,
-      contents: "ROYAL Hefana, réservée au logo et au branding. Trop fine pour de l'interface. Capitales uniquement, inclinée à 11° car la police n'a pas d'italique.",
-      font-size: 14,
-      font-family: f.fonts.ui
-    }
+      profileSample = text {
+        fill: c.colors.text-on-dark,
+        contents: "Prénom et chiffres · Medium 26",
+        font-size: 26,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
 
-    sizesNote = text {
-      width: 100%,
-      fill: c.colors.ink,
-      contents: "Tailles : titre d'écran 28, titre de carte 18, texte 16, texte secondaire 14. Jamais en dessous de 14.",
-      font-size: 14,
-      font-family: f.fonts.ui
+      bodySample = text {
+        fill: c.colors.text-on-dark,
+        contents: "Titre de carte · Medium 18, texte courant · Regular 16",
+        font-size: 18,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+
+      metaSample = text {
+        fill: c.colors.text-on-dark,
+        contents: "Lieu, libellé, pastille · Regular 14 et Medium 14",
+        font-size: 14,
+        font-family: f.fonts.ui
+      }
+
+      wagonSample = text {
+        fill: c.colors.text-on-dark,
+        contents: "14 NOV · Wagon Bold",
+        font-size: 48,
+        font-family: f.fonts.display,
+        font-style: "Bold",
+        line-height: 1
+      }
     }
   }
 
   icons = frame {
     width: 100%,
     height: .auto,
-    layout: {direction: .column, item-gap: l.lengths.space-m},
-    padding: l.lengths.space-l,
+    layout: {direction: .column, item-gap: 20px},
+    padding: [40px, 32px],
     children: [iconsTitle, iconsNote, iconGrid],
 
     iconsTitle = text {
-      fill: c.colors.ink,
+      fill: c.colors.text-on-dark,
       contents: "Icônes",
-      font-size: 28,
+      font-size: 32,
       font-family: f.fonts.ui,
-      font-style: "Bold"
+      font-style: "Medium"
     }
 
     iconsNote = text {
       width: 100%,
-      fill: c.colors.ink,
-      contents: "Lucide, trait de 2 px. Toujours en encre (ou en encre sur le rose), 24 px dans les boutons et 28 px dans la barre du bas.",
-      font-size: 14,
-      font-family: f.fonts.ui
+      fill: c.colors.text-on-dark,
+      contents: "Lucide, trait de 2 px, blanc sur fond sombre, noir sur vert ou gris clair. Un état n'est jamais porté par l'icône seule.",
+      font-size: 16,
+      font-family: f.fonts.ui,
+      line-height: 1.35
     }
 
     iconGrid = frame {
       width: 100%,
       height: .auto,
-      layout: {
-        item-gap: l.lengths.space-s,
-        wrap: .true,
-        line-gap: l.lengths.space-m
-      },
+      layout: {item-gap: 20px, wrap: .true},
       children: [
         houseCell,
         historyCell,
         plusCell,
+        searchCell,
         calendarCell,
         mapPinCell,
         ticketCell,
@@ -370,316 +2721,337 @@ export styleGuide = frame {
       ],
 
       houseCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [houseGlyph, houseLabel],
 
         houseGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: houseIcon
         }
 
         houseLabel = text {
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: "Accueil",
-          font-size: 14,
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       historyCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [historyGlyph, historyLabel],
 
         historyGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: historyIcon
         }
 
         historyLabel = text {
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: "Historique",
-          font-size: 14,
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       plusCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [plusGlyph, plusLabel],
 
         plusGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: plusIcon
         }
 
         plusLabel = text {
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: "Ajouter",
-          font-size: 14,
+          font-size: 12,
+          font-family: f.fonts.ui
+        }
+      }
+
+      searchCell = frame {
+        width: 100px,
+        height: 72px,
+        layout: {direction: .column, align-items: .center, item-gap: 8px},
+        children: [searchGlyph, searchLabel],
+
+        searchGlyph = asset {
+          width: 32px,
+          height: 32px,
+          fill: c.colors.text-on-dark,
+          contents: searchIcon
+        }
+
+        searchLabel = text {
+          fill: c.colors.text-on-dark,
+          contents: "Recherche",
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       calendarCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [calendarGlyph, calendarLabel],
 
         calendarGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: calendarIcon
         }
 
         calendarLabel = text {
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: "Date",
-          font-size: 14,
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       mapPinCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [mapPinGlyph, mapPinLabel],
 
         mapPinGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: mapPinIcon
         }
 
         mapPinLabel = text {
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: "Lieu",
-          font-size: 14,
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       ticketCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [ticketGlyph, ticketLabel],
 
         ticketGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: ticketIcon
         }
 
         ticketLabel = text {
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: "Billet",
-          font-size: 14,
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       musicCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [musicGlyph, musicLabel],
 
         musicGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: musicIcon
         }
 
         musicLabel = text {
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: "Groupe",
-          font-size: 14,
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       usersCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [usersGlyph, usersLabel],
 
         usersGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: usersIcon
         }
 
         usersLabel = text {
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: "Accompagnants",
-          font-size: 14,
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       thumbsUpCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [thumbsUpGlyph, thumbsUpLabel],
 
         thumbsUpGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: thumbsUpIcon
         }
 
         thumbsUpLabel = text {
-          fill: c.colors.ink,
-          contents: "Pouce levé",
-          font-size: 14,
+          fill: c.colors.text-on-dark,
+          contents: "Pouce haut",
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       thumbsDownCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [thumbsDownGlyph, thumbsDownLabel],
 
         thumbsDownGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: thumbsDownIcon
         }
 
         thumbsDownLabel = text {
-          fill: c.colors.ink,
-          contents: "Pouce baissé",
-          font-size: 14,
+          fill: c.colors.text-on-dark,
+          contents: "Pouce bas",
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       checkCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [checkGlyph, checkLabel],
 
         checkGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: checkIcon
         }
 
         checkLabel = text {
-          fill: c.colors.ink,
-          contents: "Confirmer",
-          font-size: 14,
+          fill: c.colors.text-on-dark,
+          contents: "Vu",
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       xCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [xGlyph, xLabel],
 
         xGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: xIcon
         }
 
         xLabel = text {
-          fill: c.colors.ink,
-          contents: "Annuler",
-          font-size: 14,
+          fill: c.colors.text-on-dark,
+          contents: "Raté",
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       arrowLeftCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [arrowLeftGlyph, arrowLeftLabel],
 
         arrowLeftGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: arrowLeftIcon
         }
 
         arrowLeftLabel = text {
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: "Retour",
-          font-size: 14,
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       chevronRightCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [chevronRightGlyph, chevronRightLabel],
 
         chevronRightGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: chevronRightIcon
         }
 
         chevronRightLabel = text {
-          fill: c.colors.ink,
-          contents: "Suivant",
-          font-size: 14,
+          fill: c.colors.text-on-dark,
+          contents: "Suite",
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
 
       chevronDownCell = frame {
-        width: 104px,
-        height: .auto,
+        width: 100px,
+        height: 72px,
         layout: {direction: .column, align-items: .center, item-gap: 8px},
         children: [chevronDownGlyph, chevronDownLabel],
 
         chevronDownGlyph = asset {
           width: 32px,
           height: 32px,
-          fill: c.colors.ink,
+          fill: c.colors.text-on-dark,
           contents: chevronDownIcon
         }
 
         chevronDownLabel = text {
-          fill: c.colors.ink,
-          contents: "Replier",
-          font-size: 14,
+          fill: c.colors.text-on-dark,
+          contents: "Déplier",
+          font-size: 12,
           font-family: f.fonts.ui
         }
       }
@@ -689,90 +3061,456 @@ export styleGuide = frame {
   shapes = frame {
     width: 100%,
     height: .auto,
-    layout: {direction: .column, item-gap: l.lengths.space-m},
-    padding: l.lengths.space-l,
-    children: [shapesTitle, shapesNote, buttonRow, cardSample],
+    layout: {direction: .column, item-gap: 20px},
+    padding: [40px, 32px],
+    children: [shapesTitle, radiusRow],
 
     shapesTitle = text {
-      fill: c.colors.ink,
-      contents: "Formes et composants",
-      font-size: 28,
+      fill: c.colors.text-on-dark,
+      contents: "Formes",
+      font-size: 32,
       font-family: f.fonts.ui,
-      font-style: "Bold"
+      font-style: "Medium"
     }
 
-    shapesNote = text {
-      width: 100%,
-      fill: c.colors.ink,
-      contents: "Rayons : 18 px pour les cartes et les gros boutons, 10 px pour les éléments dans une carte, 6 px pour les pastilles. Action principale en encre pleine, action secondaire en contour encre.",
-      font-size: 14,
-      font-family: f.fonts.ui
-    }
-
-    buttonRow = frame {
+    radiusRow = frame {
       width: 100%,
       height: .auto,
-      layout: {item-gap: l.lengths.space-m},
-      children: [primaryButton, secondaryButton],
+      layout: {item-gap: 12px},
+      children: [r6, r10, r18, r24, r32],
 
-      primaryButton = frame {
-        width: 200px,
-        height: l.lengths.tap,
-        layout: {justify-content: .center, align-items: .center},
-        fill: c.colors.action,
-        corner-radius: l.lengths.radius-m,
-        children: primaryLabel,
+      r6 = frame {
+        width: 112px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        padding: 4px,
+        children: [r6Chip, r6Label],
 
-        primaryLabel = text {
-          fill: c.colors.on-action,
-          contents: "Action principale",
-          font-size: 16,
-          font-family: f.fonts.ui,
-          font-style: "Bold"
+        r6Chip = frame {
+          width: 100%,
+          height: 80px,
+          fill: c.colors.glass,
+          border: c.colors.text-on-dark,
+          corner-radius: 6px
+        }
+
+        r6Label = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "6 px · Pastilles",
+          font-size: 13,
+          font-family: f.fonts.ui
         }
       }
 
-      secondaryButton = frame {
-        width: 200px,
-        height: l.lengths.tap,
-        layout: {justify-content: .center, align-items: .center},
-        border: c.colors.action-secondary,
-        corner-radius: l.lengths.radius-m,
-        children: secondaryLabel,
+      r10 = frame {
+        width: 112px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        padding: 4px,
+        children: [r10Chip, r10Label],
 
-        secondaryLabel = text {
-          fill: c.colors.ink,
-          contents: "Action secondaire",
-          font-size: 16,
-          font-family: f.fonts.ui,
-          font-style: "Bold"
+        r10Chip = frame {
+          width: 100%,
+          height: 80px,
+          fill: c.colors.glass,
+          border: c.colors.text-on-dark,
+          corner-radius: 10px
+        }
+
+        r10Label = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "10 px · Dans une carte",
+          font-size: 13,
+          font-family: f.fonts.ui
+        }
+      }
+
+      r18 = frame {
+        width: 112px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        padding: 4px,
+        children: [r18Chip, r18Label],
+
+        r18Chip = frame {
+          width: 100%,
+          height: 80px,
+          fill: c.colors.glass,
+          border: c.colors.text-on-dark,
+          corner-radius: 18px
+        }
+
+        r18Label = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "18 px · Cartes",
+          font-size: 13,
+          font-family: f.fonts.ui
+        }
+      }
+
+      r24 = frame {
+        width: 112px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        padding: 4px,
+        children: [r24Chip, r24Label],
+
+        r24Chip = frame {
+          width: 100%,
+          height: 80px,
+          fill: c.colors.glass,
+          border: c.colors.text-on-dark,
+          corner-radius: 24px
+        }
+
+        r24Label = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "24 px · Cartes sur photo",
+          font-size: 13,
+          font-family: f.fonts.ui
+        }
+      }
+
+      r32 = frame {
+        width: 112px,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        padding: 4px,
+        children: [r32Chip, r32Label],
+
+        r32Chip = frame {
+          width: 100%,
+          height: 80px,
+          fill: c.colors.glass,
+          border: c.colors.text-on-dark,
+          corner-radius: 32px
+        }
+
+        r32Label = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "32 px · Pilules, boutons ronds",
+          font-size: 13,
+          font-family: f.fonts.ui
         }
       }
     }
+  }
 
-    cardSample = frame {
+  effects = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 20px},
+    padding: [40px, 32px],
+    children: [effectsTitle, effectList],
+
+    effectsTitle = text {
+      fill: c.colors.text-on-dark,
+      contents: "Effets",
+      font-size: 32,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    effectList = frame {
       width: 100%,
       height: .auto,
-      layout: {direction: .column, item-gap: 4px},
-      fill: c.colors.surface-card,
-      corner-radius: l.lengths.radius-l,
-      padding: l.lengths.space-m,
-      children: [cardTitle, cardMeta],
+      layout: {direction: .column, item-gap: 12px},
+      children: [eff0, eff1, eff2, eff3],
 
-      cardTitle = text {
-        fill: c.colors.ink,
-        contents: "Ghost",
-        font-size: 18,
-        font-family: f.fonts.ui,
-        font-style: "Bold"
-      }
-
-      cardMeta = text {
+      eff0 = frame {
         width: 100%,
-        fill: c.colors.ink,
-        contents: "Concert | 12 décembre | Forest National, Bruxelles",
+        height: .auto,
+        layout: {direction: .column, item-gap: 4px},
+        fill: c.colors.glass,
+        border: c.colors.glass-border,
+        corner-radius: l.lengths.radius-xl,
+        padding: 16px,
+        children: [eff0Title, eff0Text],
+
+        eff0Title = text {
+          fill: c.colors.text-on-dark,
+          contents: "Verre sombre",
+          font-size: 17,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        eff0Text = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "Cartes et barre d'onglets : noir 55 à 80 % avec un filet blanc à 14 %. La photo reste visible derrière.",
+          font-size: 14,
+          font-family: f.fonts.ui
+        }
+      }
+
+      eff1 = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 4px},
+        fill: c.colors.glass,
+        border: c.colors.glass-border,
+        corner-radius: l.lengths.radius-xl,
+        padding: 16px,
+        children: [eff1Title, eff1Text],
+
+        eff1Title = text {
+          fill: c.colors.text-on-dark,
+          contents: "Billet holographique",
+          font-size: 17,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        eff1Text = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "Image générée (design/tools/make-ticket-holo.py) : reflet diagonal discret et logo répété en filigrane. Il doit rester vert et le texte noir lisible.",
+          font-size: 14,
+          font-family: f.fonts.ui
+        }
+      }
+
+      eff2 = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 4px},
+        fill: c.colors.glass,
+        border: c.colors.glass-border,
+        corner-radius: l.lengths.radius-xl,
+        padding: 16px,
+        children: [eff2Title, eff2Text],
+
+        eff2Title = text {
+          fill: c.colors.text-on-dark,
+          contents: "Ombre portée",
+          font-size: 17,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        eff2Text = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "Sous le billet uniquement : noir 55 %, décalage 10 px, flou 18 px.",
+          font-size: 14,
+          font-family: f.fonts.ui
+        }
+      }
+
+      eff3 = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 4px},
+        fill: c.colors.glass,
+        border: c.colors.glass-border,
+        corner-radius: l.lengths.radius-xl,
+        padding: 16px,
+        children: [eff3Title, eff3Text],
+
+        eff3Title = text {
+          fill: c.colors.text-on-dark,
+          contents: "Fondu noir",
+          font-size: 17,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        eff3Text = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "Dégradé du noir vers transparent sous la barre d'onglets, par-dessus la liste.",
+          font-size: 14,
+          font-family: f.fonts.ui
+        }
+      }
+    }
+  }
+
+  components = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 28px},
+    fill: [
+      {
+        image: {
+          ref: componentsPhoto,
+          sizing: {scale: 0.24, offset: [0px, -272.6951px]}
+        }
+      },
+      {
+        linear-gradient: {
+          angle: 180deg,
+          stops: [
+            stop(0%, rgb(0%, 0%, 0%, 70%)),
+            stop(100%, rgb(0%, 0%, 0%, 92%))
+          ]
+        }
+      }
+    ],
+    corner-radius: [0px, 0px, 24px, 24px],
+    padding: [40px, 32px, 56px],
+    children: [
+      componentsTitle,
+      ticketGroup,
+      pillGroup,
+      rowGroup,
+      profileGroup,
+      headerGroup,
+      navGroup
+    ],
+
+    componentsTitle = text {
+      fill: c.colors.text-on-dark,
+      contents: "Composants",
+      font-size: 32,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    ticketGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [ticketGroupLabel, ticketSample],
+
+      ticketGroupLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "nextTicket · le billet du prochain event",
         font-size: 14,
         font-family: f.fonts.ui
+      }
+
+      ticketSample = frame : cards.nextTicket {
+        ticketInfo {
+          eventTitle {
+            contents: "NICK CAVE"
+          }
+
+          eventMeta {
+            contents: "ANCIENNE BELGIQUE, BRUXELLES"
+          }
+        }
+      }
+    }
+
+    pillGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [pillGroupLabel, pillRow],
+
+      pillGroupLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "ticketPill · confirmPill · searchButton",
+        font-size: 14,
+        font-family: f.fonts.ui
+      }
+
+      pillRow = frame {
+        width: .auto,
+        height: .auto,
+        layout: {align-items: .center, item-gap: 24px},
+        children: [ticketPillSample, confirmSample, searchSample],
+
+        ticketPillSample = frame : cards.ticketPill {}
+
+        confirmSample = frame : cards.confirmPill {}
+
+        searchSample = frame : profileParts.searchButton {}
+      }
+    }
+
+    rowGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [rowGroupLabel, rowSample],
+
+      rowGroupLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "eventRow · ligne d'event à venir (verre sombre)",
+        font-size: 14,
+        font-family: f.fonts.ui
+      }
+
+      rowSample = frame : cards.eventRow {
+        info {
+          eventMeta {
+            contents: "Forest National, Bruxelles"
+          }
+
+          eventTitle {
+            contents: "Ghost"
+          }
+        }
+      }
+    }
+
+    profileGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [profileGroupLabel, profileSample2],
+
+      profileGroupLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "profileHeader · avatar, recherche et trois chiffres clés",
+        font-size: 14,
+        font-family: f.fonts.ui
+      }
+
+      profileSample2 = frame : profileParts.profileHeader {}
+    }
+
+    headerGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [headerGroupLabel, headerSample],
+
+      headerGroupLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "pageHeader · retour + titre d'un écran secondaire",
+        font-size: 14,
+        font-family: f.fonts.ui
+      }
+
+      headerSample = frame : headers.pageHeader {
+        padding-top: 0px,
+        padding-left: 6px,
+        padding-bottom: 0px,
+        padding-right: 6px
+      }
+    }
+
+    navGroup = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [navGroupLabel, navRow],
+
+      navGroupLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "tabBar · addButton",
+        font-size: 14,
+        font-family: f.fonts.ui
+      }
+
+      navRow = frame {
+        width: 100%,
+        height: .auto,
+        layout: {justify-content: .space-between, align-items: .center},
+        children: [tabSample, addSample],
+
+        tabSample = frame : nav.tabBar {}
+
+        addSample = frame : nav.addButton {}
       }
     }
   }

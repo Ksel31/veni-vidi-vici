@@ -1,79 +1,112 @@
-use "fonts/Archivo.ttf"
+use "fonts/CabinetGrotesk-Variable.ttf"
 
-import "components/event-card.elyx" as cards
-import "tokens/colors.elyx" as c
-import "tokens/lengths.elyx" as l
-import "tokens/fonts.elyx" as f
+import "images/bg-to-confirm.jpg" as bgPhoto
 import "components/screen-header.elyx" as headers
-import "components/tab-bar.elyx" as nav
+import "components/ui.elyx" as ui
+import "screens/event-confirm.elyx" as eventConfirm
+import "screens/event-festival.elyx" as eventFestival
 
-// À confirmer : une seule intention, dire pour chaque event passé si on y était.
+// À confirmer : events passés restés « prévus ». Une réponse par carte, « Vu » ou « Raté ».
+// Un concert se confirme sur sa fiche ; un festival demande en plus les jours et les groupes.
 export toConfirm = frame {
   title: "À confirmer",
-  caption: "Chaque event passé reçoit une réponse : Vu ou Raté.",
-  left: 540px,
+  caption: "Accès depuis la pastille de l'accueil. Chaque carte mène à la fiche de l'event pour répondre.",
+  left: 0px,
   top: 0px,
   width: 390px,
   height: 844px,
   layout: {direction: .column},
-  fill: c.colors.surface-screen,
-  children: [header, content, tabs, addButton],
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 50%)),
+          stop(40%, rgb(0%, 0%, 0%, 58%)),
+          stop(100%, rgb(0%, 0%, 0%, 78%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 0px],
+  children: [header, body],
 
   header = frame : headers.pageHeader {
+    padding-top: 8px,
+    padding-left: 8px,
+    padding-bottom: 0px,
+    padding-right: 8px,
+
     pageTitle {
       contents: "À confirmer"
     }
   }
 
-  content = frame {
+  body = frame {
     width: 100%,
-    height: 100%,
-    layout: {direction: .column, item-gap: l.lengths.space-m},
-    padding: [20px, 20px, 0px],
-    children: [help, row1, row2],
+    height: .auto,
+    layout: {direction: .column, item-gap: 14px},
+    padding: [24px, 8px, 0px],
+    children: [intro, concertCard, festivalCard],
 
-    help = text {
-      width: 100%,
-      fill: c.colors.ink,
-      contents: "Ces events sont passés. Dis si tu y étais.",
-      font-size: 16,
-      font-family: f.fonts.ui
+    intro = text : ui.hint {
+      contents: "2 events sont passés. Dis-nous si tu y étais."
     }
 
-    row1 = frame : cards.confirmCard {
-      info {
-        eventTitle {
-          contents: "Gojira"
+    concertCard = frame : ui.pendingCard {
+      connections[0].label: "Ouvrir la fiche",
+      connections[0].target: eventConfirm.eventConfirm,
+
+      head {
+        info {
+          eventMeta {
+            contents: "Concert, Botanique, Bruxelles"
+          }
+
+          eventTitle {
+            contents: "Wolves in the Throne Room"
+          }
         }
 
-        eventMeta {
-          contents: "Concert | 2 novembre | Forest National, Bruxelles"
+        dateBlock {
+          dateMonth {
+            contents: "OCT"
+          }
+
+          dateDay {
+            contents: "28"
+          }
         }
       }
     }
 
-    row2 = frame : cards.confirmCard {
-      info {
-        eventTitle {
-          contents: "Fontaines D.C."
+    festivalCard = frame : ui.pendingCard {
+      connections[0].label: "Vu : jours et groupes",
+      connections[0].target: eventFestival.eventFestival,
+
+      head {
+        info {
+          eventMeta {
+            contents: "Festival, 2 jours, Anvers"
+          }
+
+          eventTitle {
+            contents: "Desertfest Belgium"
+          }
         }
 
-        eventMeta {
-          contents: "Concert | 6 novembre | Vooruit, Gand"
+        dateBlock {
+          dateMonth {
+            contents: "OCT"
+          }
+
+          dateDay {
+            contents: "17"
+          }
         }
       }
     }
-  }
-
-  tabs = frame : nav.tabBar {
-    left: 20px,
-    bottom: 32px,
-    ignore-stack: .true
-  }
-
-  addButton = frame : nav.addButton {
-    right: 20px,
-    bottom: 32px,
-    ignore-stack: .true
   }
 }

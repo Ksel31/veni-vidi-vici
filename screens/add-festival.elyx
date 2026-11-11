@@ -1,0 +1,277 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-add-festival.jpg" as bgPhoto
+import "components/screen-header.elyx" as headers
+import "components/ui.elyx" as ui
+import "icons/lucide/plus.svg" as plusIcon
+import "screens/event-upcoming.elyx" as eventUpcoming
+import "icons/lucide/calendar.svg" as calendarIcon
+import "icons/lucide/map-pin.svg" as mapPinIcon
+import "icons/lucide/euro.svg" as euroIcon
+import "icons/lucide/tent.svg" as tentIcon
+
+// Ajout d'un festival : titre obligatoire, dates de début et de fin, lieu, line-up « à voir » avec un jour par groupe, billet.
+export addFestival = frame {
+  title: "Ajouter un festival",
+  caption: "Étape 2. Le titre est obligatoire ; chaque groupe reçoit le jour de son passage.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: .auto,
+  layout: {direction: .column},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 60%)),
+          stop(40%, rgb(0%, 0%, 0%, 72%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 40px],
+  children: [header, body],
+
+  header = frame : headers.pageHeader {
+    padding-top: 8px,
+    padding-left: 8px,
+    padding-bottom: 0px,
+    padding-right: 8px,
+
+    pageTitle {
+      contents: "Nouveau festival"
+    }
+  }
+
+  body = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 14px},
+    padding: [20px, 8px, 0px],
+    children: [whenWhere, lineup, ticket, submit],
+
+    whenWhere = frame : ui.glassCard {
+      overrides: [
+        insert(titleField, after = ui.glassCard.cardTitle),
+        insert(dates, after = titleField),
+        insert(venueField, after = dates)
+      ],
+
+      cardTitle {
+        contents: "Le festival"
+      }
+
+      titleField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: tentIcon
+          }
+
+          fieldValue {
+            contents: "Rock Werchter"
+          }
+        }
+
+        fieldLabel {
+          contents: "Titre"
+        }
+      }
+
+      dates = frame {
+        width: 100%,
+        height: .auto,
+        layout: {item-gap: 12px},
+        children: [startField, endField],
+
+        startField = frame : ui.field {
+          width: 153px,
+
+          fieldBox {
+            fieldGlyph {
+              contents: calendarIcon
+            }
+
+            fieldValue {
+              contents: "17 juil."
+            }
+          }
+
+          fieldLabel {
+            contents: "Début"
+          }
+        }
+
+        endField = frame : ui.field {
+          width: 153px,
+
+          fieldBox {
+            fieldGlyph {
+              contents: calendarIcon
+            }
+
+            fieldValue {
+              contents: "20 juil."
+            }
+          }
+
+          fieldLabel {
+            contents: "Fin"
+          }
+        }
+      }
+
+      venueField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: mapPinIcon
+          }
+
+          fieldValue {
+            contents: "Werchter, Belgique"
+          }
+        }
+
+        fieldLabel {
+          contents: "Lieu"
+        }
+      }
+    }
+
+    lineup = frame : ui.glassCard {
+      overrides: [
+        insert(band1, after = ui.glassCard.cardTitle),
+        insert(band2, after = band1),
+        insert(band3, after = band2),
+        insert(band4, after = band3),
+        insert(addBand, after = band4)
+      ],
+
+      cardTitle {
+        contents: "Line-up à voir"
+      }
+
+      band1 = frame : ui.lineupRow {
+        bandName {
+          contents: "Gojira"
+        }
+
+        bandRole {
+          bandRoleLabel {
+            contents: "Jeu 17"
+          }
+        }
+      }
+
+      band2 = frame : ui.lineupRow {
+        bandName {
+          contents: "Idles"
+        }
+
+        bandRole {
+          bandRoleLabel {
+            contents: "Jeu 17"
+          }
+        }
+      }
+
+      band3 = frame : ui.lineupRow {
+        bandName {
+          contents: "Mastodon"
+        }
+
+        bandRole {
+          bandRoleLabel {
+            contents: "Ven 18"
+          }
+        }
+      }
+
+      band4 = frame : ui.lineupRow {
+        bandName {
+          contents: "Turnstile"
+        }
+
+        bandRole {
+          bandRoleLabel {
+            contents: "Sam 19"
+          }
+        }
+      }
+
+      addBand = frame : ui.fieldEmpty {
+        fieldLabel {
+          display: .none
+        }
+
+        fieldBox {
+          fieldGlyph {
+            contents: plusIcon
+          }
+
+          fieldValue {
+            contents: "Ajouter un groupe et son jour"
+          }
+        }
+      }
+    }
+
+    ticket = frame : ui.glassCard {
+      overrides: [
+        insert(ticketBought, after = ui.glassCard.cardTitle),
+        insert(ticketPrice, after = ticketBought),
+        insert(ticketUpload, after = ticketPrice)
+      ],
+
+      cardTitle {
+        contents: "Billet"
+      }
+
+      ticketPrice = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: euroIcon
+          }
+
+          fieldValue {
+            contents: "289,00 €"
+          }
+        }
+
+        fieldLabel {
+          contents: "Prix du billet"
+        }
+      }
+
+      ticketUpload = frame : ui.uploadBox {}
+
+      ticketBought = frame : ui.checkRow {
+        checkTexts {
+          checkTitle {
+            contents: "Billet acheté"
+          }
+
+          checkMeta {
+            contents: "Pas encore ? Décoche, tu pourras le cocher plus tard."
+          }
+        }
+      }
+    }
+
+    submit = frame : ui.primaryButton {
+      connections[0].label: "Fiche du nouvel event",
+      connections[0].target: eventUpcoming.eventUpcoming,
+
+      buttonGlyph {
+        contents: plusIcon
+      }
+
+      buttonLabel {
+        contents: "Ajouter le festival"
+      }
+    }
+  }
+}

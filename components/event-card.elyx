@@ -1,5 +1,7 @@
-use "fonts/Archivo.ttf"
+use "fonts/CabinetGrotesk-Variable.ttf"
+use "fonts/Wagon-Bold.otf"
 
+import "images/ticket-holo.png" as ticketHolo
 import "icons/lucide/chevron-right.svg" as chevronRight
 import "icons/lucide/check.svg" as checkIcon
 import "icons/lucide/x.svg" as crossIcon
@@ -15,7 +17,7 @@ export ticketPill = frame {
   width: .auto,
   height: .auto,
   layout: {align-items: .center, item-gap: 6px},
-  fill: c.colors.paper,
+  fill: c.colors.neutral-12,
   corner-radius: l.lengths.radius-s,
   padding: [4px, 8px],
   children: [ticketGlyph, ticketLabel],
@@ -23,154 +25,181 @@ export ticketPill = frame {
   ticketGlyph = asset {
     width: 16px,
     height: 16px,
-    fill: c.colors.ink,
+    fill: c.colors.neutral-1,
     contents: ticketIcon
   }
 
   ticketLabel = text {
-    fill: c.colors.ink,
+    fill: c.colors.neutral-1,
     contents: "Billet acheté",
     font-size: 14,
     font-family: f.fonts.ui,
-    font-style: "Bold"
+    font-style: "Medium"
   }
 }
 
-// Prochain event, en grand : c'est la seule carte avec une ombre et un titre XXL.
-// Ticket : corps à gauche (type, titre, lieu, billet), talon papier à droite (jour, mois, compte à rebours)
-// séparé par une perforation. Les deux encoches sont des disques de la couleur du fond d'écran, coupés par les bords de la carte.
-export eventCard = frame {
+// Prochain event : le billet vert, seul aplat vif de l'écran. Image holographique (logo répété, très discret),
+// ombre portée, corps à gauche (type, titre, lieu, billet) et talon à droite (jour, mois) séparés par une perforation.
+// Les coins et la perforation sont évidés dans l'image ; l'ombre vient d'un rectangle caché sous le billet.
+export nextTicket = frame {
   left: 0px,
   top: 60px,
-  width: 100%,
-  height: .auto,
-  layout: {align-items: .stretch},
-  fill: c.colors.surface-card,
-  corner-radius: l.lengths.radius-l,
-  children: [info, stub, notchTop, notchBottom],
+  width: 366px,
+  height: 152px,
+  children: [ticketShadow, ticketBg, ticketInfo, ticketStub],
 
-  info = frame {
-    width: 100%,
-    height: .auto,
-    layout: {direction: .column, item-gap: 6px},
-    padding: [18px, 16px],
+  ticketShadow = frame {
+    left: 14px,
+    top: 8px,
+    width: 338px,
+    height: 136px,
+    ignore-stack: .true,
+    fill: c.colors.neutral-1,
+    shadow: {
+      drop-shadow: {
+        color: rgb(0%, 0%, 0%, 55%),
+        offset: point(0px, 10px),
+        blur-radius: 18px
+      }
+    },
+    corner-radius: 8px
+  }
+
+  ticketBg = asset {
+    left: 0px,
+    top: 0px,
+    width: 366px,
+    height: 152px,
+    ignore-stack: .true,
+    contents: ticketHolo
+  }
+
+  ticketInfo = frame {
+    left: 0px,
+    top: 0px,
+    width: 246px,
+    height: 152px,
+    ignore-stack: .true,
+    layout: {direction: .column, justify-content: .center, item-gap: 3px},
+    padding: [0px, 20px],
     children: [eventType, eventTitle, eventMeta, ticketState],
 
     eventType = text {
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: "CONCERT",
-      font-size: 14,
+      font-size: 13,
       font-family: f.fonts.ui,
-      font-style: "Bold",
-      letter-spacing: 8%
+      font-style: "Medium"
     }
 
     eventTitle = text {
       width: 100%,
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: "TITRE",
-      font-size: 34,
+      font-size: 38,
       font-family: f.fonts.ui,
-      font-style: "Bold",
+      font-style: "Medium",
       line-height: 1,
       letter-spacing: -2%
     }
 
     eventMeta = text {
       width: 100%,
-      fill: c.colors.ink,
-      contents: "Lieu",
-      font-size: 14,
-      font-family: f.fonts.ui
+      fill: c.colors.neutral-1,
+      contents: "LIEU, VILLE",
+      font-size: 11,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
     }
 
-    ticketState = frame : ticketPill {}
+    // Même pastille que dans la liste, inversée : noir plein sur le vert
+    ticketState = frame : ticketPill {
+      fill[0].color: c.colors.neutral-1,
+
+      ticketLabel {
+        fill[0].color: c.colors.neutral-12
+      }
+
+      ticketGlyph {
+        fill[0].color: c.colors.neutral-12
+      }
+    }
   }
 
-  // Information, pas une action : fond papier
-  stub = frame {
+  ticketStub = frame {
+    left: 246px,
+    top: 8px,
     width: 120px,
-    height: .auto,
-    layout: {
-      direction: .column,
-      justify-content: .center,
-      align-items: .center,
-      item-gap: 4px
+    height: 136px,
+    ignore-stack: .true,
+    layout: {direction: .column, justify-content: .center, align-items: .center},
+    border: {
+      color: c.colors.neutral-1,
+      width: 2px,
+      dash: [5px, 4px],
+      sides: .left
     },
-    fill: c.colors.paper,
-    border: {color: c.colors.ink, width: 2px, dash: [6px, 5px], sides: .left},
-    padding: [12px, 8px],
-    children: [dateDay, dateMonth, countdown],
+    children: [dateDay, dateMonth],
 
     dateDay = text {
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: "14",
-      font-size: 56,
-      font-family: f.fonts.ui,
+      font-size: 74,
+      font-family: f.fonts.display,
       font-style: "Bold",
       line-height: 1
     }
 
     dateMonth = text {
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: "NOV",
-      font-size: 14,
-      font-family: f.fonts.ui,
+      font-size: 24,
+      font-family: f.fonts.display,
       font-style: "Bold",
-      letter-spacing: 8%
+      line-height: 1
     }
-
-    // Tampon incliné, comme un cachet sur le billet
-    countdown = frame {
-      width: .auto,
-      height: .auto,
-      transform: [0.99, 0.1, 0, -0.1, 0.99, 0],
-      layout: {justify-content: .center, align-items: .center},
-      fill: c.colors.ink,
-      corner-radius: l.lengths.radius-s,
-      padding: [6px, 12px],
-      children: countdownLabel,
-
-      countdownLabel = text {
-        fill: c.colors.paper,
-        contents: "J-4",
-        font-size: 20,
-        font-family: f.fonts.ui,
-        font-style: "Bold"
-      }
-    }
-  }
-
-  notchTop = frame {
-    top: -10px,
-    right: 110px,
-    width: 20px,
-    height: 20px,
-    ignore-stack: .true,
-    fill: c.colors.brand,
-    corner-radius: 10px
-  }
-
-  notchBottom = frame {
-    right: 110px,
-    bottom: -10px,
-    width: 20px,
-    height: 20px,
-    ignore-stack: .true,
-    fill: c.colors.brand,
-    corner-radius: 10px
   }
 }
 
-// Event à venir suivant : ligne compacte, sans ombre. Date à gauche, compte à rebours à droite. Négatif : posée sur le fond encre, en carte un cran plus claire, texte papier.
+// Pastille « N events à confirmer » : discrète, alignée à gauche. Noir, filet et texte verts, chevron.
+export confirmPill = frame {
+  left: 0px,
+  top: 260px,
+  width: .auto,
+  height: 36px,
+  layout: {align-items: .center, item-gap: 6px},
+  fill: c.colors.neutral-1,
+  border: {color: c.colors.brand, width: 1.5px},
+  corner-radius: 18px,
+  padding: [0px, 12px, 0px, 14px],
+  children: [pillLabel, pillChevron],
+
+  pillLabel = text {
+    fill: c.colors.brand,
+    contents: "2 events à confirmer",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  pillChevron = asset {
+    width: 16px,
+    height: 16px,
+    fill: c.colors.brand,
+    contents: chevronRight
+  }
+}
+
+// Event à venir suivant : ligne compacte en verre sombre sur la photo. Date à gauche, compte à rebours à droite, texte papier.
 export eventRow = frame {
   left: 0px,
   top: 1050px,
   width: 100%,
   height: .auto,
   layout: {align-items: .center, item-gap: 12px},
-  fill: c.colors.surface-dark-raised,
-  corner-radius: l.lengths.radius-l,
+  fill: c.colors.glass,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-xl,
   padding: 12px,
   children: [dateBlock, info, countdown],
 
@@ -183,20 +212,20 @@ export eventRow = frame {
     children: [dateDay, dateMonth],
 
     dateDay = text {
-      fill: c.colors.paper,
+      fill: c.colors.neutral-12,
       contents: "12",
       font-size: 24,
       font-family: f.fonts.ui,
-      font-style: "Bold",
+      font-style: "Medium",
       line-height: 1
     }
 
     dateMonth = text {
-      fill: c.colors.paper,
+      fill: c.colors.neutral-12,
       contents: "DÉC",
       font-size: 14,
       font-family: f.fonts.ui,
-      font-style: "Bold",
+      font-style: "Medium",
       letter-spacing: 4%
     }
   }
@@ -209,16 +238,16 @@ export eventRow = frame {
 
     eventTitle = text {
       width: 100%,
-      fill: c.colors.paper,
+      fill: c.colors.neutral-12,
       contents: "Titre",
       font-size: 18,
       font-family: f.fonts.ui,
-      font-style: "Bold"
+      font-style: "Medium"
     }
 
     eventMeta = text {
       width: 100%,
-      fill: c.colors.paper,
+      fill: c.colors.neutral-12,
       contents: "Lieu",
       font-size: 14,
       font-family: f.fonts.ui
@@ -228,11 +257,11 @@ export eventRow = frame {
       fill[0].color: c.colors.surface-dark,
 
       ticketLabel {
-        fill[0].color: c.colors.paper
+        fill[0].color: c.colors.neutral-12
       }
 
       ticketGlyph {
-        fill[0].color: c.colors.paper
+        fill[0].color: c.colors.neutral-12
       }
     }
   }
@@ -241,19 +270,45 @@ export eventRow = frame {
     width: .auto,
     height: .auto,
     layout: {justify-content: .center, align-items: .center},
-    fill: c.colors.paper,
+    fill: c.colors.neutral-12,
     corner-radius: l.lengths.radius-s,
     padding: [4px, 8px],
     children: countdownLabel,
 
     countdownLabel = text {
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: "J-32",
       font-size: 14,
       font-family: f.fonts.ui,
-      font-style: "Bold"
+      font-style: "Medium"
     }
   }
+}
+
+// États de la ligne d'event : survol (verre plus dense, bordure step 7), pressé (step 3), focus anneau extérieur.
+@variant
+export eventRowHover = frame : eventRow {
+  left: 500px,
+  top: 1050px,
+  border[0].color: c.colors.border,
+  fill[0].color: c.colors.glass-strong
+}
+
+@variant
+export eventRowPressed = frame : eventRow {
+  left: 500px,
+  top: 1250px,
+  border[0].color: c.colors.border,
+  fill[0].color: c.colors.surface-dark-raised
+}
+
+@variant
+export eventRowFocus = frame : eventRow {
+  left: 500px,
+  top: 1450px,
+  border[0].color: c.colors.focus-ring,
+  border[0].position: .outside,
+  border[0].width: l.lengths.focus-ring-width
 }
 
 // Event passé à confirmer : « Raté » (secondaire, contour encre) et « Vu » (principal, encre pleine).
@@ -276,16 +331,16 @@ export confirmCard = frame {
 
     eventTitle = text {
       width: 100%,
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: "Titre",
       font-size: 18,
       font-family: f.fonts.ui,
-      font-style: "Bold"
+      font-style: "Medium"
     }
 
     eventMeta = text {
       width: 100%,
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: "Concert | Date | Lieu",
       font-size: 14,
       font-family: f.fonts.ui
@@ -294,7 +349,7 @@ export confirmCard = frame {
 
   question = text {
     width: 100%,
-    fill: c.colors.ink,
+    fill: c.colors.neutral-1,
     contents: "Tu y étais ?",
     font-size: 16,
     font-family: f.fonts.ui
@@ -317,16 +372,16 @@ export confirmCard = frame {
       missedIcon = asset {
         width: 24px,
         height: 24px,
-        fill: c.colors.ink,
+        fill: c.colors.neutral-1,
         contents: crossIcon
       }
 
       missedLabel = text {
-        fill: c.colors.ink,
+        fill: c.colors.neutral-1,
         contents: "Raté",
         font-size: 16,
         font-family: f.fonts.ui,
-        font-style: "Bold"
+        font-style: "Medium"
       }
     }
 
@@ -350,7 +405,7 @@ export confirmCard = frame {
         contents: "Vu",
         font-size: 16,
         font-family: f.fonts.ui,
-        font-style: "Bold"
+        font-style: "Medium"
       }
     }
   }
@@ -376,16 +431,16 @@ export historyCard = frame {
 
     eventTitle = text {
       width: 100%,
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: "Titre",
       font-size: 18,
       font-family: f.fonts.ui,
-      font-style: "Bold"
+      font-style: "Medium"
     }
 
     eventMeta = text {
       width: 100%,
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: "Concert | Date | Lieu",
       font-size: 14,
       font-family: f.fonts.ui
@@ -396,7 +451,7 @@ export historyCard = frame {
     width: .auto,
     height: .auto,
     layout: {justify-content: .center, align-items: .center, item-gap: 4px},
-    fill: c.colors.paper,
+    fill: c.colors.neutral-12,
     corner-radius: l.lengths.radius-s,
     padding: [6px, 10px],
     children: [statusIcon, statusLabel],
@@ -404,16 +459,16 @@ export historyCard = frame {
     statusIcon = asset {
       width: 20px,
       height: 20px,
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: checkIcon
     }
 
     statusLabel = text {
-      fill: c.colors.ink,
+      fill: c.colors.neutral-1,
       contents: "Vu",
       font-size: 14,
       font-family: f.fonts.ui,
-      font-style: "Bold"
+      font-style: "Medium"
     }
   }
 }
@@ -425,23 +480,23 @@ export confirmBanner = frame {
   width: 100%,
   height: 52px,
   layout: {justify-content: .space-between, align-items: .center},
-  fill: c.colors.paper,
+  fill: c.colors.neutral-12,
   corner-radius: l.lengths.radius-l,
   padding: [0px, 16px],
   children: [bannerLabel, bannerIcon],
 
   bannerLabel = text {
-    fill: c.colors.ink,
+    fill: c.colors.neutral-1,
     contents: "2 events à confirmer",
     font-size: 16,
     font-family: f.fonts.ui,
-    font-style: "Bold"
+    font-style: "Medium"
   }
 
   bannerIcon = asset {
     width: 24px,
     height: 24px,
-    fill: c.colors.ink,
+    fill: c.colors.neutral-1,
     contents: chevronRight
   }
 }
@@ -459,11 +514,11 @@ export yearChip = frame {
   children: yearLabel,
 
   yearLabel = text {
-    fill: c.colors.ink,
+    fill: c.colors.neutral-1,
     contents: "2025",
     font-size: 14,
     font-family: f.fonts.ui,
-    font-style: "Bold"
+    font-style: "Medium"
   }
 }
 
@@ -479,10 +534,10 @@ export yearChipActive = frame {
   children: yearLabelActive,
 
   yearLabelActive = text {
-    fill: c.colors.paper,
+    fill: c.colors.neutral-12,
     contents: "2026",
     font-size: 14,
     font-family: f.fonts.ui,
-    font-style: "Bold"
+    font-style: "Medium"
   }
 }

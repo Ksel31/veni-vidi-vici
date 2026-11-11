@@ -1,0 +1,78 @@
+import "screens/login.elyx" as login
+import "screens/home.elyx" as home
+import "screens/event-upcoming.elyx" as eventUpcoming
+import "screens/event-edit.elyx" as eventEdit
+import "screens/to-confirm.elyx" as toConfirm
+import "screens/event-confirm.elyx" as eventConfirm
+import "screens/event-report.elyx" as eventReport
+import "screens/event-festival.elyx" as eventFestival
+import "screens/history.elyx" as history
+import "screens/add-type.elyx" as addType
+import "screens/add-concert.elyx" as addConcert
+import "screens/add-festival.elyx" as addFestival
+
+file {
+  draw-connections: .true
+}
+
+// Parcours complet de l'app : connexion, accueil, puis trois branches (à confirmer, historique, ajout) qui convergent
+// vers la fiche de l'event. Colonnes = étapes, lignes = branches. Chaque flèche vient d'un `connections` posé sur le bouton.
+flowLogin = frame : login.login {
+  left: 0px,
+  top: 0px
+}
+
+flowHome = frame : home.home {
+  left: 700px,
+  top: 0px
+}
+
+flowToConfirm = frame : toConfirm.toConfirm {
+  left: 1400px,
+  top: 0px
+}
+
+flowHistory = frame : history.history {
+  left: 1400px,
+  top: 1100px
+}
+
+flowAddType = frame : addType.addType {
+  left: 1400px,
+  top: 2200px
+}
+
+flowEventConfirm = frame : eventConfirm.eventConfirm {
+  left: 2100px,
+  top: 0px
+}
+
+flowEventFestival = frame : eventFestival.eventFestival {
+  left: 2100px,
+  top: 1100px
+}
+
+flowAddConcert = frame : addConcert.addConcert {
+  left: 2100px,
+  top: 2400px
+}
+
+flowAddFestival = frame : addFestival.addFestival {
+  left: 2100px,
+  top: 3700px
+}
+
+flowEventReport = frame : eventReport.eventReport {
+  left: 2800px,
+  top: 600px
+}
+
+flowEventUpcoming = frame : eventUpcoming.eventUpcoming {
+  left: 2800px,
+  top: 2400px
+}
+
+flowEventEdit = frame : eventEdit.eventEdit {
+  left: 3500px,
+  top: 2400px
+}

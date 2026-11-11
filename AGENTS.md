@@ -42,11 +42,15 @@ Le propriétaire du projet est designer UI/UX avec des bases en code, pas dével
 
 **Login factice :** un écran de connexion où n'importe quel identifiant fonctionne. Il sert seulement à faire exister l'étape dans le parcours.
 
-**Style :** minimal mais dans l'esprit final, sans y passer de temps. Référence : `screens/style-guide.elyx`.
-- Couleurs (`tokens/colors.elyx`) : rose fluo `#ff0088` = fond d'écran et marque ; encre brun-noir `#2b1118` = texte et actions (pleine = principale, contour = secondaire) ; papier `#f5f1ea` = pastilles d'information ; blanc = cartes. Le fond d'écran et les cartes ne sont jamais de la couleur d'action.
-- Titres d'interface : Archivo gras. Texte : Archivo regular. ROYAL Hefana uniquement pour le logo et le branding (illisible en interface).
-- Icônes : Lucide, trait de 2 px, en encre. Rayons : 18 px (cartes, gros boutons), 10 px (éléments dans une carte), 6 px (pastilles).
-- Un écran = une intention : accueil (à venir), à confirmer, historique, avec une barre d'onglets en bas.
+**Style :** l'interface est **sombre, sur photo de concert**. Les maquettes Elyx font foi : `screens/style-guide.elyx` (règles et composants), `screens/home.elyx` (référence d'écran) et `screens/flow.elyx` (parcours complet). L'app doit reprendre ces maquettes, pas réinventer le style.
+- Fond d'écran : photo de concert sous un dégradé noir (45 à 92 %), cartes en « verre sombre » (`glass`, bordure `glass-border`). Les photos sont dans `images/` (`bg-*.jpg`, `hero-*.jpg`) ; sources dans `design/images/`.
+- Couleurs (`tokens/colors.elyx`, échelles Radix de 12 steps) : neutre olive pour les fonds et textes (texte principal `text-on-dark`, secondaire `text-on-dark-muted`) ; **lime `#aaff22` = la marque et les CTA** (boutons principaux, « + », billet du prochain event), jamais en fond d'écran ; rouge = raté, ambre = à confirmer, vert = vu (états seulement, jamais de la déco). Un état n'est jamais porté par la couleur seule : toujours un texte ou une icône.
+- Boutons : principal = lime, texte noir ; secondaire = verre dense + filet clair ; options sélectionnées (puces, cases) = pilule claire. Cinq états sur tout élément cliquable : défaut, survol (step 4, pointeur seulement), pressé (step 5), focus (anneau de 2 px), désactivé. Zone tactile minimale 44 px.
+- Typo : Cabinet Grotesk, **Regular et Medium seulement**, pour toute l'interface. Wagon (Bold) uniquement pour les grands chiffres du billet. Logo : `images/logo-white.svg` (version blanche simple), variantes dans `logos/SVG/`.
+- Icônes : Lucide, trait de 2 px (dans `icons/lucide/`), en blanc ou en noir sur fond clair.
+- Rayons : 6 px (pastilles), 10 px (éléments dans une carte), 18 px (cartes, gros boutons), 24 px (cartes sur photo), 32 px (pilules et boutons ronds). Tokens dans `tokens/lengths.elyx`.
+- Composants réutilisables : `components/` (`event-card`, `tab-bar`, `profile`, `screen-header`, `ui`). Les écrans les assemblent, ils ne les recréent pas.
+- Un écran = une intention : accueil (à venir), à confirmer, historique, avec une barre d'onglets flottante en bas et le « + » à droite.
 - Mobile d'abord (largeur ~390 px), utilisable sur desktop.
 - Pas d'animations.
 
@@ -81,6 +85,9 @@ Toutes les données sont propres à un utilisateur (pas de partage entre comptes
 | venueId | string | |
 | status | `planned` \| `attended` \| `missed` | |
 | ticketBought | boolean | |
+| ticketPrice | number \| null | prix du billet en euros, optionnel |
+| ticketFile | fichier \| null | billet envoyé (PDF ou image), optionnel |
+| photos | fichier[] | photos souvenirs, uniquement une fois l'event « Vu » |
 | daysAttended | date[] | festival uniquement : jours faits |
 | thumb | `up` \| `down` \| null | avis global, pas d'étoiles |
 | comment | string | une ligne maximum |
@@ -109,7 +116,9 @@ Toutes les données sont propres à un utilisateur (pas de partage entre comptes
 - **Ajout d'un event passé** : la présence est pré-sélectionnée sur « Vu » (hypothèse à valider à l'usage).
 - **Tout est modifiable à tout moment** depuis la fiche : date, lieu, groupes, billets. Si la date repasse dans le futur, l'event redevient `planned`.
 - Pas de statut « reporté » : on modifie la date.
-- Le compte rendu (pouces, avis, setlist, accompagnants) n'est accessible qu'une fois l'event marqué « Vu ».
+- Le compte rendu (pouces, avis, setlist, accompagnants, photos souvenirs) n'est accessible qu'une fois l'event marqué « Vu ».
+- **Billet** : à l'ajout comme en modification, on peut cocher « billet acheté », saisir le prix et envoyer le fichier du billet (PDF ou image). Prix et fichier sont toujours optionnels, et modifiables à tout moment.
+- **Photos souvenirs** : ajoutées depuis le compte rendu d'un event vu, sans limite de nombre, affichées en grille de vignettes avec une case « + ».
 - Lieux et artistes : autocomplétion sur ceux déjà saisis, création à la volée sinon.
 - Un concert a généralement 1 à 3 groupes, mais le nombre n'est pas limité.
 
@@ -123,14 +132,14 @@ Toutes les données sont propres à un utilisateur (pas de partage entre comptes
 | `/` | Accueil | bandeau « à confirmer » si besoin, liste des events prévus triés par date, bouton « + » bien visible, accès à l'historique |
 | `/history` | Historique | events vus et ratés, du plus récent au plus ancien, filtre par année |
 | `/add` | Ajout, étape 1 | choix : Concert ou Festival |
-| `/add/concert` | Ajout, étape 2 | date, lieu, groupes (avec tête d'affiche / première partie), billet acheté |
-| `/add/festival` | Ajout, étape 2 | titre, dates début/fin, lieu, line-up « à voir » avec jour par groupe, billet acheté |
-| `/event/[id]` | Fiche event | infos + line-up ; avant la date : compte à rebours ; après : confirmation de présence, puis jours/groupes (festival), puis compte rendu |
+| `/add/concert` | Ajout, étape 2 | date, lieu, groupes (avec tête d'affiche / première partie), billet (acheté, prix, fichier) |
+| `/add/festival` | Ajout, étape 2 | titre, dates début/fin, lieu, line-up « à voir » avec jour par groupe, billet (acheté, prix, fichier) |
+| `/event/[id]` | Fiche event | infos + billet (prix, fichier) + line-up ; avant la date : compte à rebours ; après : confirmation de présence, puis jours/groupes (festival), puis compte rendu |
 | `/event/[id]/edit` | Modifier l'event | même formulaire que l'ajout, pré-rempli |
 
 Après un ajout, rediriger vers la fiche du nouvel event. Chaque écran a un moyen évident de revenir à l'accueil.
 
-**Parcours de référence :** Connexion → Accueil → (Historique | Events prévus | Ajouter → Type d'event → Infos) → Fiche event → (Modifier l'event) → selon la date : avant l'event, ou présence confirmée → (festival : jours et groupes) → compte rendu → retour à l'accueil.
+**Parcours de référence :** Connexion → Accueil → (Historique | Events prévus | Ajouter → Type d'event → Infos) → Fiche event → (Modifier l'event) → selon la date : avant l'event, ou présence confirmée → (festival : jours et groupes) → compte rendu (dont photos souvenirs) → retour à l'accueil.
 
 ---
 
@@ -148,14 +157,14 @@ Au premier lancement, créer :
 
 ## Hors périmètre en phase 1
 
-Ne pas faire : vrai backend, vrais comptes, photos, billets PDF, intégration setlist.fm, statistiques, export, mode hors ligne, Docker, APK, design final.
+Ne pas faire : vrai backend, vrais comptes, envoi réel de fichiers (billets, photos : seuls les champs existent dans la maquette), intégration setlist.fm, statistiques, export, mode hors ligne, Docker, APK, design final.
 
 ---
 
 ## Phases suivantes (pour information, ne pas commencer)
 
 - **Phase 2** — PocketBase (backend en un exécutable : base SQLite, comptes, stockage de fichiers). Remplacer le store local par l'API PocketBase, vrais comptes.
-- **Phase 3** — Photos et billets PDF (pièces jointes d'un event), import de setlist depuis setlist.fm, stats (« Vici »), export de sauvegarde.
+- **Phase 3** — Envoi et stockage réels des billets et des photos (pièces jointes d'un event, champs déjà dessinés en phase 1), import de setlist depuis setlist.fm, stats (« Vici »), export de sauvegarde.
 - **Phase 4** — Design final, Docker pour le Pinas (accès local + Tailscale), APK Android (enveloppe Capacitor) avec billets disponibles hors ligne.
 
 ---
@@ -175,6 +184,7 @@ Ne pas faire : vrai backend, vrais comptes, photos, billets PDF, intégration se
 
 ---
 
-## Notes de design (à faire)
+## Notes de design
 
-- **Photos de concert** : chercher des photos (libres de droits ou perso) pour habiller le fond de l'app (accueil, fiche event). Rose réservé aux éléments, pas aux aplats ; fond sombre avec dégradés et reliefs.
+- Les maquettes (`screens/*.elyx`) sont à jour pour tout le parcours de la phase 1, y compris billet (prix, fichier) et photos souvenirs. Toute évolution de l'interface se fait d'abord dans les maquettes.
+- Reste à faire côté design : variantes des composants du formulaire (états erreur, focus), écran « accueil vide », version bureau.

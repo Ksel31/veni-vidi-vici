@@ -1,0 +1,716 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "icons/lucide/check.svg" as checkIcon
+import "icons/lucide/x.svg" as crossIcon
+import "icons/lucide/chevron-right.svg" as chevronRight
+import "icons/lucide/music.svg" as musicIcon
+import "icons/lucide/search.svg" as searchIcon
+import "icons/lucide/thumbs-up.svg" as thumbsUpIcon
+import "icons/lucide/upload.svg" as uploadIcon
+import "icons/lucide/file-text.svg" as fileIcon
+import "icons/lucide/plus.svg" as plusIcon
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+
+// Briques des écrans secondaires (connexion, ajout, fiche event, historique). Tout est en verre sombre sur photo,
+// texte blanc ; le vert reste réservé au billet et au « + ». Bouton principal = pilule claire, secondaire = verre + filet.
+// Carte en verre sombre : conteneur des sections de formulaire et de la fiche
+export glassCard = frame {
+  left: 0px,
+  top: 0px,
+  width: 100%,
+  height: .auto,
+  layout: {direction: .column, item-gap: 14px},
+  fill: c.colors.glass,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-xl,
+  padding: l.lengths.space-m,
+  children: cardTitle,
+
+  cardTitle = text {
+    width: 100%,
+    fill: c.colors.text-on-dark,
+    contents: "Titre de section",
+    font-size: 18,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+// Petit texte d'aide ou de légende sous un titre
+export hint = text {
+  left: 0px,
+  top: 100px,
+  width: 100%,
+  fill: c.colors.text-on-dark-muted,
+  contents: "Texte d'aide",
+  font-size: 14,
+  font-family: f.fonts.ui,
+  line-height: 1.3
+}
+
+// Bouton principal : pilule claire, texte noir (l'encre du projet sombre = neutral-1)
+export primaryButton = frame {
+  left: 0px,
+  top: 200px,
+  width: 100%,
+  height: 52px,
+  layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+  fill: c.colors.cta,
+  corner-radius: l.lengths.radius-l,
+  children: [buttonGlyph, buttonLabel],
+
+  buttonGlyph = asset {
+    width: 22px,
+    height: 22px,
+    fill: c.colors.neutral-1,
+    contents: checkIcon
+  }
+
+  buttonLabel = text {
+    fill: c.colors.neutral-1,
+    contents: "Continuer",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+// Bouton secondaire : verre dense + filet clair
+export secondaryButton = frame {
+  left: 0px,
+  top: 300px,
+  width: 100%,
+  height: 52px,
+  layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+  fill: c.colors.glass-strong,
+  border: {color: c.colors.border, width: 1.5px},
+  corner-radius: l.lengths.radius-l,
+  children: [buttonGlyph, buttonLabel],
+
+  buttonGlyph = asset {
+    width: 22px,
+    height: 22px,
+    fill: c.colors.text-on-dark,
+    contents: crossIcon
+  }
+
+  buttonLabel = text {
+    fill: c.colors.text-on-dark,
+    contents: "Annuler",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+// Champ de saisie : libellé au-dessus, valeur dans une boîte sombre, icône Lucide à gauche
+export field = frame {
+  left: 0px,
+  top: 400px,
+  width: 100%,
+  height: .auto,
+  layout: {direction: .column, item-gap: 6px},
+  children: [fieldLabel, fieldBox],
+
+  fieldLabel = text {
+    fill: c.colors.text-on-dark-muted,
+    contents: "Libellé",
+    font-size: 13,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  fieldBox = frame {
+    width: 100%,
+    height: 48px,
+    layout: {align-items: .center, item-gap: 10px},
+    fill: c.colors.surface-dark,
+    border: c.colors.glass-border,
+    corner-radius: l.lengths.radius-m,
+    padding: [0px, 14px],
+    children: [fieldGlyph, fieldValue],
+
+    fieldGlyph = asset {
+      width: 20px,
+      height: 20px,
+      fill: c.colors.text-on-dark-muted,
+      contents: searchIcon
+    }
+
+    fieldValue = text {
+      width: 100%,
+      fill: c.colors.text-on-dark,
+      contents: "Valeur",
+      font-size: 16,
+      font-family: f.fonts.ui
+    }
+  }
+}
+
+// Champ vide : la valeur devient un texte d'aide grisé
+@variant
+export fieldEmpty = frame : field {
+  left: 500px,
+  top: 400px,
+
+  fieldBox {
+    fieldValue {
+      fill[0].color: c.colors.text-on-dark-muted
+    }
+  }
+}
+
+// Puce de choix (type de passage, année, jour…) : inactive = verre + filet, active = pilule claire
+export chip = frame {
+  left: 0px,
+  top: 500px,
+  width: .auto,
+  height: 36px,
+  layout: {justify-content: .center, align-items: .center},
+  fill: c.colors.glass-strong,
+  border: c.colors.border,
+  corner-radius: l.lengths.radius-m,
+  padding: [0px, 16px],
+  children: chipLabel,
+
+  chipLabel = text {
+    fill: c.colors.text-on-dark,
+    contents: "2025",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+@variant
+export chipOn = frame : chip {
+  left: 200px,
+  top: 500px,
+  border[0].color: c.colors.light,
+  fill[0].color: c.colors.light,
+
+  chipLabel {
+    fill[0].color: c.colors.neutral-1
+  }
+}
+
+// Ligne cochable (jours faits, groupes vus) : case + libellé + détail. Base = cochée ; « Off » = case vide.
+export checkRow = frame {
+  left: 0px,
+  top: 600px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 12px},
+  fill: c.colors.surface-dark,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-m,
+  padding: [10px, 12px],
+  children: [checkBox, checkTexts],
+
+  checkBox = frame {
+    width: 24px,
+    height: 24px,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.light,
+    border: {color: c.colors.light, width: 2px},
+    corner-radius: l.lengths.radius-s,
+    children: checkGlyph,
+
+    checkGlyph = asset {
+      width: 18px,
+      height: 18px,
+      fill: c.colors.neutral-1,
+      contents: checkIcon
+    }
+  }
+
+  checkTexts = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 1px},
+    children: [checkTitle, checkMeta],
+
+    checkTitle = text {
+      width: 100%,
+      fill: c.colors.text-on-dark,
+      contents: "Groupe",
+      font-size: 16,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    checkMeta = text {
+      width: 100%,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Détail",
+      font-size: 13,
+      font-family: f.fonts.ui
+    }
+  }
+}
+
+@variant
+export checkRowOff = frame : checkRow {
+  left: 500px,
+  top: 600px,
+
+  checkBox {
+    fill[0].color: c.colors.neutral-1,
+    border[0].color: c.colors.neutral-9,
+
+    checkGlyph {
+      display: .none
+    }
+  }
+}
+
+// Badge de statut : texte + icône, jamais la couleur seule. Base = « Vu » (vert), variantes « Raté » et « À confirmer ».
+export statusBadge = frame {
+  left: 0px,
+  top: 700px,
+  width: .auto,
+  height: .auto,
+  layout: {justify-content: .center, align-items: .center, item-gap: 4px},
+  fill: c.colors.success-bg,
+  border: c.colors.success-border,
+  corner-radius: l.lengths.radius-s,
+  padding: [4px, 8px],
+  children: [badgeGlyph, badgeLabel],
+
+  badgeGlyph = asset {
+    width: 16px,
+    height: 16px,
+    fill: c.colors.success-text,
+    contents: checkIcon
+  }
+
+  badgeLabel = text {
+    fill: c.colors.success-text,
+    contents: "Vu",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+@variant
+export statusBadgeMissed = frame : statusBadge {
+  left: 200px,
+  top: 700px,
+  border[0].color: c.colors.danger-border,
+  fill[0].color: c.colors.danger-bg,
+
+  badgeGlyph {
+    fill[0].color: c.colors.danger-text,
+    contents: crossIcon
+  }
+
+  badgeLabel {
+    fill[0].color: c.colors.danger-text,
+    contents: "Raté"
+  }
+}
+
+@variant
+export statusBadgePending = frame : statusBadge {
+  left: 400px,
+  top: 700px,
+  border[0].color: c.colors.warning-border,
+  fill[0].color: c.colors.warning-bg,
+
+  badgeGlyph {
+    fill[0].color: c.colors.warning-text,
+    contents: chevronRight
+  }
+
+  badgeLabel {
+    fill[0].color: c.colors.warning-text,
+    contents: "À confirmer"
+  }
+}
+
+// Ligne d'event passé (historique) : date à gauche, titre + lieu, badge de statut à droite. Même verre que eventRow.
+export pastRow = frame {
+  left: 0px,
+  top: 800px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 12px},
+  fill: c.colors.glass,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-xl,
+  padding: 12px,
+  children: [dateBlock, info, status],
+
+  dateBlock = frame {
+    width: 60px,
+    height: 60px,
+    layout: {direction: .column, justify-content: .center, align-items: .center},
+    fill: c.colors.surface-dark,
+    corner-radius: l.lengths.radius-m,
+    children: [dateDay, dateMonth],
+
+    dateDay = text {
+      fill: c.colors.neutral-12,
+      contents: "12",
+      font-size: 24,
+      font-family: f.fonts.ui,
+      font-style: "Medium",
+      line-height: 1
+    }
+
+    dateMonth = text {
+      fill: c.colors.neutral-12,
+      contents: "DÉC",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Medium",
+      letter-spacing: 4%
+    }
+  }
+
+  info = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 2px},
+    children: [eventTitle, eventMeta],
+
+    eventTitle = text {
+      width: 100%,
+      fill: c.colors.neutral-12,
+      contents: "Titre",
+      font-size: 18,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    eventMeta = text {
+      width: 100%,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Lieu",
+      font-size: 14,
+      font-family: f.fonts.ui
+    }
+  }
+
+  status = frame : statusBadge {}
+}
+
+// Event passé à confirmer (écran « À confirmer ») : carte en verre avec la question et les deux réponses.
+export pendingCard = frame {
+  left: 0px,
+  top: 900px,
+  width: 100%,
+  height: .auto,
+  layout: {direction: .column, item-gap: 14px},
+  fill: c.colors.glass,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-xl,
+  padding: l.lengths.space-m,
+  children: [head, actions],
+
+  head = frame : pastRow {
+    padding-top: 0px,
+    padding-left: 0px,
+    padding-bottom: 0px,
+    padding-right: 0px,
+    border[0].color: .transparent,
+    fill[0].color: .transparent,
+
+    status {
+      display: .none
+    }
+  }
+
+  actions = frame {
+    width: 100%,
+    height: .auto,
+    layout: {item-gap: 12px},
+    children: [missedButton, seenButton],
+
+    missedButton = frame : secondaryButton {
+      height: 48px,
+
+      buttonLabel {
+        contents: "Raté"
+      }
+    }
+
+    seenButton = frame : primaryButton {
+      height: 48px,
+
+      buttonLabel {
+        contents: "Vu"
+      }
+    }
+  }
+}
+
+// Grand choix de type d'event (étape 1 de l'ajout) : disque clair + icône, titre, phrase, chevron
+export typeCard = frame {
+  left: 0px,
+  top: 1000px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 16px},
+  fill: c.colors.glass,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-xl,
+  padding: 20px,
+  children: [typeDisc, typeTexts, typeChevron],
+
+  typeDisc = frame {
+    width: 64px,
+    height: 64px,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.light,
+    corner-radius: 32px,
+    children: typeGlyph,
+
+    typeGlyph = asset {
+      width: 30px,
+      height: 30px,
+      fill: c.colors.neutral-1,
+      contents: musicIcon
+    }
+  }
+
+  typeTexts = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 4px},
+    children: [typeTitle, typeText],
+
+    typeTitle = text {
+      width: 100%,
+      fill: c.colors.text-on-dark,
+      contents: "Concert",
+      font-size: 26,
+      font-family: f.fonts.ui,
+      font-style: "Medium",
+      letter-spacing: -2%
+    }
+
+    typeText = text {
+      width: 100%,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Une soirée, une salle.",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      line-height: 1.3
+    }
+  }
+
+  typeChevron = asset {
+    width: 24px,
+    height: 24px,
+    fill: c.colors.text-on-dark,
+    contents: chevronRight
+  }
+}
+
+// Ligne de line-up : nom du groupe, rôle (tête d'affiche / première partie) en pastille papier, croix pour retirer
+export lineupRow = frame {
+  left: 0px,
+  top: 1100px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 10px},
+  fill: c.colors.surface-dark,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-m,
+  padding: [10px, 12px],
+  children: [bandName, bandRole, bandRemove],
+
+  bandName = text {
+    width: 100%,
+    fill: c.colors.text-on-dark,
+    contents: "Groupe",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  bandRole = frame {
+    width: .auto,
+    height: .auto,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.neutral-12,
+    corner-radius: l.lengths.radius-s,
+    padding: [4px, 8px],
+    children: bandRoleLabel,
+
+    bandRoleLabel = text {
+      fill: c.colors.neutral-1,
+      contents: "Tête d'affiche",
+      font-size: 13,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+  }
+
+  bandRemove = asset {
+    width: 20px,
+    height: 20px,
+    fill: c.colors.text-on-dark-muted,
+    contents: crossIcon
+  }
+}
+
+// Pouce (avis global ou par groupe) : bouton en verre avec libellé ; sélectionné = pilule claire
+export thumbButton = frame {
+  left: 0px,
+  top: 1200px,
+  width: .auto,
+  height: 44px,
+  layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+  fill: c.colors.glass-strong,
+  border: c.colors.border,
+  corner-radius: l.lengths.radius-m,
+  padding: [0px, 16px],
+  children: [thumbGlyph, thumbLabel],
+
+  thumbGlyph = asset {
+    width: 20px,
+    height: 20px,
+    fill: c.colors.text-on-dark,
+    contents: thumbsUpIcon
+  }
+
+  thumbLabel = text {
+    fill: c.colors.text-on-dark,
+    contents: "J'ai aimé",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+@variant
+export thumbButtonOn = frame : thumbButton {
+  left: 300px,
+  top: 1200px,
+  border[0].color: c.colors.light,
+  fill[0].color: c.colors.light,
+
+  thumbGlyph {
+    fill[0].color: c.colors.neutral-1
+  }
+
+  thumbLabel {
+    fill[0].color: c.colors.neutral-1
+  }
+}
+
+// Zone d'envoi de fichier (billet PDF ou image) : cadre en pointillés, icône, consigne
+export uploadBox = frame {
+  left: 0px,
+  top: 1300px,
+  width: 100%,
+  height: .auto,
+  layout: {
+    direction: .column,
+    justify-content: .center,
+    align-items: .center,
+    item-gap: 6px
+  },
+  border: {color: c.colors.border, width: 1.5px, dash: [6px, 5px]},
+  corner-radius: l.lengths.radius-m,
+  padding: [18px, 12px],
+  children: [uploadGlyph, uploadTitle, uploadHint],
+
+  uploadGlyph = asset {
+    width: 26px,
+    height: 26px,
+    fill: c.colors.text-on-dark,
+    contents: uploadIcon
+  }
+
+  uploadTitle = text {
+    fill: c.colors.text-on-dark,
+    contents: "Ajouter le billet",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  uploadHint = text {
+    fill: c.colors.text-on-dark-muted,
+    contents: "PDF ou image",
+    font-size: 13,
+    font-family: f.fonts.ui
+  }
+}
+
+// Fichier déjà envoyé : icône, nom, taille, croix pour le retirer
+export fileRow = frame {
+  left: 0px,
+  top: 1400px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 12px},
+  fill: c.colors.surface-dark,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-m,
+  padding: [10px, 12px],
+  children: [fileGlyph, fileTexts, fileRemove],
+
+  fileGlyph = asset {
+    width: 24px,
+    height: 24px,
+    fill: c.colors.text-on-dark,
+    contents: fileIcon
+  }
+
+  fileTexts = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 1px},
+    children: [fileName, fileMeta],
+
+    fileName = text {
+      width: 100%,
+      fill: c.colors.text-on-dark,
+      contents: "billet.pdf",
+      font-size: 16,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    fileMeta = text {
+      width: 100%,
+      fill: c.colors.text-on-dark-muted,
+      contents: "PDF, 240 Ko",
+      font-size: 13,
+      font-family: f.fonts.ui
+    }
+  }
+
+  fileRemove = asset {
+    width: 20px,
+    height: 20px,
+    fill: c.colors.text-on-dark-muted,
+    contents: crossIcon
+  }
+}
+
+// Case « ajouter une photo » de la grille de souvenirs : même taille que les vignettes (100 px)
+export photoAdd = frame {
+  left: 0px,
+  top: 1500px,
+  width: 100px,
+  height: 100px,
+  layout: {justify-content: .center, align-items: .center},
+  border: {color: c.colors.border, width: 1.5px, dash: [6px, 5px]},
+  corner-radius: l.lengths.radius-m,
+  children: photoAddGlyph,
+
+  photoAddGlyph = asset {
+    width: 28px,
+    height: 28px,
+    fill: c.colors.text-on-dark,
+    contents: plusIcon
+  }
+}

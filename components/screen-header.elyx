@@ -1,62 +1,99 @@
-use "fonts/ROYALHefanaRegular.woff"
-use "fonts/Archivo.ttf"
+use "fonts/CabinetGrotesk-Variable.ttf"
 
+import "images/logo-white.svg" as logoImage
 import "icons/lucide/arrow-left.svg" as arrowLeft
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
 
-// Logo en tête de l'accueil, en Hefana sur une ligne : seul endroit où la police de marque apparaît.
+// Logo seul, sans fond : pour la connexion et l'accueil vide. L'accueil, lui, s'ouvre sur le profil (voir profileHeader).
 export brandHeader = frame {
   left: 0px,
   top: 0px,
   width: 100%,
   height: .auto,
   layout: {direction: .column},
-  fill: c.colors.brand,
   padding: [24px, 20px, 12px],
   children: logo,
 
-  logo = text {
-    transform: [1, -0.2, 8, 0, 1, 0],
-    fill: c.colors.ink,
-    contents: "VENI VIDI VICI",
-    font-size: 40,
-    font-family: f.fonts.brand
+  logo = asset {
+    width: 150px,
+    height: 53px,
+    contents: logoImage
   }
 }
 
-// En-tête d'un écran secondaire : retour + titre en Archivo gras
+// Bouton rond en verre sombre (retour, fermer…) : 48 px, icône blanche. Survol step 4, pressé step 5, focus anneau, désactivé gris.
+export glassButton = frame {
+  left: 400px,
+  top: 0px,
+  width: 48px,
+  height: 48px,
+  layout: {justify-content: .center, align-items: .center},
+  fill: c.colors.glass-strong,
+  border: c.colors.glass-border,
+  corner-radius: 24px,
+  children: glyph,
+
+  glyph = asset {
+    width: 24px,
+    height: 24px,
+    fill: c.colors.text-on-dark,
+    contents: arrowLeft
+  }
+}
+
+@variant
+export glassButtonHover = frame : glassButton {
+  left: 500px,
+  top: 0px,
+  fill[0].color: c.colors.state-hover
+}
+
+@variant
+export glassButtonPressed = frame : glassButton {
+  left: 500px,
+  top: 100px,
+  fill[0].color: c.colors.state-pressed
+}
+
+@variant
+export glassButtonFocus = frame : glassButton {
+  left: 500px,
+  top: 200px,
+  border[0].color: c.colors.focus-ring,
+  border[0].position: .outside,
+  border[0].width: l.lengths.focus-ring-width
+}
+
+@variant
+export glassButtonDisabled = frame : glassButton {
+  left: 500px,
+  top: 300px,
+
+  glyph {
+    fill[0].color: c.colors.disabled-text
+  }
+}
+
+// En-tête d'un écran secondaire, sur fond sombre : bouton retour rond en verre sombre + titre blanc en Medium.
 export pageHeader = frame {
   left: 0px,
-  top: 200px,
+  top: 400px,
   width: 100%,
   height: .auto,
   layout: {align-items: .center, item-gap: l.lengths.space-m},
   padding: [20px, 20px, 0px],
   children: [backButton, pageTitle],
 
-  backButton = frame {
-    width: 44px,
-    height: 44px,
-    layout: {justify-content: .center, align-items: .center},
-    border: c.colors.ink,
-    corner-radius: l.lengths.radius-m,
-    children: backIcon,
-
-    backIcon = asset {
-      width: 24px,
-      height: 24px,
-      fill: c.colors.ink,
-      contents: arrowLeft
-    }
-  }
+  backButton = frame : glassButton {}
 
   pageTitle = text {
-    fill: c.colors.ink,
+    fill: c.colors.text-on-dark,
     contents: "Titre",
-    font-size: 28,
+    font-size: 32,
     font-family: f.fonts.ui,
-    font-style: "Bold"
+    font-style: "Medium",
+    letter-spacing: -3%
   }
 }
