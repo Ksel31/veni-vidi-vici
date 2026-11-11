@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import favicon from '#lib/assets/favicon.svg';
 	import { data, restoreSession } from '#lib/store.js';
+	import { shellTone } from '#lib/shell.js';
 	import '../app.css';
 
 	/** @type {{ children: import('svelte').Snippet }} */
@@ -14,7 +15,7 @@
 	const loggedIn = $derived(Boolean($data.userId));
 	const show = $derived(ready && ((path === '/login' && !loggedIn) || (path !== '/login' && loggedIn)));
 
-	const background = $derived(backgroundFor(path));
+	const background = $derived($shellTone || backgroundFor(path));
 
 	/** @param {string} current */
 	function backgroundFor(current) {
@@ -25,6 +26,8 @@
 		if (current === '/add') return 'bg-add-type';
 		if (current.startsWith('/add/concert')) return 'bg-add-concert';
 		if (current.startsWith('/add/festival')) return 'bg-add-festival';
+		if (current.includes('/edit')) return 'bg-event-edit';
+		if (current.startsWith('/event/')) return 'bg-event-upcoming';
 		return 'bg-plain';
 	}
 

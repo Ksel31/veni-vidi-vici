@@ -314,6 +314,81 @@ export function updateEvent(id, changes) {
 	commit({ ...state, events, performances });
 }
 
+/**
+ * Vu ou Raté. Concert : les passages suivent. Festival raté : tous les passages en `missed`.
+ * @param {string} eventId
+ * @param {'attended' | 'missed'} status
+ */
+export function setPresence(eventId, status) {
+	const state = get(data);
+	const current = state.events.find((event) => event.id === eventId);
+	if (!current || !state.userId) return;
+	if (status !== 'attended' && status !== 'missed') return;
+
+	let performances = state.performances;
+	if (current.type === 'concert') {
+		const next = status === 'attended' ? 'seen' : 'missed';
+		performances = performances.map((performance) =>
+			performance.eventId === eventId ? { ...performance, status: next } : performance
+		);
+	} else if (status === 'missed') {
+		performances = performances.map((performance) =>
+			performance.eventId === eventId ? { ...performance, status: 'missed' } : performance
+		);
+	}
+
+	const event = normalizeEvent({ ...current, status });
+	commit({
+		...state,
+		events: state.events.map((item) => (item.id === eventId ? event : item)),
+		performances: applyPerformanceRules(event, performances)
+	});
+}
+
+/**
+ * Festival vu : jours faits, groupes cochés en `seen`, les autres en `missed`.
+ * @param {string} eventId
+ * @param {string[]} daysAttended
+ * @param {string[]} seenIds
+ */
+export function setFestivalAttendance(eventId, daysAttended, seenIds) {
+	const state = get(data);
+	const current = state.events.find((event) => event.id === eventId);
+	if (!current || current.type !== 'festival' || !state.userId) return;
+
+	const end = current.endDate || current.startDate;
+	const days = [...new Set(daysAttended.filter((day) => day >= current.startDate && day <= end))];
+	const seen = new Set(seenIds);
+	const performances = state.performances.map((performance) => {
+		if (performance.eventId !== eventId) return performance;
+		const thatDay = !performance.day || days.includes(performance.day);
+		/** @type {'seen' | 'missed'} */
+		const next = thatDay && seen.has(performance.id) ? 'seen' : 'missed';
+		return { ...performance, status: next };
+	});
+	const event = normalizeEvent({ ...current, status: 'attended', daysAttended: days });
+	commit({
+		...state,
+		events: state.events.map((item) => (item.id === eventId ? event : item)),
+		performances: applyPerformanceRules(event, performances)
+	});
+}
+
+/** Pouce ou setlist d'un passage. @param {string} id @param {Partial<Pick<Performance, 'thumb' | 'setlist'>>} changes */
+export function updatePerformance(id, changes) {
+	const state = get(data);
+	if (!state.userId) return;
+	const performances = state.performances.map((performance) => {
+		if (performance.id !== id) return performance;
+		return {
+			...performance,
+			thumb: changes.thumb === undefined ? performance.thumb : changes.thumb,
+			setlist: changes.setlist === undefined ? performance.setlist : changes.setlist
+		};
+	});
+	commit({ ...state, performances });
+}
+
 /** Events `planned` dont la date n'est pas passée, du plus proche au plus lointain.
  * @param {AppData} state
  */
