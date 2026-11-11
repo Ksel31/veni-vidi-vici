@@ -253,6 +253,13 @@ button {
 		url("/images/bg-to-confirm.jpg");
 }
 
+/* Historique : screens/history.elyx */
+.bg-history::before {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 55%) 0%, rgb(0% 0% 0% / 68%) 40%, rgb(0% 0% 0% / 92%) 100%),
+		url("/images/bg-history.jpg");
+}
+
 .screen {
 	position: relative;
 	z-index: 1;
@@ -519,9 +526,18 @@ button {
 	}
 
 	.event-row:hover,
-	.pending-head:hover {
+	.pending-head:hover,
+	.history-row:hover {
 		background: var(--glass-strong);
 		border-color: var(--border);
+	}
+
+	.chip:hover:not(.chip-on) {
+		background: var(--state-hover);
+	}
+
+	.chip-on:hover {
+		background: var(--light-hover);
 	}
 }
 
@@ -540,7 +556,8 @@ button {
 }
 
 .event-row:active,
-.pending-head:active {
+.pending-head:active,
+.history-row:active {
 	background: var(--surface-dark-raised);
 	border-color: var(--border);
 }
@@ -883,4 +900,82 @@ button {
 
 .pending-actions .btn {
 	height: 48px;
+}
+
+/* Historique : titre Regular 36, puces d'année (ui.elyx), ligne passée. */
+.screen-history {
+	gap: 18px;
+}
+
+.history-title {
+	margin: 32px 6px 0;
+	font-size: 36px;
+	font-weight: 400;
+	line-height: 1;
+	letter-spacing: -0.03em;
+}
+
+.year-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-s);
+	padding: 0 6px;
+}
+
+.chip {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: var(--tap);
+	padding: 0 var(--space-m);
+	border: var(--line-width) solid var(--border);
+	border-radius: var(--radius-m);
+	background: var(--glass-strong);
+	color: var(--text-on-dark);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.chip:active:not(.chip-on) {
+	background: var(--state-pressed);
+}
+
+.chip-on {
+	border-color: var(--light);
+	background: var(--light);
+	color: var(--neutral-1);
+}
+
+.chip-on:active {
+	background: var(--light-pressed);
+}
+
+.history-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px;
+	background: var(--glass);
+	border: var(--line-width) solid var(--glass-border);
+	border-radius: var(--radius-xl);
+}
+
+.status-badge {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	border: var(--line-width) solid var(--success-border);
+	border-radius: var(--radius-s);
+	background: var(--success-bg);
+	color: var(--success-text);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.status-missed {
+	border-color: var(--danger-border);
+	background: var(--danger-bg);
+	color: var(--danger-text);
 }

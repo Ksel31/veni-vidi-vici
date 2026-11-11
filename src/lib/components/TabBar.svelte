@@ -2,7 +2,9 @@
 	import { page } from '$app/state';
 	import Icon from './Icon.svelte';
 
-	const onHome = $derived(page.url.pathname === '/');
+	const path = $derived(page.url.pathname);
+	const onHome = $derived(path === '/');
+	const onHistory = $derived(path === '/history');
 </script>
 
 <div class="dock">
@@ -11,7 +13,7 @@
 		<a class="tab" class:tab-active={onHome} href="/" aria-label="Accueil" aria-current={onHome ? 'page' : undefined}>
 			<Icon name="house" />
 		</a>
-		<a class="tab" href="/history" aria-label="Historique">
+		<a class="tab" class:tab-active={onHistory} href="/history" aria-label="Historique" aria-current={onHistory ? 'page' : undefined}>
 			<Icon name="history" />
 		</a>
 	</nav>
