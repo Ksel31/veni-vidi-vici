@@ -6,7 +6,7 @@
 </script>
 
 <header class="page-header">
-	<a class="icon-button" href={backHref} aria-label="Retour à l'accueil">
+	<a class="icon-button" href={backHref} aria-label={backHref === '/' ? "Retour à l'accueil" : 'Retour'}>
 		<Icon name="arrow-left" />
 	</a>
 	<h1>{title}</h1>

@@ -117,13 +117,17 @@ Toutes les données sont propres à un utilisateur (pas de partage entre comptes
   - Festival : l'utilisateur coche les jours faits, puis les groupes vus parmi ceux de ces jours. Les groupes non cochés passent en `missed`.
   - Si un festival entier est marqué « Raté », tous ses passages passent en `missed`.
 - Le statut d'un passage est lié à la date de cet event : un groupe raté à un festival reste `missed` pour cette date. Le revoir plus tard est un autre event.
-- **Ajout d'un event passé** : la présence est pré-sélectionnée sur « Vu » (hypothèse à valider à l'usage).
+- **Ajout d'un event passé** : la présence est pré-sélectionnée sur « Vu ». L'event est enregistré `attended`. Concert : les passages passent en `seen`. Festival : les passages restent `to_see` jusqu'à ce que les jours et les groupes soient cochés sur la fiche.
+- **Pour enregistrer un event** : date de début, lieu, et au moins un groupe. Un festival demande en plus un titre, une date de fin, et un jour pour chaque groupe. Le titre d'un concert reste optionnel.
+- **Lieu** : un champ nom, avec autocomplétion sur les lieux déjà saisis. Si le nom est nouveau, un champ ville apparaît. Le pays vaut Belgique par défaut.
+- **Festival, jour de passage** : une puce par jour entre le début et la fin (libellé du type « Jeu 17 »). L'utilisateur touche celle du groupe.
+- **Concert, rôles** : deux zones, « Tête d'affiche » et « Première partie ». Chaque groupe a une poignée pour le glisser d'une zone à l'autre. Toucher la pastille du rôle bascule aussi tête d'affiche / première partie.
+- Lieux et artistes : autocomplétion sur ceux déjà saisis, création à la volée sinon.
 - **Tout est modifiable à tout moment** depuis la fiche : date, lieu, groupes, billets. Si la date repasse à aujourd'hui ou plus tard, l'event redevient `planned` et tous ses passages repassent en `to_see`.
 - Pas de statut « reporté » : on modifie la date.
 - Le compte rendu (pouces, avis, setlist, accompagnants, photos souvenirs) n'est accessible qu'une fois l'event marqué « Vu ».
 - **Billet** : à l'ajout comme en modification, on peut cocher « billet acheté », saisir le prix et envoyer le fichier du billet (PDF ou image). Prix et fichier sont toujours optionnels, et modifiables à tout moment.
 - **Photos souvenirs** : ajoutées depuis le compte rendu d'un event vu, sans limite de nombre, affichées en grille de vignettes avec une case « + ».
-- Lieux et artistes : autocomplétion sur ceux déjà saisis, création à la volée sinon.
 - Un concert a généralement 1 à 3 groupes, mais le nombre n'est pas limité.
 
 ---
