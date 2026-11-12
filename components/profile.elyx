@@ -93,7 +93,7 @@ export profileHeader = frame {
   height: .auto,
   layout: {direction: .column, item-gap: 14px},
   padding: [0px, 6px],
-  children: [identity, stats],
+  children: [identity, stats, logout],
 
   identity = frame {
     width: 100%,
@@ -185,6 +185,20 @@ export profileHeader = frame {
       statValue {
         contents: "31"
       }
+    }
+  }
+
+  logout = frame {
+    width: .auto,
+    height: l.lengths.tap,
+    layout: {align-items: .center},
+    children: logoutLabel,
+
+    logoutLabel = text {
+      fill: c.colors.text-on-dark-muted,
+      contents: "Se déconnecter",
+      font-size: 14,
+      font-family: f.fonts.ui
     }
   }
 }

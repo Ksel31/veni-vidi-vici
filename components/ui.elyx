@@ -9,6 +9,8 @@ import "icons/lucide/thumbs-up.svg" as thumbsUpIcon
 import "icons/lucide/upload.svg" as uploadIcon
 import "icons/lucide/file-text.svg" as fileIcon
 import "icons/lucide/plus.svg" as plusIcon
+import "icons/lucide/crown.svg" as crownIcon
+import "icons/lucide/trash.svg" as trashIcon
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
@@ -26,6 +28,8 @@ export glassCard = frame {
   border: c.colors.glass-border,
   corner-radius: l.lengths.radius-xl,
   padding: l.lengths.space-m,
+  // Le contour de focus dépasse la boîte : la carte ne le coupe plus.
+  overflow: .visible,
   children: cardTitle,
 
   cardTitle = text {
@@ -112,6 +116,7 @@ export field = frame {
   width: 100%,
   height: .auto,
   layout: {direction: .column, item-gap: 6px},
+  overflow: .visible,
   children: [fieldLabel, fieldBox],
 
   fieldLabel = text {
@@ -130,6 +135,7 @@ export field = frame {
     border: c.colors.glass-border,
     corner-radius: l.lengths.radius-m,
     padding: [0px, 14px],
+    overflow: .visible,
     children: [fieldGlyph, fieldValue],
 
     fieldGlyph = asset {
@@ -167,8 +173,8 @@ export chip = frame {
   left: 0px,
   top: 500px,
   width: .auto,
-  height: 36px,
-  layout: {justify-content: .center, align-items: .center},
+  height: l.lengths.tap,
+  layout: {justify-content: .center, align-items: .center, item-gap: 8px},
   fill: c.colors.glass-strong,
   border: c.colors.border,
   corner-radius: l.lengths.radius-m,
@@ -342,7 +348,8 @@ export pastRow = frame {
   border: c.colors.glass-border,
   corner-radius: l.lengths.radius-xl,
   padding: 12px,
-  children: [dateBlock, info, status],
+  overflow: .visible,
+  children: [dateBlock, info, status, deleteMark],
 
   dateBlock = frame {
     width: 60px,
@@ -396,6 +403,18 @@ export pastRow = frame {
   }
 
   status = frame : statusBadge {}
+
+  // Croix discrète, coin haut droit. Masquée ici : l'historique l'affiche (olive-11, trait 2).
+  deleteMark = asset {
+    display: .none,
+    top: 10px,
+    right: 10px,
+    width: 12px,
+    height: 12px,
+    ignore-stack: .true,
+    fill: c.colors.text-on-dark-muted,
+    contents: crossIcon
+  }
 }
 
 // Event passé à confirmer (écran « À confirmer ») : carte en verre avec la question et les deux réponses.
@@ -511,18 +530,49 @@ export typeCard = frame {
   }
 }
 
-// Ligne de line-up : nom du groupe, rôle (tête d'affiche / première partie) en pastille papier, croix pour retirer
+// Ligne de groupe. Le rôle est une pastille ronde : couronne = tête d'affiche, micro = première partie.
+// Le libellé (masqué) sert aux jours de festival (« Jeu 17 »), texte centré. La poignée est masquée hors formulaire.
 export lineupRow = frame {
   left: 0px,
   top: 1100px,
   width: 100%,
   height: .auto,
-  layout: {align-items: .center, item-gap: 10px},
+  layout: {align-items: .center, item-gap: 8px},
   fill: c.colors.surface-dark,
   border: c.colors.glass-border,
   corner-radius: l.lengths.radius-m,
-  padding: [10px, 12px],
-  children: [bandName, bandRole, bandRemove],
+  padding: [4px, 12px],
+  overflow: .visible,
+  children: [dragHandle, bandName, bandRole, bandRemove],
+
+  dragHandle = frame {
+    display: .none,
+    width: l.lengths.tap,
+    height: l.lengths.tap,
+    layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 4px},
+    children: [grip1, grip2, grip3],
+
+    grip1 = frame {
+      width: 18px,
+      height: 2px,
+      fill: c.colors.text-on-dark-muted,
+      corner-radius: 1px
+    }
+
+    grip2 = frame {
+      width: 18px,
+      height: 2px,
+      fill: c.colors.text-on-dark-muted,
+      corner-radius: 1px
+    }
+
+    grip3 = frame {
+      width: 18px,
+      height: 2px,
+      fill: c.colors.text-on-dark-muted,
+      corner-radius: 1px
+    }
+  }
 
   bandName = text {
     width: 100%,
@@ -534,28 +584,43 @@ export lineupRow = frame {
   }
 
   bandRole = frame {
-    width: .auto,
-    height: .auto,
+    width: 32px,
+    height: 32px,
     layout: {justify-content: .center, align-items: .center},
-    fill: c.colors.neutral-12,
-    corner-radius: l.lengths.radius-s,
-    padding: [4px, 8px],
-    children: bandRoleLabel,
+    fill: c.colors.light,
+    corner-radius: 32px,
+    children: [bandRoleGlyph, bandRoleLabel],
+
+    bandRoleGlyph = asset {
+      width: 18px,
+      height: 18px,
+      fill: c.colors.neutral-1,
+      contents: crownIcon
+    }
 
     bandRoleLabel = text {
+      display: .none,
       fill: c.colors.neutral-1,
-      contents: "Tête d'affiche",
+      contents: "Jeu 17",
       font-size: 13,
       font-family: f.fonts.ui,
-      font-style: "Medium"
+      font-style: "Medium",
+      line-height: 1
     }
   }
 
-  bandRemove = asset {
-    width: 20px,
-    height: 20px,
-    fill: c.colors.text-on-dark-muted,
-    contents: crossIcon
+  bandRemove = frame {
+    width: l.lengths.tap,
+    height: l.lengths.tap,
+    layout: {justify-content: .center, align-items: .center},
+    children: bandRemoveGlyph,
+
+    bandRemoveGlyph = asset {
+      width: 20px,
+      height: 20px,
+      fill: c.colors.text-on-dark-muted,
+      contents: crossIcon
+    }
   }
 }
 
@@ -638,7 +703,7 @@ export uploadBox = frame {
 
   uploadHint = text {
     fill: c.colors.text-on-dark-muted,
-    contents: "PDF ou image",
+    contents: "PDF ou image. L'envoi n'est pas encore branché.",
     font-size: 13,
     font-family: f.fonts.ui
   }
@@ -712,5 +777,145 @@ export photoAdd = frame {
     height: 28px,
     fill: c.colors.text-on-dark,
     contents: plusIcon
+  }
+}
+
+// Bouton destructif : filet et texte rouge, fond transparent, icône poubelle. Sous « Modifier l'event ».
+export dangerButton = frame {
+  left: 500px,
+  top: 300px,
+  width: 100%,
+  height: 52px,
+  layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+  border: {color: c.colors.danger-border, width: 1.5px},
+  corner-radius: l.lengths.radius-l,
+  children: [buttonGlyph, buttonLabel],
+
+  buttonGlyph = asset {
+    width: 22px,
+    height: 22px,
+    fill: c.colors.danger-text,
+    contents: trashIcon
+  }
+
+  buttonLabel = text {
+    fill: c.colors.danger-text,
+    contents: "Supprimer l'event",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+// Question de suppression : panneau opaque (plus le verre), pas un voile.
+export deleteDialog = frame {
+  left: 0px,
+  top: 1650px,
+  width: 358px,
+  height: .auto,
+  layout: {direction: .column, item-gap: 14px},
+  fill: c.colors.surface-dark-raised,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-xl,
+  padding: l.lengths.space-m,
+  children: [dialogTitle, dialogHint, dialogActions],
+
+  dialogTitle = text {
+    width: 100%,
+    fill: c.colors.text-on-dark,
+    contents: "Supprimer cet event ?",
+    font-size: 18,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  dialogHint = text : hint {
+    left: 0px,
+    top: 0px,
+    contents: "L'event, ses groupes et son compte rendu seront effacés."
+  }
+
+  dialogActions = frame {
+    width: 100%,
+    height: .auto,
+    layout: {item-gap: 8px},
+    children: [cancel, confirm],
+
+    cancel = frame : secondaryButton {
+      buttonGlyph {
+        display: .none
+      }
+
+      buttonLabel {
+        contents: "Annuler"
+      }
+    }
+
+    confirm = frame : primaryButton {
+      buttonGlyph {
+        contents: trashIcon
+      }
+
+      buttonLabel {
+        contents: "Supprimer"
+      }
+    }
+  }
+}
+
+// Même question, sur le voile noir (60 %) de l'historique et de la fiche.
+export deleteConfirm = frame {
+  left: 420px,
+  top: 1650px,
+  width: 390px,
+  height: 280px,
+  layout: {justify-content: .center, align-items: .center},
+  fill: rgb(0%, 0%, 0%, 60%),
+  corner-radius: 24px,
+  padding: 16px,
+  children: panel,
+
+  panel = frame : deleteDialog {
+    left: 0px,
+    top: 0px
+  }
+}
+
+// Toast après « Raté » sur À confirmer : 5 secondes, action « Annuler ».
+export undoToast = frame {
+  left: 0px,
+  top: 2000px,
+  width: 358px,
+  height: .auto,
+  layout: {justify-content: .space-between, align-items: .center, item-gap: 12px},
+  fill: c.colors.surface-dark,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-l,
+  padding: [8px, 8px, 8px, 16px],
+  children: [toastText, toastAction],
+
+  toastText = text {
+    width: 100%,
+    fill: c.colors.text-on-dark,
+    contents: "Event marqué comme raté",
+    font-size: 15,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  toastAction = frame {
+    width: .auto,
+    height: l.lengths.tap,
+    layout: {justify-content: .center, align-items: .center},
+    padding: [0px, 12px],
+    children: toastActionLabel,
+
+    toastActionLabel = text {
+      fill: c.colors.cta,
+      contents: "Annuler",
+      font-size: 16,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
   }
 }

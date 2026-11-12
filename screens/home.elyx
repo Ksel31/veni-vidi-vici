@@ -15,7 +15,7 @@ import "screens/add-type.elyx" as addType
 // cartes en verre sombre pour la suite. Tout est assemblé à partir des composants du design system.
 export home = frame {
   title: "Accueil",
-  caption: "Profil, prochain event en billet, events à venir, et un accès direct aux events à confirmer.",
+  caption: "Profil, prochain event en billet, events à venir, et un accès direct aux events à confirmer. Le jour même, le titre et la pastille disent « Aujourd'hui », jamais « J-0 ». Sans event à venir, une simple ligne « Aucun event à venir. » — pas de gros bouton.",
   left: 0px,
   top: 0px,
   width: 390px,

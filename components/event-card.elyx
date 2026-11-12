@@ -41,11 +41,16 @@ export ticketPill = frame {
 // Prochain event : le billet vert, seul aplat vif de l'écran. Image holographique (logo répété, très discret),
 // ombre portée, corps à gauche (type, titre, lieu, billet) et talon à droite (jour, mois) séparés par une perforation.
 // Les coins et la perforation sont évidés dans l'image ; l'ombre vient d'un rectangle caché sous le billet.
+// Le titre n'est jamais coupé : le billet grandit. Au-delà de 15 caractères il passe à 26 px, au-delà de 26 à 20 px.
+// Le pointillé va d'encoche à encoche (5,26 % du haut et du bas), quelle que soit la hauteur.
 export nextTicket = frame {
   left: 0px,
   top: 60px,
   width: 366px,
-  height: 152px,
+  height: .auto,
+  min-height: 152px,
+  layout: {direction: .column},
+  overflow: .visible,
   children: [ticketShadow, ticketBg, ticketInfo, ticketStub],
 
   ticketShadow = frame {
@@ -68,20 +73,19 @@ export nextTicket = frame {
   ticketBg = asset {
     left: 0px,
     top: 0px,
-    width: 366px,
-    height: 152px,
+    width: 100%,
+    height: 100%,
     ignore-stack: .true,
     contents: ticketHolo
   }
 
   ticketInfo = frame {
-    left: 0px,
-    top: 0px,
-    width: 246px,
-    height: 152px,
-    ignore-stack: .true,
-    layout: {direction: .column, justify-content: .center, item-gap: 3px},
-    padding: [0px, 20px],
+    width: 67%,
+    height: .auto,
+    min-height: 152px,
+    layout: {direction: .column, justify-content: .center, item-gap: 4px},
+    padding: [16px, 20px],
+    overflow: .visible,
     children: [eventType, eventTitle, eventMeta, ticketState],
 
     eventType = text {
@@ -99,7 +103,7 @@ export nextTicket = frame {
       font-size: 38,
       font-family: f.fonts.ui,
       font-style: "Medium",
-      line-height: 1,
+      line-height: 1.05,
       letter-spacing: -2%
     }
 
@@ -127,10 +131,10 @@ export nextTicket = frame {
   }
 
   ticketStub = frame {
-    left: 246px,
-    top: 8px,
-    width: 120px,
-    height: 136px,
+    right: 0px,
+    top: 5.26%,
+    bottom: 5.26%,
+    width: 33%,
     ignore-stack: .true,
     layout: {direction: .column, justify-content: .center, align-items: .center},
     border: {
@@ -161,12 +165,30 @@ export nextTicket = frame {
   }
 }
 
+// Titre long : 20 px, le billet s'étire, rien n'est tronqué.
+export nextTicketLong = frame : nextTicket {
+  left: 420px,
+  top: 60px,
+
+  ticketInfo {
+    eventTitle {
+      contents: "Nick Cave and the Bad Seeds, Wild God",
+      font-size: 20,
+      line-height: 1.15
+    }
+
+    eventMeta {
+      contents: "ANCIENNE BELGIQUE, BRUXELLES"
+    }
+  }
+}
+
 // Pastille « N events à confirmer » : discrète, alignée à gauche. Noir, filet et texte verts, chevron.
 export confirmPill = frame {
   left: 0px,
   top: 260px,
   width: .auto,
-  height: 36px,
+  height: l.lengths.tap,
   layout: {align-items: .center, item-gap: 6px},
   fill: c.colors.neutral-1,
   border: {color: c.colors.brand, width: 1.5px},
@@ -275,6 +297,7 @@ export eventRow = frame {
     padding: [4px, 8px],
     children: countdownLabel,
 
+    // Le jour même : « Aujourd'hui », jamais « J-0 ».
     countdownLabel = text {
       fill: c.colors.neutral-1,
       contents: "J-32",
@@ -314,7 +337,7 @@ export eventRowFocus = frame : eventRow {
 // Event passé à confirmer : « Raté » (secondaire, contour encre) et « Vu » (principal, encre pleine).
 export confirmCard = frame {
   left: 0px,
-  top: 300px,
+  top: 320px,
   width: 100%,
   height: .auto,
   layout: {direction: .column, item-gap: 12px},

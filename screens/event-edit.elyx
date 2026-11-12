@@ -3,18 +3,21 @@ use "fonts/CabinetGrotesk-Variable.ttf"
 import "images/bg-event-edit.jpg" as bgPhoto
 import "components/screen-header.elyx" as headers
 import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
 import "components/ui.elyx" as ui
 import "icons/lucide/check.svg" as checkIcon
 import "icons/lucide/plus.svg" as plusIcon
 import "icons/lucide/calendar.svg" as calendarIcon
 import "icons/lucide/map-pin.svg" as mapPinIcon
+import "icons/lucide/mic-vocal.svg" as micIcon
+import "icons/lucide/music.svg" as musicIcon
 import "icons/lucide/euro.svg" as euroIcon
 
-// Modifier l'event : même formulaire que l'ajout, pré-rempli. Date, lieu, groupes, billet : tout est modifiable.
-// Si la date repasse dans le futur, l'event redevient « prévu » ; si elle est passée, il attend sa confirmation.
+// Modifier un concert : même formulaire que l'ajout, pré-rempli. Le festival a sa planche, screens/event-edit-festival.elyx.
+// Si la date repasse à aujourd'hui ou plus tard, l'event redevient prévu.
 export eventEdit = frame {
   title: "Modifier l'event",
-  caption: "Accès depuis la fiche. Même formulaire que l'ajout, pré-rempli avec l'event existant.",
+  caption: "Accès depuis la fiche. Même formulaire que l'ajout : ville puis salle, groupes sous chaque rôle. « Supprimer l'event » ouvre la question dans la page.",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -53,12 +56,18 @@ export eventEdit = frame {
     height: .auto,
     layout: {direction: .column, item-gap: 14px},
     padding: [20px, 8px, 0px],
-    children: [whenWhere, bands, ticket, note, submit],
+    children: [required, whenWhere, bands, ticket, note, submit, remove],
+
+    required = text : ui.hint {
+      contents: "* Obligatoire"
+    }
 
     whenWhere = frame : ui.glassCard {
       overrides: [
         insert(dateField, after = ui.glassCard.cardTitle),
-        insert(venueField, after = dateField)
+        insert(cityField, after = dateField),
+        insert(roomField, after = cityField),
+        insert(titleField, after = roomField)
       ],
 
       cardTitle {
@@ -77,72 +86,161 @@ export eventEdit = frame {
         }
 
         fieldLabel {
-          contents: "Date"
+          contents: "Date *"
         }
       }
 
-      venueField = frame : ui.field {
+      cityField = frame : ui.field {
         fieldBox {
           fieldGlyph {
             contents: mapPinIcon
           }
 
           fieldValue {
-            contents: "Ancienne Belgique, Bruxelles"
+            contents: "Bruxelles"
           }
         }
 
         fieldLabel {
-          contents: "Lieu"
+          contents: "Ville"
+        }
+      }
+
+      roomField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: mapPinIcon
+          }
+
+          fieldValue {
+            contents: "Ancienne Belgique"
+          }
+        }
+
+        fieldLabel {
+          contents: "Lieu, salle"
+        }
+      }
+
+      titleField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: musicIcon
+          }
+
+          fieldValue {
+            contents: "Nick Cave"
+          }
+        }
+
+        fieldLabel {
+          contents: "Titre (optionnel)"
         }
       }
     }
 
     bands = frame : ui.glassCard {
       overrides: [
-        insert(headliner, after = ui.glassCard.cardTitle),
-        insert(support, after = headliner),
-        insert(addBand, after = support)
+        insert(zoneHead, after = ui.glassCard.cardTitle),
+        insert(zoneSupport, after = zoneHead)
       ],
 
       cardTitle {
         contents: "Groupes"
       }
 
-      headliner = frame : ui.lineupRow {
-        bandName {
-          contents: "Nick Cave"
+      zoneHead = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        overflow: .visible,
+        children: [zoneLabel, headliner, addHead],
+
+        zoneLabel = text {
+          width: 100%,
+          fill: c.colors.text-on-dark-muted,
+          contents: "Tête d'affiche",
+          font-size: 13,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
         }
-      }
 
-      support = frame : ui.lineupRow {
-        bandRole {
-          fill[0].color: c.colors.glass-strong,
-          border[0].color: c.colors.border,
+        headliner = frame : ui.lineupRow {
+          dragHandle {
+            display: .visible
+          }
 
-          bandRoleLabel {
-            fill[0].color: c.colors.text-on-dark,
-            contents: "Première partie"
+          bandName {
+            contents: "Nick Cave"
           }
         }
 
-        bandName {
-          contents: "Cat Power"
+        addHead = frame : ui.fieldEmpty {
+          fieldLabel {
+            display: .none
+          }
+
+          fieldBox {
+            fieldGlyph {
+              contents: plusIcon
+            }
+
+            fieldValue {
+              contents: "Ajouter un groupe"
+            }
+          }
         }
       }
 
-      addBand = frame : ui.fieldEmpty {
-        fieldLabel {
-          display: .none
+      zoneSupport = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        overflow: .visible,
+        children: [zoneLabel, support, addSupport],
+
+        zoneLabel = text {
+          width: 100%,
+          fill: c.colors.text-on-dark-muted,
+          contents: "Première partie",
+          font-size: 13,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
         }
 
-        fieldBox {
-          fieldGlyph {
-            contents: plusIcon
+        support = frame : ui.lineupRow {
+          dragHandle {
+            display: .visible
           }
 
-          fieldValue {
-            contents: "Ajouter un groupe"
+          bandRole {
+            fill[0].color: c.colors.glass-strong,
+            border[0].color: c.colors.border,
+
+            bandRoleGlyph {
+              fill[0].color: c.colors.text-on-dark,
+              contents: micIcon
+            }
+          }
+
+          bandName {
+            contents: "Cat Power"
+          }
+        }
+
+        addSupport = frame : ui.fieldEmpty {
+          fieldLabel {
+            display: .none
+          }
+
+          fieldBox {
+            fieldGlyph {
+              contents: plusIcon
+            }
+
+            fieldValue {
+              contents: "Ajouter un groupe"
+            }
           }
         }
       }
@@ -175,13 +273,7 @@ export eventEdit = frame {
         }
       }
 
-      ticketUpload = frame : ui.fileRow {
-        fileTexts {
-          fileName {
-            contents: "nick-cave-billet.pdf"
-          }
-        }
-      }
+      ticketUpload = frame : ui.uploadBox {}
 
       ticketBought = frame : ui.checkRow {
         checkTexts {
@@ -197,7 +289,7 @@ export eventEdit = frame {
     }
 
     note = text : ui.hint {
-      contents: "Si tu repousses la date dans le futur, l'event redevient « prévu »."
+      contents: "Si la date repasse à aujourd'hui ou plus tard, l'event redevient prévu."
     }
 
     submit = frame : ui.primaryButton {
@@ -207,6 +299,16 @@ export eventEdit = frame {
 
       buttonLabel {
         contents: "Enregistrer"
+      }
+    }
+
+    remove = frame : ui.secondaryButton {
+      buttonGlyph {
+        display: .none
+      }
+
+      buttonLabel {
+        contents: "Supprimer l'event"
       }
     }
   }

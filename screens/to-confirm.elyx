@@ -10,7 +10,7 @@ import "screens/event-festival.elyx" as eventFestival
 // Un concert se confirme sur sa fiche ; un festival demande en plus les jours et les groupes.
 export toConfirm = frame {
   title: "À confirmer",
-  caption: "Accès depuis la pastille de l'accueil. Chaque carte mène à la fiche de l'event pour répondre.",
+  caption: "Accès depuis la pastille de l'accueil. « Vu » ouvre la fiche. « Raté » marque l'event tout de suite, sans quitter la liste, et affiche ui.undoToast (« Annuler ») pendant 5 secondes. Un festival raté passe tous ses groupes en raté.",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -56,8 +56,12 @@ export toConfirm = frame {
     }
 
     concertCard = frame : ui.pendingCard {
-      connections[0].label: "Ouvrir la fiche",
-      connections[0].target: eventConfirm.eventConfirm,
+      actions {
+        seenButton {
+          connections[0].label: "Vu : ouvrir la fiche",
+          connections[0].target: eventConfirm.eventConfirm
+        }
+      }
 
       head {
         info {
@@ -83,8 +87,12 @@ export toConfirm = frame {
     }
 
     festivalCard = frame : ui.pendingCard {
-      connections[0].label: "Vu : jours et groupes",
-      connections[0].target: eventFestival.eventFestival,
+      actions {
+        seenButton {
+          connections[0].label: "Vu : jours et groupes",
+          connections[0].target: eventFestival.eventFestival
+        }
+      }
 
       head {
         info {
