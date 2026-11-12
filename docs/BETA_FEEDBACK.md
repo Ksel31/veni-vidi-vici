@@ -85,6 +85,13 @@ Exemple d'entrée :
   - Statut : à trier
   - Source : Sanguisugalaurent Stieoui
 
+- [ ] **Animation du billet déchiré**
+  - Date : 12 nov. 2026
+  - Description : quand un concert est classé « Vu », le billet se déchire avec une petite animation.
+  - Priorité : à définir
+  - Statut : à trier
+  - Source : Ruru
+
 ## ✅ Fait
 
 Rien pour l'instant.
