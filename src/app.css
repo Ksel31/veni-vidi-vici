@@ -141,16 +141,32 @@
 	/* Noms de familles, tokens/fonts.elyx */
 	--font-ui: "Cabinet Grotesk Variable", sans-serif;
 	--font-display: "Wagon", sans-serif;
+	--font-input: "Archivo", sans-serif;
+
+	/* Graisses nommées des fichiers variables (axe wght).
+	   Cabinet et Archivo : Light 300, Regular 400, Medium 500, Bold 700.
+	   Wagon n'existe qu'en Bold. */
+	--weight-light: 300;
+	--weight-regular: 400;
+	--weight-medium: 500;
+	--weight-bold: 700;
 }
 
-/* Pas de woff2 dans fonts/ : on charge le TTF variable et l'OTF.
-   Le fichier Cabinet est variable (100–900) mais l'interface n'utilise
-   que Regular (400) et Medium (500). Le réglage d'origine du fichier est 900,
-   donc on borne le poids ici. */
+/* Plage complète : le défaut du fichier Cabinet est 900. Une plage 400–500
+   écrasait Light (300) et Bold (700). */
 @font-face {
 	font-family: "Cabinet Grotesk Variable";
 	src: url("/fonts/CabinetGrotesk-Variable.ttf") format("truetype");
-	font-weight: 400 500;
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Archivo";
+	src: url("/fonts/Archivo.ttf") format("truetype");
+	font-weight: 100 900;
+	font-stretch: 62% 125%;
 	font-style: normal;
 	font-display: swap;
 }
@@ -179,7 +195,7 @@ body {
 	background: var(--surface-dark);
 	color: var(--text-on-dark);
 	font-family: var(--font-ui);
-	font-weight: 400;
+	font-weight: var(--weight-regular);
 	font-size: 16px;
 	line-height: 1.35;
 	font-synthesis: none;
@@ -200,6 +216,14 @@ button,
 input {
 	font: inherit;
 	color: inherit;
+}
+
+/* Valeurs de champ : Archivo Light (ui.elyx), pas Cabinet. */
+input,
+textarea {
+	font-family: var(--font-input);
+	font-weight: var(--weight-light);
+	font-stretch: 100%;
 }
 
 button,
@@ -344,7 +368,7 @@ button {
 .toast p {
 	margin: 0;
 	font-size: 15px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .toast button {
@@ -355,7 +379,7 @@ button {
 	background: transparent;
 	color: var(--cta);
 	font: inherit;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .screen {
@@ -418,7 +442,7 @@ button {
 	min-height: var(--tap);
 	height: 52px;
 	border-radius: var(--radius-l);
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	font-size: 16px;
 }
 
@@ -485,7 +509,7 @@ button {
 .field label {
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .field-box {
@@ -555,7 +579,7 @@ textarea,
 .login-intro h1 {
 	margin: 0;
 	font-size: 44px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 	letter-spacing: -0.03em;
 }
@@ -583,7 +607,7 @@ textarea,
 .page-header h1 {
 	margin: 0;
 	font-size: 32px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	letter-spacing: -0.03em;
 }
 
@@ -773,12 +797,12 @@ textarea,
 	background: var(--neutral-12);
 	color: var(--neutral-1);
 	font-size: 24px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .profile-name {
 	font-size: 26px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .stats {
@@ -800,7 +824,7 @@ textarea,
 
 .stat-value {
 	font-size: 26px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 }
 
@@ -822,7 +846,7 @@ textarea,
 .section-title {
 	margin: 0;
 	font-size: 36px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 	letter-spacing: -0.03em;
 }
@@ -846,7 +870,7 @@ textarea,
 	background: var(--neutral-1);
 	color: var(--brand);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .event-row,
@@ -874,13 +898,13 @@ textarea,
 
 .date-day {
 	font-size: 24px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 }
 
 .date-month {
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	letter-spacing: 0.04em;
 }
 
@@ -894,7 +918,7 @@ textarea,
 
 .event-row-title {
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .event-row-meta {
@@ -909,7 +933,7 @@ textarea,
 	padding: 4px 8px;
 	border-radius: var(--radius-s);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .countdown {
@@ -978,12 +1002,12 @@ textarea,
 
 .ticket-type {
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .ticket-title {
 	font-size: 38px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1.05;
 	letter-spacing: -0.02em;
 	overflow-wrap: break-word;
@@ -1001,7 +1025,7 @@ textarea,
 
 .ticket-place {
 	font-size: 11px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	text-transform: uppercase;
 }
 
@@ -1013,14 +1037,14 @@ textarea,
 .ticket-day {
 	font-family: var(--font-display);
 	font-size: 74px;
-	font-weight: 700;
+	font-weight: var(--weight-bold);
 	line-height: 0.85;
 }
 
 .ticket-month {
 	font-family: var(--font-display);
 	font-size: 24px;
-	font-weight: 700;
+	font-weight: var(--weight-bold);
 	line-height: 1;
 }
 
@@ -1057,7 +1081,7 @@ textarea,
 .history-title {
 	margin: 32px 6px 0;
 	font-size: 36px;
-	font-weight: 400;
+	font-weight: var(--weight-regular);
 	line-height: 1;
 	letter-spacing: -0.03em;
 }
@@ -1080,7 +1104,7 @@ textarea,
 	background: var(--glass-strong);
 	color: var(--text-on-dark);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .chip-person {
@@ -1173,7 +1197,7 @@ textarea,
 	background: var(--success-bg);
 	color: var(--success-text);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .status-missed {
@@ -1200,7 +1224,7 @@ textarea,
 .add-question {
 	margin: 48px var(--space-s) 0;
 	font-size: 36px;
-	font-weight: 400;
+	font-weight: var(--weight-regular);
 	line-height: 1;
 	letter-spacing: -0.03em;
 }
@@ -1239,7 +1263,7 @@ textarea,
 
 .type-title {
 	font-size: 26px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	letter-spacing: -0.02em;
 }
 
@@ -1256,7 +1280,7 @@ textarea,
 .card-title {
 	margin: 0;
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .date-pair {
@@ -1313,7 +1337,7 @@ textarea,
 
 .cal-nav p {
 	margin: 0;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .cal-nav button {
@@ -1380,7 +1404,7 @@ textarea,
 	margin: 0;
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .suggestions {
@@ -1416,7 +1440,7 @@ textarea,
 	margin: 0;
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .band-row {
@@ -1439,7 +1463,7 @@ textarea,
 	flex: 1;
 	min-width: 0;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .drag-handle {
@@ -1473,7 +1497,7 @@ textarea,
 	background: var(--neutral-12);
 	color: var(--neutral-1);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 /* Bouton de rôle : zone 44 px, pastille ronde plus petite, icône centrée. */
@@ -1583,7 +1607,7 @@ button.role-pill.role-support:active::before {
 	background: transparent;
 	color: var(--neutral-1);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 }
 
@@ -1687,7 +1711,7 @@ button.role-pill.role-support:active::before {
 .detail-heading {
 	margin: 0;
 	font-size: 36px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1.05;
 	letter-spacing: -0.03em;
 }
@@ -1725,7 +1749,7 @@ button.role-pill.role-support:active::before {
 	background: var(--warning);
 	color: var(--on-warning);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .field-box-text {
@@ -1756,7 +1780,7 @@ button.role-pill.role-support:active::before {
 .field-caption {
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .thumb-btn {
@@ -1772,7 +1796,7 @@ button.role-pill.role-support:active::before {
 	background: var(--glass-strong);
 	color: var(--text-on-dark);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .thumb-btn-on {
@@ -1881,7 +1905,7 @@ button.role-pill.role-support:active::before {
 
 .setlist-title {
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .setlist-card .day-panel-open .day-panel-inner {
@@ -1897,6 +1921,9 @@ button.role-pill.role-support:active::before {
 	background: var(--surface-dark);
 	color: var(--text-on-dark);
 	font: inherit;
+	font-family: var(--font-input);
+	font-weight: var(--weight-light);
+	font-stretch: 100%;
 	resize: vertical;
 }
 
@@ -1960,7 +1987,7 @@ button.role-pill.role-support:active::before {
 	display: block;
 	margin: 0;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .check-meta {
@@ -2073,7 +2100,7 @@ button.field-box:active {
 	background: var(--cta);
 	color: var(--on-cta);
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	box-shadow: 0 0 28px rgb(66.6667% 100% 13.33% / 45%);
 }
 
@@ -2157,7 +2184,7 @@ button.field-box:active {
 	min-height: var(--tap);
 	padding: 0 4px;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .onboarding-lower {
@@ -2202,12 +2229,12 @@ button.field-box:active {
 
 .onboarding-eyebrow {
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .onboarding-texts h1 {
 	font-size: 44px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 	letter-spacing: -0.03em;
 }
