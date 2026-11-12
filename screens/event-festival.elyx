@@ -9,7 +9,7 @@ import "components/ui.elyx" as ui
 import "icons/lucide/x.svg" as crossIcon
 import "icons/lucide/pencil.svg" as pencilIcon
 import "screens/event-report.elyx" as eventReport
-import "screens/event-edit.elyx" as eventEdit
+import "screens/event-edit-festival.elyx" as eventEditFestival
 
 // Fiche d'un festival passé, encore « prévu » : on coche les jours faits, puis les groupes vus parmi ces jours.
 // Les groupes non cochés passent en « raté ». Un jour décoché retire ses groupes de la liste.
@@ -228,7 +228,7 @@ export eventFestival = frame {
 
     edit = frame : ui.secondaryButton {
       connections[0].label: "Modifier l'event",
-      connections[0].target: eventEdit.eventEdit,
+      connections[0].target: eventEditFestival.eventEditFestival,
 
       buttonGlyph {
         contents: pencilIcon

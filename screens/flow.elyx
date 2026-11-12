@@ -2,6 +2,7 @@ import "screens/login.elyx" as login
 import "screens/home.elyx" as home
 import "screens/event-upcoming.elyx" as eventUpcoming
 import "screens/event-edit.elyx" as eventEdit
+import "screens/event-edit-festival.elyx" as eventEditFestival
 import "screens/to-confirm.elyx" as toConfirm
 import "screens/event-confirm.elyx" as eventConfirm
 import "screens/event-report.elyx" as eventReport
@@ -75,4 +76,9 @@ flowEventUpcoming = frame : eventUpcoming.eventUpcoming {
 flowEventEdit = frame : eventEdit.eventEdit {
   left: 3500px,
   top: 2400px
+}
+
+flowEventEditFestival = frame : eventEditFestival.eventEditFestival {
+  left: 4200px,
+  top: 1100px
 }

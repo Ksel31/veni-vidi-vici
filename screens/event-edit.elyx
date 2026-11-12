@@ -13,8 +13,8 @@ import "icons/lucide/mic-vocal.svg" as micIcon
 import "icons/lucide/music.svg" as musicIcon
 import "icons/lucide/euro.svg" as euroIcon
 
-// Modifier l'event : même formulaire que l'ajout, pré-rempli. Date, lieu, groupes, billet : tout est modifiable.
-// Si la date repasse dans le futur, l'event redevient « prévu » ; si elle est passée, il attend sa confirmation.
+// Modifier un concert : même formulaire que l'ajout, pré-rempli. Le festival a sa planche, screens/event-edit-festival.elyx.
+// Si la date repasse à aujourd'hui ou plus tard, l'event redevient prévu.
 export eventEdit = frame {
   title: "Modifier l'event",
   caption: "Accès depuis la fiche. Même formulaire que l'ajout : ville puis salle, groupes sous chaque rôle. « Supprimer l'event » ouvre la question dans la page.",
