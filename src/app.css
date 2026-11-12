@@ -597,6 +597,18 @@ textarea,
 	font-size: 13px;
 }
 
+/* Démo uniquement : note de connexion factice, à retirer en phase 2. */
+.login-intro .login-demo-hint {
+	font-size: 13px;
+	font-weight: var(--weight-regular);
+	line-height: 1.35;
+}
+
+.login-demo-hint strong {
+	color: var(--text-on-dark);
+	font-weight: var(--weight-medium);
+}
+
 /* En-tête d'écran secondaire (screen-header.elyx). */
 .page-header {
 	display: flex;
