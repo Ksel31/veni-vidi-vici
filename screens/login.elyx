@@ -7,6 +7,7 @@ import "tokens/fonts.elyx" as f
 import "components/ui.elyx" as ui
 import "icons/lucide/chevron-right.svg" as arrowIcon
 import "screens/home.elyx" as home
+import "screens/onboarding-1.elyx" as onboarding1
 import "icons/lucide/user.svg" as userIcon
 import "icons/lucide/lock.svg" as lockIcon
 
@@ -124,6 +125,8 @@ export login = frame {
     submit = frame : ui.primaryButton {
       connections[0].label: "Se connecter",
       connections[0].target: home.home,
+      connections[1].label: "Compte vide",
+      connections[1].target: onboarding1.onboarding1,
 
       buttonGlyph {
         contents: arrowIcon

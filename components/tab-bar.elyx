@@ -3,6 +3,7 @@ import "icons/lucide/history.svg" as historyIcon
 import "icons/lucide/plus.svg" as plusIcon
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
 
 // Onglet de la barre : disque de 48 px (zone tactile > 44 px), icône seule. Base = onglet inactif, icône blanche.
 // États (théorie Radix) : survol = step 4, pressé = step 5, focus = anneau 2 px extérieur, désactivé = step 9 sur step 4.
@@ -148,4 +149,64 @@ export addButtonDisabled = frame : addButton {
   addGlyph {
     fill[0].color: c.colors.disabled-text
   }
+}
+
+// « + » étendu du compte vide : quand aucun event n'est enregistré, il prend toute la largeur à la place de la barre
+// d'onglets (l'accueil et l'historique n'ont encore rien à montrer) et dit ce qu'il fait. Même vert, même icône noire.
+export addButtonFirst = frame {
+  left: 600px,
+  top: 0px,
+  width: 100%,
+  height: 64px,
+  layout: {justify-content: .center, align-items: .center, item-gap: 10px},
+  fill: c.colors.cta,
+  // Lueur verte : démarque le CTA du premier event. Même teinte que le bouton (lime-9), sans décalage.
+  shadow: {
+    drop-shadow: {
+      color: rgb(66.6667%, 100%, 13.33%, 45%),
+      offset: point(0px, 0px),
+      blur-radius: 28px,
+      spread: 0px
+    }
+  },
+  corner-radius: 32px,
+  children: [addGlyph, addLabel],
+
+  addGlyph = asset {
+    width: 26px,
+    height: 26px,
+    fill: c.colors.on-cta,
+    contents: plusIcon
+  }
+
+  addLabel = text {
+    fill: c.colors.on-cta,
+    contents: "Ajouter mon 1er event",
+    font-size: 18,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+@variant
+export addButtonFirstHover = frame : addButtonFirst {
+  left: 600px,
+  top: 100px,
+  fill[0].color: c.colors.cta-hover
+}
+
+@variant
+export addButtonFirstPressed = frame : addButtonFirst {
+  left: 600px,
+  top: 200px,
+  fill[0].color: c.colors.cta-pressed
+}
+
+@variant
+export addButtonFirstFocus = frame : addButtonFirst {
+  left: 600px,
+  top: 300px,
+  border[0].color: c.colors.focus-ring,
+  border[0].position: .outside,
+  border[0].width: l.lengths.focus-ring-width
 }

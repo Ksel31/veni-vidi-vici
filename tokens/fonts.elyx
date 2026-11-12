@@ -1,7 +1,9 @@
 // ui : Cabinet Grotesk (variable), seulement Regular et Medium, pour tout le texte de l'interface.
 // display : Wagon (Bold), pour les grands chiffres du billet (jour, mois).
+// input : Archivo, pour le texte saisi dans les champs et les textes d'aide de formulaire (pas la police de titrage).
 export fonts = tokens {
   ui: "Cabinet Grotesk Variable",
+  input: "Archivo",
   display: "Wagon",
   brand: "Cabinet Grotesk Variable"
 }

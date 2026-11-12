@@ -53,9 +53,11 @@ exports/      PNG des écrans
 Après une modification des maquettes, avec le CLI [`@elyx-design/cli`](https://www.npmjs.com/package/@elyx-design/cli) :
 
 ```sh
-elyx render screens/home.elyx --scale 2 -o exports/02-home.png
+elyx render screens/home.elyx --scale 2 -o exports/06-home.png
 elyx render screens/flow.elyx --scale 0.5 -o exports/00-flow.png
 ```
+
+Les PNG sont numérotés dans l'ordre du parcours (`00-flow`, `01-login`, `02` à `04` l'onboarding, `05-home-empty`, `06-home`…). Les écrans à l'échelle 2, le parcours à 0.5, `style-guide.png` à 1.
 
 ## Lancer le prototype
 

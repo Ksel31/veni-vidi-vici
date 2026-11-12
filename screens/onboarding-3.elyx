@@ -1,0 +1,83 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/hero-cowboy.jpg" as photo
+import "icons/lucide/history.svg" as stepIcon
+import "components/onboarding.elyx" as onboarding
+import "components/tab-bar.elyx" as nav
+import "screens/add-type.elyx" as addType
+
+// Onboarding, étape 3 sur 3 : les souvenirs. Le CTA « Ajouter mon 1er event » n'apparaît qu'ici, à la place de « Suivant ».
+export onboarding3 = frame {
+  title: "Onboarding 3/3",
+  caption: "« Garde tes souvenirs ». Dernier écran : plus de « Passer », le bouton « Ajouter mon 1er event » prend la place de « Suivant » et ouvre l'ajout.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
+  fill: [
+    {image: {ref: photo}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 40%)),
+          stop(45%, rgb(0%, 0%, 0%, 55%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 20px, 32px],
+  children: [top, lower],
+
+  // Dernier écran : le logo reste, « Passer » disparaît (le CTA est la sortie).
+  top = frame : onboarding.onboardingTop {
+    skip {
+      display: .none
+    }
+  }
+
+  lower = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 28px},
+    overflow: .visible,
+    children: [content, dotsRow, action],
+
+    content = frame : onboarding.onboardingContent {
+      disc {
+        glyph {
+          contents: stepIcon
+        }
+      }
+
+      texts {
+        stepTitle {
+          contents: "Garde tes souvenirs"
+        }
+
+        stepBody {
+          contents: "Pouces, avis, setlist, photos : tout est gardé dans ton historique."
+        }
+      }
+    }
+
+    dotsRow = frame {
+      width: 100%,
+      height: .auto,
+      layout: {justify-content: .center},
+      children: dots,
+
+      dots = frame : onboarding.pageDots3 {}
+    }
+
+    action = frame : nav.addButtonFirst {
+      left: 0px,
+      top: 0px,
+      connections[0].label: "Ajouter",
+      connections[0].target: addType.addType
+    }
+  }
+}

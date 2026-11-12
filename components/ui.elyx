@@ -1,8 +1,10 @@
 use "fonts/CabinetGrotesk-Variable.ttf"
+use "fonts/Archivo.ttf"
 
 import "icons/lucide/check.svg" as checkIcon
 import "icons/lucide/x.svg" as crossIcon
 import "icons/lucide/chevron-right.svg" as chevronRight
+import "icons/lucide/clock.svg" as clockIcon
 import "icons/lucide/music.svg" as musicIcon
 import "icons/lucide/search.svg" as searchIcon
 import "icons/lucide/thumbs-up.svg" as thumbsUpIcon
@@ -27,9 +29,8 @@ export glassCard = frame {
   fill: c.colors.glass,
   border: c.colors.glass-border,
   corner-radius: l.lengths.radius-xl,
-  padding: l.lengths.space-m,
-  // Le contour de focus dépasse la boîte : la carte ne le coupe plus.
   overflow: .visible,
+  padding: l.lengths.space-m,
   children: cardTitle,
 
   cardTitle = text {
@@ -135,8 +136,8 @@ export field = frame {
     fill: c.colors.surface-dark,
     border: c.colors.glass-border,
     corner-radius: l.lengths.radius-m,
-    padding: [0px, 14px],
     overflow: .visible,
+    padding: [0px, 14px],
     children: [fieldGlyph, fieldValue],
 
     fieldGlyph = asset {
@@ -150,9 +151,9 @@ export field = frame {
       width: 100%,
       fill: c.colors.text-on-dark,
       contents: "Valeur",
-      font-size: 16,
-      font-family: f.fonts.ui,
-      font-style: "Regular"
+      font-size: 14,
+      font-family: f.fonts.input,
+      font-style: "Light"
     }
   }
 }
@@ -331,7 +332,7 @@ export statusBadgePending = frame : statusBadge {
 
   badgeGlyph {
     fill[0].color: c.colors.warning-text,
-    contents: chevronRight
+    contents: clockIcon
   }
 
   badgeLabel {
@@ -350,8 +351,8 @@ export pastRow = frame {
   fill: c.colors.glass,
   border: c.colors.glass-border,
   corner-radius: l.lengths.radius-xl,
-  padding: 12px,
   overflow: .visible,
+  padding: 12px,
   children: [dateBlock, info, status, deleteMark],
 
   dateBlock = frame {
@@ -410,11 +411,11 @@ export pastRow = frame {
 
   // Croix discrète, coin haut droit. Masquée ici : l'historique l'affiche (olive-11, trait 2).
   deleteMark = asset {
-    display: .none,
     top: 10px,
     right: 10px,
     width: 12px,
     height: 12px,
+    display: .none,
     ignore-stack: .true,
     fill: c.colors.text-on-dark-muted,
     contents: crossIcon
@@ -546,15 +547,20 @@ export lineupRow = frame {
   fill: c.colors.surface-dark,
   border: c.colors.glass-border,
   corner-radius: l.lengths.radius-m,
-  padding: [4px, 12px],
   overflow: .visible,
+  padding: [4px, 12px],
   children: [dragHandle, bandName, bandRole, bandRemove],
 
   dragHandle = frame {
-    display: .none,
     width: l.lengths.tap,
     height: l.lengths.tap,
-    layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 4px},
+    display: .none,
+    layout: {
+      direction: .column,
+      justify-content: .center,
+      align-items: .center,
+      item-gap: 4px
+    },
     children: [grip1, grip2, grip3],
 
     grip1 = frame {
@@ -706,13 +712,16 @@ export uploadBox = frame {
     font-style: "Medium"
   }
 
-  // .upload-box p l'emporte sur .hint : 16 px, Medium, couleur du hint.
+  // Texte d'aide : comme `hint` (14 px, Regular, gris secondaire), centré, sur toute la largeur pour passer à la ligne.
   uploadHint = text {
+    width: 100%,
     fill: c.colors.text-on-dark-muted,
     contents: "PDF ou image. L'envoi n'est pas encore branché.",
-    font-size: 16,
-    font-family: f.fonts.ui,
-    font-style: "Medium"
+    font-size: 14,
+    font-family: f.fonts.input,
+    font-style: "Regular",
+    line-height: 1.3,
+    align: .center
   }
 }
 
@@ -895,7 +904,11 @@ export undoToast = frame {
   top: 2000px,
   width: 358px,
   height: .auto,
-  layout: {justify-content: .space-between, align-items: .center, item-gap: 12px},
+  layout: {
+    justify-content: .space-between,
+    align-items: .center,
+    item-gap: 12px
+  },
   fill: c.colors.surface-dark,
   border: c.colors.glass-border,
   corner-radius: l.lengths.radius-l,
@@ -989,7 +1002,7 @@ export festivalBand = frame {
       height: 28px,
       layout: {justify-content: .center, align-items: .center},
       fill: c.colors.surface-dark,
-      border: {color: c.colors.border, width: 1px},
+      border: c.colors.border,
       corner-radius: 32px,
       children: removeGlyph,
 
@@ -1020,9 +1033,9 @@ export artistAddField = frame {
     width: 100%,
     fill: c.colors.text-on-dark-muted,
     contents: "Ajouter un groupe",
-    font-size: 16,
-    font-family: f.fonts.ui,
-    font-style: "Regular"
+    font-size: 14,
+    font-family: f.fonts.input,
+    font-style: "Light"
   }
 
   addArtist = frame {

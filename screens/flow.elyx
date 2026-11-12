@@ -2,15 +2,19 @@ import "screens/login.elyx" as login
 import "screens/home.elyx" as home
 import "screens/event-upcoming.elyx" as eventUpcoming
 import "screens/event-edit.elyx" as eventEdit
-import "screens/event-edit-festival.elyx" as eventEditFestival
 import "screens/to-confirm.elyx" as toConfirm
 import "screens/event-confirm.elyx" as eventConfirm
 import "screens/event-report.elyx" as eventReport
 import "screens/event-festival.elyx" as eventFestival
+import "screens/event-edit-festival.elyx" as eventEditFestival
 import "screens/history.elyx" as history
 import "screens/add-type.elyx" as addType
 import "screens/add-concert.elyx" as addConcert
 import "screens/add-festival.elyx" as addFestival
+import "screens/onboarding-1.elyx" as onboarding1
+import "screens/home-empty.elyx" as homeEmpty
+import "screens/onboarding-2.elyx" as onboarding2
+import "screens/onboarding-3.elyx" as onboarding3
 
 file {
   draw-connections: .true
@@ -39,8 +43,8 @@ flowHistory = frame : history.history {
 }
 
 flowAddType = frame : addType.addType {
-  left: 1400px,
-  top: 2200px
+  left: 1072px,
+  top: 2519px
 }
 
 flowEventConfirm = frame : eventConfirm.eventConfirm {
@@ -54,31 +58,53 @@ flowEventFestival = frame : eventFestival.eventFestival {
 }
 
 flowAddConcert = frame : addConcert.addConcert {
-  left: 2100px,
-  top: 2400px
+  left: 2011px,
+  top: 2260px
 }
 
 flowAddFestival = frame : addFestival.addFestival {
-  left: 2100px,
-  top: 3700px
+  left: 1072px,
+  top: 4370px
 }
 
 flowEventReport = frame : eventReport.eventReport {
-  left: 2800px,
-  top: 600px
+  left: 3970px,
+  top: -274px
 }
 
 flowEventUpcoming = frame : eventUpcoming.eventUpcoming {
-  left: 2800px,
-  top: 2400px
+  left: 2852px,
+  top: 3966px
 }
 
 flowEventEdit = frame : eventEdit.eventEdit {
-  left: 3500px,
-  top: 2400px
+  left: 3701px,
+  top: 2624px
 }
 
 flowEventEditFestival = frame : eventEditFestival.eventEditFestival {
-  left: 4200px,
-  top: 1100px
+  left: 5022px,
+  top: 1243px
+}
+
+// Compte vide (rangée au-dessus de la connexion) : onboarding en trois écrans à swiper, puis l'accueil vide.
+// « Passer » saute directement à l'accueil vide ; « Ajouter mon 1er event » ouvre l'ajout.
+flowOnboarding1 = frame : onboarding1.onboarding1 {
+  left: 0px,
+  top: -1100px
+}
+
+flowOnboarding2 = frame : onboarding2.onboarding2 {
+  left: 700px,
+  top: -1100px
+}
+
+flowOnboarding3 = frame : onboarding3.onboarding3 {
+  left: 1400px,
+  top: -1100px
+}
+
+flowHomeEmpty = frame : homeEmpty.homeEmpty {
+  left: 2100px,
+  top: -1100px
 }

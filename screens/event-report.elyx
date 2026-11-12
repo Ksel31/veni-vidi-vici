@@ -6,7 +6,9 @@ import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
 import "components/ui.elyx" as ui
-import "icons/lucide/thumbs-up.svg" as thumbsUpIcon
+import "icons/lucide/x.svg" as crossIcon
+import "icons/lucide/chevron-right.svg" as chevronRightIcon
+import "icons/lucide/plus.svg" as plusIcon
 import "images/bg-add-concert.jpg" as photoA
 import "images/bg-event-upcoming.jpg" as photoB
 import "images/bg-add-type.jpg" as photoC
@@ -14,17 +16,14 @@ import "icons/lucide/euro.svg" as euroIcon
 import "icons/lucide/thumbs-down.svg" as thumbsDownIcon
 import "icons/lucide/mic-vocal.svg" as micIcon
 import "icons/lucide/pencil.svg" as pencilIcon
-import "icons/lucide/x.svg" as crossIcon
-import "icons/lucide/plus.svg" as plusIcon
 import "icons/lucide/chevron-down.svg" as chevronDownIcon
-import "icons/lucide/chevron-right.svg" as chevronRightIcon
 import "screens/event-edit.elyx" as eventEdit
 
 // Fiche d'un event vu, avec son compte rendu : pouce global, avis d'une ligne, accompagnants, pouce par groupe, setlist.
 // Le compte rendu n'existe qu'une fois l'event marqué « Vu ». Dernier écran du parcours : retour à l'accueil par la flèche.
 export eventReport = frame {
   title: "Fiche : compte rendu",
-  caption: "Event vu : le badge « Vu » est à côté du nom. Pouces, avis, accompagnants (croix à gauche), setlist repliable (180 ms, coupée si mouvement réduit). « Terminer » ferme les setlists. Pas de bouton « Confirmer ».",
+  caption: "Event vu : le badge « Vu » est sous le nom. Pouces, avis, accompagnants (croix à gauche), setlist repliable (180 ms, coupée si mouvement réduit). « Terminer » ferme les setlists. Pas de bouton « Confirmer ».",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -83,26 +82,17 @@ export eventReport = frame {
       height: .auto,
       layout: {direction: .column, item-gap: 8px},
       padding: [0px, 6px],
-      children: [nameLine, eventMeta],
+      children: [eventTitle, eventMeta, badge],
 
-      nameLine = frame {
+      eventTitle = text {
         width: 100%,
-        height: .auto,
-        layout: {align-items: .center, item-gap: 10px},
-        children: [eventTitle, badge],
-
-        eventTitle = text {
-          width: 100%,
-          fill: c.colors.text-on-dark,
-          contents: "Messa",
-          font-size: 36,
-          font-family: f.fonts.ui,
-          font-style: "Medium",
-          line-height: 1.05,
-          letter-spacing: -3%
-        }
-
-        badge = frame : ui.statusBadge {}
+        fill: c.colors.text-on-dark,
+        contents: "Messa",
+        font-size: 36,
+        font-family: f.fonts.ui,
+        font-style: "Medium",
+        line-height: 1.05,
+        letter-spacing: -3%
       }
 
       eventMeta = text {
@@ -113,6 +103,8 @@ export eventReport = frame {
         font-family: f.fonts.ui,
         font-style: "Regular"
       }
+
+      badge = frame : ui.statusBadge {}
     }
 
     opinion = frame : ui.glassCard {
@@ -177,7 +169,11 @@ export eventReport = frame {
         julie = frame {
           width: .auto,
           height: l.lengths.tap,
-          layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+          layout: {
+            justify-content: .center,
+            align-items: .center,
+            item-gap: 8px
+          },
           fill: c.colors.glass-strong,
           border: c.colors.border,
           corner-radius: l.lengths.radius-m,
@@ -203,7 +199,11 @@ export eventReport = frame {
         marc = frame {
           width: .auto,
           height: l.lengths.tap,
-          layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+          layout: {
+            justify-content: .center,
+            align-items: .center,
+            item-gap: 8px
+          },
           fill: c.colors.glass-strong,
           border: c.colors.border,
           corner-radius: l.lengths.radius-m,
@@ -229,7 +229,11 @@ export eventReport = frame {
         addPerson = frame {
           width: .auto,
           height: l.lengths.tap,
-          layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+          layout: {
+            justify-content: .center,
+            align-items: .center,
+            item-gap: 8px
+          },
           fill: c.colors.glass-strong,
           border: c.colors.border,
           corner-radius: l.lengths.radius-m,
@@ -280,8 +284,11 @@ export eventReport = frame {
 
         thumbUp = frame : ui.thumbButtonOn {
           width: l.lengths.tap,
-          padding: 0px,
           corner-radius: l.lengths.radius-pill,
+          padding-top: 0px,
+          padding-left: 0px,
+          padding-bottom: 0px,
+          padding-right: 0px,
 
           thumbLabel {
             display: .none
@@ -290,15 +297,18 @@ export eventReport = frame {
 
         thumbDown = frame : ui.thumbButton {
           width: l.lengths.tap,
-          padding: 0px,
           corner-radius: l.lengths.radius-pill,
-
-          thumbGlyph {
-            contents: thumbsDownIcon
-          }
+          padding-top: 0px,
+          padding-left: 0px,
+          padding-bottom: 0px,
+          padding-right: 0px,
 
           thumbLabel {
             display: .none
+          }
+
+          thumbGlyph {
+            contents: thumbsDownIcon
           }
         }
       }
@@ -329,8 +339,11 @@ export eventReport = frame {
 
         thumbUp = frame : ui.thumbButton {
           width: l.lengths.tap,
-          padding: 0px,
           corner-radius: l.lengths.radius-pill,
+          padding-top: 0px,
+          padding-left: 0px,
+          padding-bottom: 0px,
+          padding-right: 0px,
 
           thumbLabel {
             display: .none
@@ -339,15 +352,18 @@ export eventReport = frame {
 
         thumbDown = frame : ui.thumbButton {
           width: l.lengths.tap,
-          padding: 0px,
           corner-radius: l.lengths.radius-pill,
-
-          thumbGlyph {
-            contents: thumbsDownIcon
-          }
+          padding-top: 0px,
+          padding-left: 0px,
+          padding-bottom: 0px,
+          padding-right: 0px,
 
           thumbLabel {
             display: .none
+          }
+
+          thumbGlyph {
+            contents: thumbsDownIcon
           }
         }
       }
@@ -366,7 +382,11 @@ export eventReport = frame {
       setlistHead = frame {
         width: 100%,
         height: .auto,
-        layout: {justify-content: .space-between, align-items: .center, item-gap: 8px},
+        layout: {
+          justify-content: .space-between,
+          align-items: .center,
+          item-gap: 8px
+        },
         children: [setlistTitle, setlistChevron],
 
         setlistTitle = text {
@@ -418,7 +438,11 @@ export eventReport = frame {
       setlistHead = frame {
         width: 100%,
         height: .auto,
-        layout: {justify-content: .space-between, align-items: .center, item-gap: 8px},
+        layout: {
+          justify-content: .space-between,
+          align-items: .center,
+          item-gap: 8px
+        },
         children: [setlistTexts, setlistChevron],
 
         setlistTexts = frame {
