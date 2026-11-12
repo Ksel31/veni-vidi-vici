@@ -291,6 +291,36 @@ button {
 		url("/images/bg-add-festival.jpg");
 }
 
+.bg-event-upcoming::before {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 55%) 0%, rgb(0% 0% 0% / 62%) 42%, rgb(0% 0% 0% / 88%) 100%),
+		url("/images/bg-event-upcoming.jpg");
+}
+
+.bg-event-confirm::before {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 45%) 0%, rgb(0% 0% 0% / 55%) 40%, rgb(0% 0% 0% / 88%) 100%),
+		url("/images/bg-event-confirm.jpg");
+}
+
+.bg-event-festival::before {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 62%) 0%, rgb(0% 0% 0% / 72%) 46%, rgb(0% 0% 0% / 92%) 100%),
+		url("/images/bg-event-festival.jpg");
+}
+
+.bg-event-report::before {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 50%) 0%, rgb(0% 0% 0% / 62%) 40%, rgb(0% 0% 0% / 90%) 100%),
+		url("/images/bg-event-report.jpg");
+}
+
+.bg-event-edit::before {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 55%) 0%, rgb(0% 0% 0% / 68%) 42%, rgb(0% 0% 0% / 92%) 100%),
+		url("/images/bg-event-edit.jpg");
+}
+
 .screen {
 	position: relative;
 	z-index: 1;
@@ -1383,6 +1413,180 @@ button {
 	.day-panel {
 		transition: none;
 	}
+}
+
+.screen-detail {
+	padding-top: var(--space-s);
+	padding-bottom: 40px;
+}
+
+.detail-heading {
+	margin: 0;
+	font-size: 36px;
+	font-weight: 500;
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+}
+
+.name-line {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.name-line .detail-heading {
+	flex: 1;
+	min-width: 0;
+}
+
+.name-line .status-badge,
+.name-line .badge-link {
+	flex: none;
+}
+
+.detail-meta {
+	margin: -8px 0 0;
+	color: var(--text-on-dark-muted);
+	font-size: 14px;
+}
+
+.badge-link {
+	display: inline-flex;
+	align-self: flex-start;
+	align-items: center;
+	gap: 6px;
+	min-height: var(--tap);
+	padding: 0 12px;
+	border-radius: var(--radius-s);
+	background: var(--warning);
+	color: var(--on-warning);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.field-box-text {
+	height: auto;
+	min-height: 48px;
+}
+
+.field-value {
+	min-width: 0;
+	color: var(--text-on-dark);
+	font-size: 16px;
+}
+
+.choice-row {
+	display: flex;
+	gap: var(--space-s);
+}
+
+.choice-row .btn {
+	flex: 1;
+	height: auto;
+	min-width: 0;
+	min-height: 52px;
+	padding: 10px 12px;
+	text-align: center;
+}
+
+.field-caption {
+	color: var(--text-on-dark-muted);
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.thumb-btn {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: var(--tap);
+	padding: 0 14px;
+	border: var(--line-width) solid var(--border);
+	border-radius: var(--radius-pill);
+	background: var(--glass-strong);
+	color: var(--text-on-dark);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.thumb-btn-on {
+	border-color: var(--light);
+	background: var(--light);
+	color: var(--neutral-1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.thumb-btn:hover:not(.thumb-btn-on) {
+		background: var(--state-hover);
+	}
+}
+
+.thumb-btn:active {
+	background: var(--state-pressed);
+}
+
+.thumb-btn-on:active {
+	background: var(--light-pressed);
+}
+
+.thumb-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-s);
+}
+
+.lineup-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--space-s);
+	min-height: var(--tap);
+	padding: 4px 12px;
+	background: var(--surface-dark);
+	border: var(--line-width) solid var(--glass-border);
+	border-radius: var(--radius-m);
+}
+
+.lineup-row .role-pill {
+	min-height: 32px;
+	pointer-events: none;
+}
+
+.setlist-box {
+	width: 100%;
+	min-height: 120px;
+	padding: 12px;
+	border: var(--line-width) solid var(--glass-border);
+	border-radius: var(--radius-m);
+	background: var(--surface-dark);
+	color: var(--text-on-dark);
+	font: inherit;
+	resize: vertical;
+}
+
+.companion-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-s);
+}
+
+.photo-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--space-s);
+}
+
+.photo-add {
+	display: flex;
+	aspect-ratio: 1;
+	align-items: center;
+	justify-content: center;
+	min-height: var(--tap);
+	border: 1.5px dashed var(--border);
+	border-radius: var(--radius-m);
+	color: var(--text-on-dark-muted);
 }
 
 .check-row {

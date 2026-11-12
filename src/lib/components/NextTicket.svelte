@@ -1,8 +1,8 @@
 <script>
 	import { dateParts, eventTitle, findVenue, venueLine } from '#lib/present.js';
 
-	/** @type {{ event: import('#lib/store.js').Event, performances: import('#lib/store.js').Performance[], artists: import('#lib/store.js').Artist[], venues: import('#lib/store.js').Venue[] }} */
-	let { event, performances, artists, venues } = $props();
+	/** @type {{ event: import('#lib/store.js').Event, performances: import('#lib/store.js').Performance[], artists: import('#lib/store.js').Artist[], venues: import('#lib/store.js').Venue[], plain?: boolean }} */
+	let { event, performances, artists, venues, plain = false } = $props();
 
 	const title = $derived(eventTitle(event, performances, artists));
 	const venue = $derived(findVenue(venues, event.venueId));
@@ -10,7 +10,7 @@
 	const place = $derived(venueLine(venue) ?? 'Lieu à venir');
 </script>
 
-<a class="ticket" href="/event/{event.id}">
+{#snippet face()}
 	<img class="ticket-bg" src="/images/ticket-holo.png" alt="" />
 	<span class="ticket-body">
 		<span class="ticket-type">{event.type === 'festival' ? 'FESTIVAL' : 'CONCERT'}</span>
@@ -27,4 +27,10 @@
 		<span class="ticket-day">{date.day}</span>
 		<span class="ticket-month">{date.monthLabel}</span>
 	</span>
-</a>
+{/snippet}
+
+{#if plain}
+	<div class="ticket">{@render face()}</div>
+{:else}
+	<a class="ticket" href="/event/{event.id}">{@render face()}</a>
+{/if}
