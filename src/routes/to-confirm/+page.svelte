@@ -17,10 +17,11 @@
 
 <section class="screen screen-pad">
 	<ScreenHeader title="À confirmer" />
-	<p class="hint">{intro}</p>
 	{#if events.length === 0}
 		<p class="empty-title">Aucun event à confirmer.</p>
+		<p class="hint">Les events passés encore prévus apparaîtront ici.</p>
 	{:else}
+		<p class="hint">{intro}</p>
 		<div class="card-list">
 			{#each events as event (event.id)}
 				<PendingCard {event} performances={$data.performances} artists={$data.artists} venues={$data.venues} />

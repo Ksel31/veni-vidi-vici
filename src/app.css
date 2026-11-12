@@ -365,7 +365,8 @@ button {
 	flex-direction: column;
 	gap: var(--space-m);
 	min-height: 100dvh;
-	padding: var(--space-l) var(--space-m) 190px;
+	padding: var(--space-l) max(var(--space-m), env(safe-area-inset-right, 0px))
+		calc(190px + env(safe-area-inset-bottom, 0px)) max(var(--space-m), env(safe-area-inset-left, 0px));
 }
 
 .screen-login {
@@ -502,6 +503,7 @@ button {
 .field-box input {
 	width: 100%;
 	min-width: 0;
+	min-height: var(--tap);
 	border: 0;
 	background: transparent;
 	color: var(--text-on-dark);
@@ -512,6 +514,13 @@ button {
 .field-box:focus-within {
 	outline: var(--focus-ring-width) solid var(--focus-ring);
 	outline-offset: var(--focus-ring-width);
+}
+
+input,
+textarea,
+.field-box {
+	scroll-margin-top: 24px;
+	scroll-margin-bottom: 40vh;
 }
 
 .glass-card {
@@ -682,7 +691,7 @@ button {
 	position: fixed;
 	z-index: 3;
 	right: 0;
-	bottom: 32px;
+	bottom: calc(32px + env(safe-area-inset-bottom, 0px));
 	left: 0;
 	display: flex;
 	align-items: flex-end;
@@ -1643,6 +1652,10 @@ button.role-pill.role-support:active::before {
 	padding: 6px;
 }
 
+.day-panel:not(.day-panel-open) .day-panel-inner {
+	padding: 0;
+}
+
 .day-panel-open .day-panel-inner {
 	overflow: visible;
 	padding-bottom: 10px;
@@ -1668,7 +1681,7 @@ button.role-pill.role-support:active::before {
 
 .screen-detail {
 	padding-top: var(--space-s);
-	padding-bottom: 40px;
+	padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
 }
 
 .detail-heading {
@@ -1954,6 +1967,57 @@ button.role-pill.role-support:active::before {
 	display: block;
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.suggestions button:hover,
+	.check-row:hover,
+	.setlist-head:hover,
+	.cal-nav button:hover,
+	.cal-day:hover:not(.cal-day-on),
+	.drag-handle:hover {
+		background: var(--state-hover);
+	}
+
+	.cal-day-on:hover {
+		background: var(--light-hover);
+	}
+
+	.badge-link:hover {
+		background: var(--warning-hover);
+	}
+
+	button.field-box:hover {
+		background: var(--neutral-2);
+	}
+
+	.toast button:hover {
+		color: var(--text-on-dark);
+	}
+}
+
+.suggestions button:active,
+.check-row:active,
+.setlist-head:active,
+.cal-nav button:active,
+.cal-day:active:not(.cal-day-on) {
+	background: var(--state-pressed);
+}
+
+.cal-day-on:active {
+	background: var(--light-pressed);
+}
+
+.badge-link:active {
+	background: var(--warning-hover);
+}
+
+button.field-box:active {
+	background: var(--neutral-3);
+}
+
+.toast button:active {
+	color: var(--text-on-dark);
 }
 
 .upload-box {
