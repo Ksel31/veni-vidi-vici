@@ -149,155 +149,65 @@ export addFestival = frame {
         contents: "Line-up à voir"
       }
 
-      band1 = frame : ui.lineupRow {
+      band1 = frame : ui.festivalBand {
         bandName {
           contents: "Gojira"
         }
 
-        bandRole {
-          width: .auto,
-          height: 24px,
-          padding: [0px, 10px],
-
-          bandRoleGlyph {
-            display: .none
-          }
-
-          bandRoleLabel {
-            display: .visible,
-            contents: "Jeu 17"
-          }
-        }
-
-        bandRemove {
-          width: 28px,
-          height: 28px,
-          fill: c.colors.surface-dark,
-          border: {color: c.colors.border, width: 1px},
-          corner-radius: 32px,
-
-          bandRemoveGlyph {
-            width: 16px,
-            height: 16px
+        dayPill {
+          dayFace {
+            dayLabel {
+              contents: "Jeu 17"
+            }
           }
         }
       }
 
-      band2 = frame : ui.lineupRow {
+      band2 = frame : ui.festivalBand {
         bandName {
           contents: "Idles"
         }
 
-        bandRole {
-          width: .auto,
-          height: 24px,
-          padding: [0px, 10px],
-
-          bandRoleGlyph {
-            display: .none
-          }
-
-          bandRoleLabel {
-            display: .visible,
-            contents: "Jeu 17"
-          }
-        }
-
-        bandRemove {
-          width: 28px,
-          height: 28px,
-          fill: c.colors.surface-dark,
-          border: {color: c.colors.border, width: 1px},
-          corner-radius: 32px,
-
-          bandRemoveGlyph {
-            width: 16px,
-            height: 16px
+        dayPill {
+          dayFace {
+            dayLabel {
+              contents: "Jeu 17"
+            }
           }
         }
       }
 
-      band3 = frame : ui.lineupRow {
+      band3 = frame : ui.festivalBand {
         bandName {
           contents: "Mastodon"
         }
 
-        bandRole {
-          width: .auto,
-          height: 24px,
-          padding: [0px, 10px],
-
-          bandRoleGlyph {
-            display: .none
-          }
-
-          bandRoleLabel {
-            display: .visible,
-            contents: "Ven 18"
-          }
-        }
-
-        bandRemove {
-          width: 28px,
-          height: 28px,
-          fill: c.colors.surface-dark,
-          border: {color: c.colors.border, width: 1px},
-          corner-radius: 32px,
-
-          bandRemoveGlyph {
-            width: 16px,
-            height: 16px
+        dayPill {
+          dayFace {
+            dayLabel {
+              contents: "Ven 18"
+            }
           }
         }
       }
 
-      band4 = frame : ui.lineupRow {
+      band4 = frame : ui.festivalBand {
         bandName {
           contents: "Turnstile"
         }
 
-        bandRole {
-          width: .auto,
-          height: 24px,
-          padding: [0px, 10px],
-
-          bandRoleGlyph {
-            display: .none
-          }
-
-          bandRoleLabel {
-            display: .visible,
-            contents: "Sam 19"
-          }
-        }
-
-        bandRemove {
-          width: 28px,
-          height: 28px,
-          fill: c.colors.surface-dark,
-          border: {color: c.colors.border, width: 1px},
-          corner-radius: 32px,
-
-          bandRemoveGlyph {
-            width: 16px,
-            height: 16px
+        dayPill {
+          dayFace {
+            dayLabel {
+              contents: "Sam 19"
+            }
           }
         }
       }
 
-      addBand = frame : ui.fieldEmpty {
-        fieldLabel {
-          display: .none
-        }
-
-        fieldBox {
-          fieldGlyph {
-            contents: plusIcon
-          }
-
-          fieldValue {
-            contents: "Ajouter un groupe et son jour"
-          }
+      addBand = frame : ui.artistAddField {
+        fieldValue {
+          contents: "Ajouter un groupe et son jour"
         }
       }
     }
@@ -320,7 +230,7 @@ export addFestival = frame {
           }
 
           fieldValue {
-            contents: "289,00 €"
+            contents: "289,00"
           }
         }
 

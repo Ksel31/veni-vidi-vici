@@ -27,7 +27,8 @@ export statBlock = frame {
     fill: c.colors.text-on-dark,
     contents: "Libellé",
     font-size: 14,
-    font-family: f.fonts.ui
+    font-family: f.fonts.ui,
+    font-style: "Regular"
   }
 }
 
@@ -198,7 +199,8 @@ export profileHeader = frame {
       fill: c.colors.text-on-dark-muted,
       contents: "Se déconnecter",
       font-size: 14,
-      font-family: f.fonts.ui
+      font-family: f.fonts.ui,
+      font-style: "Regular"
     }
   }
 }

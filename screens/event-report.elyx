@@ -110,7 +110,8 @@ export eventReport = frame {
         fill: c.colors.text-on-dark-muted,
         contents: "Concert, Ven 19 mars 2026, Trix, Anvers",
         font-size: 14,
-        font-family: f.fonts.ui
+        font-family: f.fonts.ui,
+        font-style: "Regular"
       }
     }
 
@@ -399,8 +400,9 @@ export eventReport = frame {
           width: 100%,
           fill: c.colors.text-on-dark,
           contents: "1. Suspended in Lament\n2. Hour of the Wolf\n3. Leah\n4. Rubedo\n5. Immolation",
-          font-size: 15,
+          font-size: 16,
           font-family: f.fonts.ui,
+          font-style: "Regular",
           line-height: 1.45
         }
       }

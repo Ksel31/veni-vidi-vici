@@ -124,6 +124,7 @@ export styleGuide = frame {
       contents: "Cinq échelles de 12 steps (méthode Radix Colors). 1-2 fonds · 3-5 composants · 6-8 bordures · 9-10 aplats pleins · 11-12 textes. Le lime n'est jamais un aplat de fond d'écran. Rouge, ambre et vert disent un état, jamais de la décoration.",
       font-size: 16,
       font-family: f.fonts.ui,
+      font-style: "Regular",
       line-height: 1.35
     }
 
@@ -178,7 +179,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "1",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -200,7 +202,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "2",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -222,7 +225,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "3",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -244,7 +248,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "4",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -266,7 +271,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "5",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -288,7 +294,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "6",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -310,7 +317,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "7",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -332,7 +340,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "8",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -354,7 +363,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "9",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -376,7 +386,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "10",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -398,7 +409,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "11",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -420,7 +432,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "12",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
       }
@@ -477,7 +490,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "1",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -499,7 +513,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "2",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -521,7 +536,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "3",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -543,7 +559,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "4",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -565,7 +582,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "5",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -587,7 +605,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "6",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -609,7 +628,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "7",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -631,7 +651,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "8",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -653,7 +674,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "9",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -675,7 +697,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "10",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -697,7 +720,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "11",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -719,7 +743,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "12",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
       }
@@ -776,7 +801,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "1",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -798,7 +824,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "2",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -820,7 +847,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "3",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -842,7 +870,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "4",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -864,7 +893,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "5",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -886,7 +916,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "6",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -908,7 +939,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "7",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -930,7 +962,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "8",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -952,7 +985,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "9",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -974,7 +1008,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "10",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -996,7 +1031,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "11",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1018,7 +1054,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "12",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
       }
@@ -1075,7 +1112,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "1",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1097,7 +1135,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "2",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1119,7 +1158,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "3",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1141,7 +1181,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "4",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1163,7 +1204,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "5",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1185,7 +1227,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "6",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1207,7 +1250,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "7",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1229,7 +1273,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "8",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1251,7 +1296,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "9",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1273,7 +1319,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "10",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1295,7 +1342,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "11",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1317,7 +1365,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "12",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
       }
@@ -1374,7 +1423,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "1",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1396,7 +1446,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "2",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1418,7 +1469,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "3",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1440,7 +1492,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "4",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1462,7 +1515,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "5",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1484,7 +1538,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "6",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1506,7 +1561,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "7",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1528,7 +1584,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "8",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1550,7 +1607,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "9",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1572,7 +1630,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "10",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1594,7 +1653,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "11",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -1616,7 +1676,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "12",
             font-size: 12,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
       }
@@ -1636,6 +1697,7 @@ export styleGuide = frame {
       contents: "Rapport de contraste WCAG entre un texte et son fond. Minimum visé : 4,5:1. Sur un aplat step 9, le texte est toujours neutral-1.",
       font-size: 14,
       font-family: f.fonts.ui,
+      font-style: "Regular",
       line-height: 1.35
     }
 
@@ -1678,7 +1740,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "text-on-dark sur surface-dark · 16,1:1",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -1704,7 +1767,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark-muted,
           contents: "text-on-dark-muted sur neutral-2 · 8,4:1",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -1730,7 +1794,8 @@ export styleGuide = frame {
           fill: c.colors.text-accent,
           contents: "text-accent sur lime-2 · 12,3:1",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -1756,7 +1821,8 @@ export styleGuide = frame {
           fill: c.colors.on-cta,
           contents: "on-cta sur cta · 15,2:1",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -1782,7 +1848,8 @@ export styleGuide = frame {
           fill: c.colors.danger-text,
           contents: "danger-text sur danger-bg · 7,7:1",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -1808,7 +1875,8 @@ export styleGuide = frame {
           fill: c.colors.on-danger,
           contents: "on-danger sur danger · 4,8:1",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -1834,7 +1902,8 @@ export styleGuide = frame {
           fill: c.colors.warning-text,
           contents: "warning-text sur warning-bg · 10,3:1",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -1860,7 +1929,8 @@ export styleGuide = frame {
           fill: c.colors.on-warning,
           contents: "on-warning sur warning · 11,9:1",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -1886,7 +1956,8 @@ export styleGuide = frame {
           fill: c.colors.success-text,
           contents: "success-text sur success-bg · 7,9:1",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -1912,7 +1983,8 @@ export styleGuide = frame {
           fill: c.colors.on-success,
           contents: "on-success sur success · 6,0:1",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
     }
@@ -1948,6 +2020,7 @@ export styleGuide = frame {
       contents: "Tout élément cliquable a cinq états. Survol = step 4 (pointeur seulement, jamais sur mobile). Pressé = step 5. Focus clavier = anneau neutral-12 de 2 px posé à l'extérieur, jamais retiré. Désactivé = icône step 9 sur fond step 4, sans contraste exigé mais jamais seul pour dire « indisponible ». Zone tactile minimale : 44 px (les boutons font 48 px). Un état n'est jamais porté par la couleur seule.",
       font-size: 16,
       font-family: f.fonts.ui,
+      font-style: "Regular",
       line-height: 1.35
     }
 
@@ -1991,7 +2064,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Défaut",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2011,7 +2085,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Survol",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2031,7 +2106,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Pressé",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2051,7 +2127,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Focus",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2071,7 +2148,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Désactivé",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
       }
@@ -2117,7 +2195,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Défaut",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2137,7 +2216,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Survol",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2157,7 +2237,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Pressé",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2177,7 +2258,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Focus",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2197,7 +2279,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Désactivé",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
       }
@@ -2243,7 +2326,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Défaut",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2263,7 +2347,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Survol",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2283,7 +2368,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Pressé",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2303,7 +2389,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Focus",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2323,7 +2410,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Désactivé",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
       }
@@ -2369,7 +2457,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Défaut",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2389,7 +2478,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Survol",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2409,7 +2499,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Pressé",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2429,7 +2520,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Focus",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
 
@@ -2449,7 +2541,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Désactivé",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
         }
       }
@@ -2521,7 +2614,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Défaut",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
 
           evState0Sample = frame : cards.eventRow {
@@ -2541,7 +2635,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Survol",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
 
           evState1Sample = frame : cards.eventRowHover {
@@ -2561,7 +2656,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Pressé",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
 
           evState2Sample = frame : cards.eventRowPressed {
@@ -2581,7 +2677,8 @@ export styleGuide = frame {
             fill: c.colors.text-on-dark-muted,
             contents: "Focus",
             font-size: 13,
-            font-family: f.fonts.ui
+            font-family: f.fonts.ui,
+            font-style: "Regular"
           }
 
           evState3Sample = frame : cards.eventRowFocus {
@@ -2614,6 +2711,7 @@ export styleGuide = frame {
       contents: "Cabinet Grotesk, Regular et Medium seulement (pas de gras). Wagon pour les grands chiffres du billet.",
       font-size: 16,
       font-family: f.fonts.ui,
+      font-style: "Regular",
       line-height: 1.35
     }
 
@@ -2659,7 +2757,8 @@ export styleGuide = frame {
         fill: c.colors.text-on-dark,
         contents: "Lieu, libellé, pastille · Regular 14 et Medium 14",
         font-size: 14,
-        font-family: f.fonts.ui
+        font-family: f.fonts.ui,
+        font-style: "Regular"
       }
 
       wagonSample = text {
@@ -2694,6 +2793,7 @@ export styleGuide = frame {
       contents: "Lucide, trait de 2 px, blanc sur fond sombre, noir sur vert ou gris clair. Un état n'est jamais porté par l'icône seule.",
       font-size: 16,
       font-family: f.fonts.ui,
+      font-style: "Regular",
       line-height: 1.35
     }
 
@@ -2737,7 +2837,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Accueil",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2758,7 +2859,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Historique",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2779,7 +2881,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Ajouter",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2800,7 +2903,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Recherche",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2821,7 +2925,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Date",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2842,7 +2947,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Lieu",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2863,7 +2969,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Billet",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2884,7 +2991,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Groupe",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2905,7 +3013,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Accompagnants",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2926,7 +3035,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Pouce haut",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2947,7 +3057,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Pouce bas",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2968,7 +3079,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Vu",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -2989,7 +3101,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Raté",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -3010,7 +3123,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Retour",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -3031,7 +3145,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Suite",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -3052,7 +3167,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Déplier",
           font-size: 12,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
     }
@@ -3099,7 +3215,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "6 px · Pastilles",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -3123,7 +3240,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "10 px · Dans une carte",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -3147,7 +3265,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "18 px · Cartes",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -3171,7 +3290,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "24 px · Cartes sur photo",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -3195,7 +3315,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "32 px · Pilules, boutons ronds",
           font-size: 13,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
     }
@@ -3245,7 +3366,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Cartes et barre d'onglets : noir 55 à 80 % avec un filet blanc à 14 %. La photo reste visible derrière.",
           font-size: 14,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -3272,7 +3394,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Image générée (design/tools/make-ticket-holo.py) : reflet diagonal discret et logo répété en filigrane. Il doit rester vert et le texte noir lisible.",
           font-size: 14,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -3299,7 +3422,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Sous le billet uniquement : noir 55 %, décalage 10 px, flou 18 px.",
           font-size: 14,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
 
@@ -3326,7 +3450,8 @@ export styleGuide = frame {
           fill: c.colors.text-on-dark,
           contents: "Dégradé du noir vers transparent sous la barre d'onglets, par-dessus la liste.",
           font-size: 14,
-          font-family: f.fonts.ui
+          font-family: f.fonts.ui,
+          font-style: "Regular"
         }
       }
     }
@@ -3383,7 +3508,8 @@ export styleGuide = frame {
         fill: c.colors.text-on-dark,
         contents: "nextTicket · le billet du prochain event",
         font-size: 14,
-        font-family: f.fonts.ui
+        font-family: f.fonts.ui,
+        font-style: "Regular"
       }
 
       ticketSample = frame : cards.nextTicket {
@@ -3409,7 +3535,8 @@ export styleGuide = frame {
         fill: c.colors.text-on-dark,
         contents: "ticketPill · confirmPill · searchButton",
         font-size: 14,
-        font-family: f.fonts.ui
+        font-family: f.fonts.ui,
+        font-style: "Regular"
       }
 
       pillRow = frame {
@@ -3436,7 +3563,8 @@ export styleGuide = frame {
         fill: c.colors.text-on-dark,
         contents: "eventRow · ligne d'event à venir (verre sombre)",
         font-size: 14,
-        font-family: f.fonts.ui
+        font-family: f.fonts.ui,
+        font-style: "Regular"
       }
 
       rowSample = frame : cards.eventRow {
@@ -3462,7 +3590,8 @@ export styleGuide = frame {
         fill: c.colors.text-on-dark,
         contents: "profileHeader · avatar, recherche, trois chiffres clés, déconnexion",
         font-size: 14,
-        font-family: f.fonts.ui
+        font-family: f.fonts.ui,
+        font-style: "Regular"
       }
 
       profileSample2 = frame : profileParts.profileHeader {}
@@ -3478,7 +3607,8 @@ export styleGuide = frame {
         fill: c.colors.text-on-dark,
         contents: "pageHeader · retour + titre d'un écran secondaire",
         font-size: 14,
-        font-family: f.fonts.ui
+        font-family: f.fonts.ui,
+        font-style: "Regular"
       }
 
       headerSample = frame : headers.pageHeader {
@@ -3499,7 +3629,8 @@ export styleGuide = frame {
         fill: c.colors.text-on-dark,
         contents: "tabBar · addButton",
         font-size: 14,
-        font-family: f.fonts.ui
+        font-family: f.fonts.ui,
+        font-style: "Regular"
       }
 
       navRow = frame {

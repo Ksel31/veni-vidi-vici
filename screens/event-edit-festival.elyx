@@ -149,133 +149,27 @@ export eventEditFestival = frame {
         contents: "Line-up à voir"
       }
 
-      band1 = frame : ui.lineupRow {
-        dragHandle {
-          display: .none
-        }
-
+      band1 = frame : ui.festivalBand {
         bandName {
           contents: "Truckfighters"
         }
-
-        bandRole {
-          width: .auto,
-          height: 24px,
-          padding: [0px, 10px],
-
-          bandRoleGlyph {
-            display: .none
-          }
-
-          bandRoleLabel {
-            display: .visible,
-            contents: "Sam 17"
-          }
-        }
-
-        bandRemove {
-          width: 28px,
-          height: 28px,
-          fill: c.colors.surface-dark,
-          border: {color: c.colors.border, width: 1px},
-          corner-radius: 32px,
-
-          bandRemoveGlyph {
-            width: 16px,
-            height: 16px
-          }
-        }
       }
 
-      band2 = frame : ui.lineupRow {
-        dragHandle {
-          display: .none
-        }
-
+      band2 = frame : ui.festivalBand {
         bandName {
           contents: "Nebula"
         }
-
-        bandRole {
-          width: .auto,
-          height: 24px,
-          padding: [0px, 10px],
-
-          bandRoleGlyph {
-            display: .none
-          }
-
-          bandRoleLabel {
-            display: .visible,
-            contents: "Sam 17"
-          }
-        }
-
-        bandRemove {
-          width: 28px,
-          height: 28px,
-          fill: c.colors.surface-dark,
-          border: {color: c.colors.border, width: 1px},
-          corner-radius: 32px,
-
-          bandRemoveGlyph {
-            width: 16px,
-            height: 16px
-          }
-        }
       }
 
-      band3 = frame : ui.lineupRow {
-        dragHandle {
-          display: .none
-        }
-
+      band3 = frame : ui.festivalBand {
         bandName {
           contents: "Elder"
         }
-
-        bandRole {
-          width: .auto,
-          height: 24px,
-          padding: [0px, 10px],
-
-          bandRoleGlyph {
-            display: .none
-          }
-
-          bandRoleLabel {
-            display: .visible,
-            contents: "Sam 17"
-          }
-        }
-
-        bandRemove {
-          width: 28px,
-          height: 28px,
-          fill: c.colors.surface-dark,
-          border: {color: c.colors.border, width: 1px},
-          corner-radius: 32px,
-
-          bandRemoveGlyph {
-            width: 16px,
-            height: 16px
-          }
-        }
       }
 
-      addBand = frame : ui.fieldEmpty {
-        fieldLabel {
-          display: .none
-        }
-
-        fieldBox {
-          fieldGlyph {
-            contents: plusIcon
-          }
-
-          fieldValue {
-            contents: "Ajouter un groupe et son jour"
-          }
+      addBand = frame : ui.artistAddField {
+        fieldValue {
+          contents: "Ajouter un groupe et son jour"
         }
       }
     }

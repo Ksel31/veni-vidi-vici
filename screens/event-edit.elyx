@@ -6,7 +6,6 @@ import "tokens/colors.elyx" as c
 import "tokens/fonts.elyx" as f
 import "components/ui.elyx" as ui
 import "icons/lucide/check.svg" as checkIcon
-import "icons/lucide/plus.svg" as plusIcon
 import "icons/lucide/calendar.svg" as calendarIcon
 import "icons/lucide/map-pin.svg" as mapPinIcon
 import "icons/lucide/mic-vocal.svg" as micIcon
@@ -81,7 +80,7 @@ export eventEdit = frame {
           }
 
           fieldValue {
-            contents: "Sam 14 novembre 2026"
+            contents: "14 nov. 2026"
           }
         }
 
@@ -166,6 +165,8 @@ export eventEdit = frame {
         }
 
         headliner = frame : ui.lineupRow {
+          padding: [10px, 12px],
+
           dragHandle {
             display: .visible
           }
@@ -175,21 +176,7 @@ export eventEdit = frame {
           }
         }
 
-        addHead = frame : ui.fieldEmpty {
-          fieldLabel {
-            display: .none
-          }
-
-          fieldBox {
-            fieldGlyph {
-              contents: plusIcon
-            }
-
-            fieldValue {
-              contents: "Ajouter un groupe"
-            }
-          }
-        }
+        addHead = frame : ui.artistAddField {}
       }
 
       zoneSupport = frame {
@@ -209,6 +196,8 @@ export eventEdit = frame {
         }
 
         support = frame : ui.lineupRow {
+          padding: [10px, 12px],
+
           dragHandle {
             display: .visible
           }
@@ -228,21 +217,7 @@ export eventEdit = frame {
           }
         }
 
-        addSupport = frame : ui.fieldEmpty {
-          fieldLabel {
-            display: .none
-          }
-
-          fieldBox {
-            fieldGlyph {
-              contents: plusIcon
-            }
-
-            fieldValue {
-              contents: "Ajouter un groupe"
-            }
-          }
-        }
+        addSupport = frame : ui.artistAddField {}
       }
     }
 
@@ -264,7 +239,7 @@ export eventEdit = frame {
           }
 
           fieldValue {
-            contents: "65,00 €"
+            contents: "65,00"
           }
         }
 

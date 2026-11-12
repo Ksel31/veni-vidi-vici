@@ -82,7 +82,7 @@ export addConcert = frame {
           }
 
           fieldValue {
-            contents: "Sam 14 novembre 2026"
+            contents: "14 nov. 2026"
           }
         }
 
@@ -167,6 +167,8 @@ export addConcert = frame {
         }
 
         headliner = frame : ui.lineupRow {
+          padding: [10px, 12px],
+
           dragHandle {
             display: .visible
           }
@@ -176,21 +178,7 @@ export addConcert = frame {
           }
         }
 
-        addHead = frame : ui.fieldEmpty {
-          fieldLabel {
-            display: .none
-          }
-
-          fieldBox {
-            fieldGlyph {
-              contents: plusIcon
-            }
-
-            fieldValue {
-              contents: "Ajouter un groupe"
-            }
-          }
-        }
+        addHead = frame : ui.artistAddField {}
       }
 
       zoneSupport = frame {
@@ -210,6 +198,8 @@ export addConcert = frame {
         }
 
         support = frame : ui.lineupRow {
+          padding: [10px, 12px],
+
           dragHandle {
             display: .visible
           }
@@ -229,21 +219,7 @@ export addConcert = frame {
           }
         }
 
-        addSupport = frame : ui.fieldEmpty {
-          fieldLabel {
-            display: .none
-          }
-
-          fieldBox {
-            fieldGlyph {
-              contents: plusIcon
-            }
-
-            fieldValue {
-              contents: "Ajouter un groupe"
-            }
-          }
-        }
+        addSupport = frame : ui.artistAddField {}
       }
     }
 
@@ -265,7 +241,7 @@ export addConcert = frame {
           }
 
           fieldValue {
-            contents: "65,00 €"
+            contents: "65,00"
           }
         }
 
