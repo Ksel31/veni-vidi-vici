@@ -378,3 +378,80 @@ body {
 	font-size: 12px;
 	color: var(--text-on-dark-muted);
 }
+
+/* Panneau temporaire de l'étape 2. Il disparaîtra avec le vrai écran de connexion. */
+.debug {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-s);
+	padding: var(--space-m);
+	background: var(--glass);
+	border: var(--line-width) solid var(--glass-border);
+	border-radius: var(--radius-xl);
+}
+
+.debug h2,
+.debug p {
+	margin: 0;
+}
+
+.debug h2 {
+	font-size: 18px;
+	font-weight: 500;
+}
+
+.debug form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-s);
+}
+
+.debug label {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-s);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.debug input,
+.debug button {
+	font: inherit;
+	min-height: var(--tap);
+	border-radius: var(--radius-m);
+}
+
+.debug input {
+	padding: 0 var(--space-m);
+	border: var(--line-width) solid var(--glass-border);
+	background: var(--glass-strong);
+	color: var(--text-on-dark);
+}
+
+.debug button {
+	border: 0;
+	border-radius: var(--radius-pill);
+	background: var(--brand);
+	color: var(--on-cta);
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.debug button:disabled {
+	background: var(--disabled-bg);
+	color: var(--disabled-text);
+	cursor: default;
+}
+
+.debug-list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-s);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.debug-list li {
+	font-size: 14px;
+}

@@ -111,14 +111,14 @@ Toutes les données sont propres à un utilisateur (pas de partage entre comptes
 
 ## Règles métier
 
-- **« À confirmer »** n'est pas un statut stocké : c'est un event `planned` dont la date de fin (ou de début) est passée. L'accueil affiche un bandeau « N events à confirmer », qui mène à la liste `/to-confirm`.
+- **« À confirmer »** n'est pas un statut stocké : c'est un event `planned` dont la date de fin (ou de début) est passée. Le jour même reste « à venir » : l'event ne devient « à confirmer » qu'à partir du lendemain. L'accueil affiche un bandeau « N events à confirmer », qui mène à la liste `/to-confirm`.
 - **Confirmer la présence** : sur la fiche d'un event passé, l'utilisateur choisit « Vu » ou « Raté ».
   - Concert : les passages suivent le statut de l'event.
   - Festival : l'utilisateur coche les jours faits, puis les groupes vus parmi ceux de ces jours. Les groupes non cochés passent en `missed`.
   - Si un festival entier est marqué « Raté », tous ses passages passent en `missed`.
 - Le statut d'un passage est lié à la date de cet event : un groupe raté à un festival reste `missed` pour cette date. Le revoir plus tard est un autre event.
 - **Ajout d'un event passé** : la présence est pré-sélectionnée sur « Vu » (hypothèse à valider à l'usage).
-- **Tout est modifiable à tout moment** depuis la fiche : date, lieu, groupes, billets. Si la date repasse dans le futur, l'event redevient `planned`.
+- **Tout est modifiable à tout moment** depuis la fiche : date, lieu, groupes, billets. Si la date repasse à aujourd'hui ou plus tard, l'event redevient `planned` et tous ses passages repassent en `to_see`.
 - Pas de statut « reporté » : on modifie la date.
 - Le compte rendu (pouces, avis, setlist, accompagnants, photos souvenirs) n'est accessible qu'une fois l'event marqué « Vu ».
 - **Billet** : à l'ajout comme en modification, on peut cocher « billet acheté », saisir le prix et envoyer le fichier du billet (PDF ou image). Prix et fichier sont toujours optionnels, et modifiables à tout moment.
