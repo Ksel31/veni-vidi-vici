@@ -1,5 +1,9 @@
-// Compte `demo`. Les dates sont calculées à partir d'aujourd'hui
-// pour que les trois events restent dans le passé.
+// Compte `demo`. Les dates sont calculées au chargement, à partir d'aujourd'hui.
+// Répartition d'origine : un vu, deux à confirmer (concert + festival),
+// un concert à venir avec billet, un festival à venir sur 3 jours.
+
+/** Incrémenter pour réécrire le compte `demo` déjà enregistré dans le navigateur. */
+export const DEMO_SEED_VERSION = 2;
 
 /** @param {number} offset @returns {string} AAAA-MM-JJ, calendrier local. */
 function daysFromToday(offset) {
@@ -11,10 +15,14 @@ function daysFromToday(offset) {
 }
 
 export function createDemoData() {
-	const seenConcert = daysFromToday(-40);
-	const plannedConcert = daysFromToday(-8);
-	const festivalStart = daysFromToday(-18);
-	const festivalEnd = daysFromToday(-17);
+	const seenConcert = daysFromToday(-60);
+	const confirmConcert = daysFromToday(-6);
+	const pastFestStart = daysFromToday(-20);
+	const pastFestEnd = daysFromToday(-19);
+	const nextConcert = daysFromToday(3);
+	const festStart = daysFromToday(24);
+	const festMid = daysFromToday(25);
+	const festEnd = daysFromToday(26);
 
 	/** @type {import('./store.js').Venue[]} */
 	const venues = [
@@ -26,12 +34,16 @@ export function createDemoData() {
 	/** @type {import('./store.js').Artist[]} */
 	const artists = [
 		{ id: 'artist-nick-cave', name: 'Nick Cave' },
-		{ id: 'artist-dry-cleaning', name: 'Dry Cleaning' },
+		{ id: 'artist-cat-power', name: 'Cat Power' },
 		{ id: 'artist-ghost', name: 'Ghost' },
 		{ id: 'artist-fontaines', name: 'Fontaines D.C.' },
-		{ id: 'artist-wet-leg', name: 'Wet Leg' },
+		{ id: 'artist-gojira', name: 'Gojira' },
 		{ id: 'artist-idles', name: 'Idles' },
-		{ id: 'artist-slowdive', name: 'Slowdive' }
+		{ id: 'artist-wet-leg', name: 'Wet Leg' },
+		{ id: 'artist-mastodon', name: 'Mastodon' },
+		{ id: 'artist-turnstile', name: 'Turnstile' },
+		{ id: 'artist-slowdive', name: 'Slowdive' },
+		{ id: 'artist-dry-cleaning', name: 'Dry Cleaning' }
 	];
 
 	/** @type {import('./store.js').Event[]} */
@@ -57,7 +69,7 @@ export function createDemoData() {
 			id: 'event-ghost',
 			type: 'concert',
 			title: 'Ghost',
-			startDate: plannedConcert,
+			startDate: confirmConcert,
 			endDate: null,
 			venueId: 'venue-botanique',
 			status: 'planned',
@@ -71,15 +83,49 @@ export function createDemoData() {
 			companions: []
 		},
 		{
-			id: 'event-werchter',
+			id: 'event-nuits',
 			type: 'festival',
-			title: 'Rock Werchter',
-			startDate: festivalStart,
-			endDate: festivalEnd,
-			venueId: 'venue-werchter',
+			title: 'Les Nuits',
+			startDate: pastFestStart,
+			endDate: pastFestEnd,
+			venueId: 'venue-botanique',
 			status: 'planned',
 			ticketBought: false,
 			ticketPrice: null,
+			ticketFile: null,
+			photos: [],
+			daysAttended: [],
+			thumb: null,
+			comment: '',
+			companions: []
+		},
+		{
+			id: 'event-fontaines',
+			type: 'concert',
+			title: 'Fontaines D.C.',
+			startDate: nextConcert,
+			endDate: null,
+			venueId: 'venue-ab',
+			status: 'planned',
+			ticketBought: true,
+			ticketPrice: 49,
+			ticketFile: null,
+			photos: [],
+			daysAttended: [],
+			thumb: null,
+			comment: '',
+			companions: []
+		},
+		{
+			id: 'event-werchter',
+			type: 'festival',
+			title: 'Rock Werchter',
+			startDate: festStart,
+			endDate: festEnd,
+			venueId: 'venue-werchter',
+			status: 'planned',
+			ticketBought: true,
+			ticketPrice: 289,
 			ticketFile: null,
 			photos: [],
 			daysAttended: [],
@@ -98,13 +144,13 @@ export function createDemoData() {
 			billing: 'headliner',
 			day: null,
 			status: 'seen',
-			thumb: null,
+			thumb: 'up',
 			setlist: ''
 		},
 		{
-			id: 'perf-dry-cleaning',
+			id: 'perf-cat-power',
 			eventId: 'event-nick-cave',
-			artistId: 'artist-dry-cleaning',
+			artistId: 'artist-cat-power',
 			billing: 'support',
 			day: null,
 			status: 'seen',
@@ -122,11 +168,71 @@ export function createDemoData() {
 			setlist: ''
 		},
 		{
-			id: 'perf-fontaines',
-			eventId: 'event-werchter',
+			id: 'perf-nuits-dry',
+			eventId: 'event-nuits',
+			artistId: 'artist-dry-cleaning',
+			billing: 'headliner',
+			day: pastFestStart,
+			status: 'to_see',
+			thumb: null,
+			setlist: ''
+		},
+		{
+			id: 'perf-nuits-wet',
+			eventId: 'event-nuits',
+			artistId: 'artist-wet-leg',
+			billing: 'support',
+			day: pastFestStart,
+			status: 'to_see',
+			thumb: null,
+			setlist: ''
+		},
+		{
+			id: 'perf-nuits-slow',
+			eventId: 'event-nuits',
+			artistId: 'artist-slowdive',
+			billing: 'headliner',
+			day: pastFestEnd,
+			status: 'to_see',
+			thumb: null,
+			setlist: ''
+		},
+		{
+			id: 'perf-nuits-idles',
+			eventId: 'event-nuits',
+			artistId: 'artist-idles',
+			billing: 'support',
+			day: pastFestEnd,
+			status: 'to_see',
+			thumb: null,
+			setlist: ''
+		},
+		{
+			id: 'perf-fontaines-show',
+			eventId: 'event-fontaines',
 			artistId: 'artist-fontaines',
 			billing: 'headliner',
-			day: festivalStart,
+			day: null,
+			status: 'to_see',
+			thumb: null,
+			setlist: ''
+		},
+		{
+			id: 'perf-gojira',
+			eventId: 'event-werchter',
+			artistId: 'artist-gojira',
+			billing: 'headliner',
+			day: festStart,
+			status: 'to_see',
+			thumb: null,
+			setlist: ''
+		},
+		{
+			id: 'perf-idles',
+			eventId: 'event-werchter',
+			artistId: 'artist-idles',
+			billing: 'support',
+			day: festStart,
 			status: 'to_see',
 			thumb: null,
 			setlist: ''
@@ -136,17 +242,27 @@ export function createDemoData() {
 			eventId: 'event-werchter',
 			artistId: 'artist-wet-leg',
 			billing: 'support',
-			day: festivalStart,
+			day: festStart,
 			status: 'to_see',
 			thumb: null,
 			setlist: ''
 		},
 		{
-			id: 'perf-idles',
+			id: 'perf-mastodon',
 			eventId: 'event-werchter',
-			artistId: 'artist-idles',
+			artistId: 'artist-mastodon',
 			billing: 'headliner',
-			day: festivalEnd,
+			day: festMid,
+			status: 'to_see',
+			thumb: null,
+			setlist: ''
+		},
+		{
+			id: 'perf-turnstile',
+			eventId: 'event-werchter',
+			artistId: 'artist-turnstile',
+			billing: 'support',
+			day: festMid,
 			status: 'to_see',
 			thumb: null,
 			setlist: ''
@@ -156,7 +272,27 @@ export function createDemoData() {
 			eventId: 'event-werchter',
 			artistId: 'artist-slowdive',
 			billing: 'support',
-			day: festivalEnd,
+			day: festMid,
+			status: 'to_see',
+			thumb: null,
+			setlist: ''
+		},
+		{
+			id: 'perf-fontaines-fest',
+			eventId: 'event-werchter',
+			artistId: 'artist-fontaines',
+			billing: 'headliner',
+			day: festEnd,
+			status: 'to_see',
+			thumb: null,
+			setlist: ''
+		},
+		{
+			id: 'perf-dry-cleaning',
+			eventId: 'event-werchter',
+			artistId: 'artist-dry-cleaning',
+			billing: 'support',
+			day: festEnd,
 			status: 'to_see',
 			thumb: null,
 			setlist: ''

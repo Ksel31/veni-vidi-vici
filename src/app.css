@@ -141,16 +141,33 @@
 	/* Noms de familles, tokens/fonts.elyx */
 	--font-ui: "Cabinet Grotesk Variable", sans-serif;
 	--font-display: "Wagon", sans-serif;
+	--font-input: "Archivo", sans-serif;
+
+	/* Graisses optiques, calées sur l'épaisseur des fûts des exports Elyx
+	   (pas sur le nom d'instance : Medium du fichier est 500, l'export est plus épais).
+	   Light 575, Regular 650, Medium 750. Bold 700 = Wagon, police statique,
+	   dont le « 14 » du billet a déjà la même épaisseur que l'export. */
+	--weight-light: 575;
+	--weight-regular: 650;
+	--weight-medium: 750;
+	--weight-bold: 700;
 }
 
-/* Pas de woff2 dans fonts/ : on charge le TTF variable et l'OTF.
-   Le fichier Cabinet est variable (100–900) mais l'interface n'utilise
-   que Regular (400) et Medium (500). Le réglage d'origine du fichier est 900,
-   donc on borne le poids ici. */
+/* Plage complète : le défaut du fichier Cabinet est 900. Une plage 400–500
+   écrasait Light (300) et Bold (700). */
 @font-face {
 	font-family: "Cabinet Grotesk Variable";
 	src: url("/fonts/CabinetGrotesk-Variable.ttf") format("truetype");
-	font-weight: 400 500;
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Archivo";
+	src: url("/fonts/Archivo.ttf") format("truetype");
+	font-weight: 100 900;
+	font-stretch: 62% 125%;
 	font-style: normal;
 	font-display: swap;
 }
@@ -179,7 +196,7 @@ body {
 	background: var(--surface-dark);
 	color: var(--text-on-dark);
 	font-family: var(--font-ui);
-	font-weight: 400;
+	font-weight: var(--weight-regular);
 	font-size: 16px;
 	line-height: 1.35;
 	font-synthesis: none;
@@ -200,6 +217,14 @@ button,
 input {
 	font: inherit;
 	color: inherit;
+}
+
+/* Valeurs de champ : Archivo Light (ui.elyx), pas Cabinet. */
+input,
+textarea {
+	font-family: var(--font-input);
+	font-weight: var(--weight-light);
+	font-stretch: 100%;
 }
 
 button,
@@ -344,7 +369,7 @@ button {
 .toast p {
 	margin: 0;
 	font-size: 15px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .toast button {
@@ -355,7 +380,7 @@ button {
 	background: transparent;
 	color: var(--cta);
 	font: inherit;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .screen {
@@ -418,7 +443,7 @@ button {
 	min-height: var(--tap);
 	height: 52px;
 	border-radius: var(--radius-l);
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	font-size: 16px;
 }
 
@@ -485,7 +510,7 @@ button {
 .field label {
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .field-box {
@@ -555,7 +580,7 @@ textarea,
 .login-intro h1 {
 	margin: 0;
 	font-size: 44px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 	letter-spacing: -0.03em;
 }
@@ -583,7 +608,7 @@ textarea,
 .page-header h1 {
 	margin: 0;
 	font-size: 32px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	letter-spacing: -0.03em;
 }
 
@@ -756,14 +781,18 @@ textarea,
 
 .profile-row {
 	justify-content: space-between;
+	gap: 12px;
 }
 
 .who {
+	flex: 1;
 	gap: 12px;
+	min-width: 0;
 }
 
 .avatar {
 	display: inline-flex;
+	flex: none;
 	align-items: center;
 	justify-content: center;
 	width: 52px;
@@ -773,12 +802,16 @@ textarea,
 	background: var(--neutral-12);
 	color: var(--neutral-1);
 	font-size: 24px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .profile-name {
+	min-width: 0;
+	overflow: hidden;
 	font-size: 26px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .stats {
@@ -800,7 +833,7 @@ textarea,
 
 .stat-value {
 	font-size: 26px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 }
 
@@ -809,20 +842,33 @@ textarea,
 }
 
 .logout {
-	align-self: flex-start;
+	flex: none;
+	align-self: center;
 	min-height: var(--tap);
-	padding: 0;
+	padding: 0 0 0 4px;
 	border: 0;
 	background: transparent;
 	color: var(--text-on-dark-muted);
 	font-size: 14px;
+	font-weight: var(--weight-regular);
+	white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.logout:hover {
+		color: var(--text-on-dark);
+	}
+}
+
+.logout:active {
+	color: var(--text-on-dark);
 }
 
 /* Titres de section de l'accueil : Medium 36, interlettrage -3 %. */
 .section-title {
 	margin: 0;
 	font-size: 36px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 	letter-spacing: -0.03em;
 }
@@ -846,7 +892,7 @@ textarea,
 	background: var(--neutral-1);
 	color: var(--brand);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .event-row,
@@ -874,13 +920,13 @@ textarea,
 
 .date-day {
 	font-size: 24px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 }
 
 .date-month {
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	letter-spacing: 0.04em;
 }
 
@@ -894,7 +940,7 @@ textarea,
 
 .event-row-title {
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .event-row-meta {
@@ -909,7 +955,7 @@ textarea,
 	padding: 4px 8px;
 	border-radius: var(--radius-s);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .countdown {
@@ -978,12 +1024,12 @@ textarea,
 
 .ticket-type {
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .ticket-title {
 	font-size: 38px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1.05;
 	letter-spacing: -0.02em;
 	overflow-wrap: break-word;
@@ -1001,7 +1047,7 @@ textarea,
 
 .ticket-place {
 	font-size: 11px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	text-transform: uppercase;
 }
 
@@ -1013,14 +1059,14 @@ textarea,
 .ticket-day {
 	font-family: var(--font-display);
 	font-size: 74px;
-	font-weight: 700;
+	font-weight: var(--weight-bold);
 	line-height: 0.85;
 }
 
 .ticket-month {
 	font-family: var(--font-display);
 	font-size: 24px;
-	font-weight: 700;
+	font-weight: var(--weight-bold);
 	line-height: 1;
 }
 
@@ -1057,7 +1103,7 @@ textarea,
 .history-title {
 	margin: 32px 6px 0;
 	font-size: 36px;
-	font-weight: 400;
+	font-weight: var(--weight-regular);
 	line-height: 1;
 	letter-spacing: -0.03em;
 }
@@ -1080,7 +1126,7 @@ textarea,
 	background: var(--glass-strong);
 	color: var(--text-on-dark);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .chip-person {
@@ -1173,7 +1219,7 @@ textarea,
 	background: var(--success-bg);
 	color: var(--success-text);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .status-missed {
@@ -1200,7 +1246,7 @@ textarea,
 .add-question {
 	margin: 48px var(--space-s) 0;
 	font-size: 36px;
-	font-weight: 400;
+	font-weight: var(--weight-regular);
 	line-height: 1;
 	letter-spacing: -0.03em;
 }
@@ -1239,7 +1285,7 @@ textarea,
 
 .type-title {
 	font-size: 26px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	letter-spacing: -0.02em;
 }
 
@@ -1256,7 +1302,7 @@ textarea,
 .card-title {
 	margin: 0;
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .date-pair {
@@ -1313,7 +1359,7 @@ textarea,
 
 .cal-nav p {
 	margin: 0;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .cal-nav button {
@@ -1380,7 +1426,7 @@ textarea,
 	margin: 0;
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .suggestions {
@@ -1416,7 +1462,7 @@ textarea,
 	margin: 0;
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .band-row {
@@ -1439,7 +1485,7 @@ textarea,
 	flex: 1;
 	min-width: 0;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .drag-handle {
@@ -1473,7 +1519,7 @@ textarea,
 	background: var(--neutral-12);
 	color: var(--neutral-1);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 /* Bouton de rôle : zone 44 px, pastille ronde plus petite, icône centrée. */
@@ -1583,7 +1629,7 @@ button.role-pill.role-support:active::before {
 	background: transparent;
 	color: var(--neutral-1);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1;
 }
 
@@ -1687,7 +1733,7 @@ button.role-pill.role-support:active::before {
 .detail-heading {
 	margin: 0;
 	font-size: 36px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 	line-height: 1.05;
 	letter-spacing: -0.03em;
 }
@@ -1725,7 +1771,7 @@ button.role-pill.role-support:active::before {
 	background: var(--warning);
 	color: var(--on-warning);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .field-box-text {
@@ -1756,7 +1802,7 @@ button.role-pill.role-support:active::before {
 .field-caption {
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .thumb-btn {
@@ -1772,7 +1818,7 @@ button.role-pill.role-support:active::before {
 	background: var(--glass-strong);
 	color: var(--text-on-dark);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .thumb-btn-on {
@@ -1881,7 +1927,7 @@ button.role-pill.role-support:active::before {
 
 .setlist-title {
 	font-size: 18px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .setlist-card .day-panel-open .day-panel-inner {
@@ -1897,6 +1943,9 @@ button.role-pill.role-support:active::before {
 	background: var(--surface-dark);
 	color: var(--text-on-dark);
 	font: inherit;
+	font-family: var(--font-input);
+	font-weight: var(--weight-light);
+	font-stretch: 100%;
 	resize: vertical;
 }
 
@@ -1960,7 +2009,7 @@ button.role-pill.role-support:active::before {
 	display: block;
 	margin: 0;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .check-meta {
@@ -2029,4 +2078,231 @@ button.field-box:active {
 	border: 1.5px dashed var(--border);
 	border-radius: var(--radius-m);
 	text-align: center;
+}
+
+/* Accueil vide : phrase + CTA pleine largeur, sans barre d'onglets (home-empty.elyx). */
+.empty-home {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding-top: 32px;
+}
+
+.empty-lead {
+	margin: 0;
+	color: var(--text-on-dark-muted);
+	font-size: 16px;
+	line-height: 1.3;
+}
+
+.dock-solo {
+	justify-content: stretch;
+}
+
+.add-first {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	width: 100%;
+	height: 64px;
+	border: 0;
+	border-radius: var(--radius-pill);
+	background: var(--cta);
+	color: var(--on-cta);
+	font-size: 18px;
+	font-weight: var(--weight-medium);
+	box-shadow: 0 0 28px rgb(66.6667% 100% 13.33% / 45%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.add-first:hover {
+		background: var(--cta-hover);
+	}
+}
+
+.add-first:active {
+	background: var(--cta-pressed);
+}
+
+/* Onboarding : trois écrans à swiper (onboarding.elyx). Le défilement est natif. */
+.onboarding {
+	position: relative;
+	z-index: 1;
+	height: 100dvh;
+	overflow: hidden;
+}
+
+.onboarding-track {
+	display: flex;
+	height: 100%;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: none;
+}
+
+.onboarding-track::-webkit-scrollbar {
+	display: none;
+}
+
+.onboarding-slide {
+	position: relative;
+	display: flex;
+	flex: 0 0 100%;
+	flex-direction: column;
+	justify-content: space-between;
+	min-width: 100%;
+	height: 100%;
+	padding:
+		max(24px, env(safe-area-inset-top, 0px))
+		max(20px, env(safe-area-inset-right, 0px))
+		max(32px, env(safe-area-inset-bottom, 0px))
+		max(20px, env(safe-area-inset-left, 0px));
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	background-color: var(--surface-dark);
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 40%) 0%, rgb(0% 0% 0% / 55%) 45%, rgb(0% 0% 0% / 92%) 100%),
+		var(--slide-photo);
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.onboarding-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.onboarding-logo {
+	width: 150px;
+	height: 53px;
+	object-fit: contain;
+	object-position: left center;
+}
+
+.onboarding-skip,
+.swipe-hint {
+	border: 0;
+	border-radius: var(--radius-pill);
+	background: transparent;
+	color: var(--text-on-dark);
+}
+
+.onboarding-skip {
+	min-height: var(--tap);
+	padding: 0 4px;
+	font-size: 16px;
+	font-weight: var(--weight-medium);
+}
+
+.onboarding-lower {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	padding-bottom: 92px;
+}
+
+.onboarding-lower-last {
+	padding-bottom: 0;
+}
+
+.onboarding-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.onboarding-disc {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 88px;
+	height: 88px;
+	border-radius: 44px;
+	background: var(--light);
+	color: var(--neutral-1);
+}
+
+.onboarding-texts {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.onboarding-eyebrow,
+.onboarding-texts p,
+.onboarding-texts h1 {
+	margin: 0;
+}
+
+.onboarding-eyebrow {
+	font-size: 18px;
+	font-weight: var(--weight-medium);
+}
+
+.onboarding-texts h1 {
+	font-size: 44px;
+	font-weight: var(--weight-medium);
+	line-height: 1;
+	letter-spacing: -0.03em;
+}
+
+.onboarding-texts p {
+	font-size: 18px;
+	line-height: 1.3;
+}
+
+.page-dots {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	height: 8px;
+}
+
+.page-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 4px;
+	background: var(--text-on-dark-muted);
+}
+
+.page-dot-on {
+	width: 24px;
+	background: var(--light);
+}
+
+.swipe-hint {
+	position: absolute;
+	top: calc(398 / 844 * 100%);
+	right: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	padding: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.onboarding-skip:hover,
+	.swipe-hint:hover {
+		background: var(--state-hover);
+	}
+}
+
+.onboarding-skip:active,
+.swipe-hint:active {
+	background: var(--state-pressed);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.onboarding-track {
+		scroll-behavior: auto;
+	}
 }

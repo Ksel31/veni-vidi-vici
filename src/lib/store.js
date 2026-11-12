@@ -1,5 +1,5 @@
 import { get, writable } from 'svelte/store';
-import { createDemoData } from './demo-data.js';
+import { createDemoData, DEMO_SEED_VERSION } from './demo-data.js';
 
 // `localStorage` n'existe pas pendant le rendu serveur.
 const browser = typeof localStorage !== 'undefined';
@@ -67,6 +67,8 @@ const browser = typeof localStorage !== 'undefined';
  * @property {Artist[]} artists
  * @property {Event[]} events
  * @property {Performance[]} performances
+ * @property {boolean} onboardingSeen
+ * @property {number} [seedVersion]
  */
 
 /**
@@ -84,7 +86,7 @@ function storageKey(userId) {
 
 /** @returns {AppData} */
 function loggedOut() {
-	return { userId: null, venues: [], artists: [], events: [], performances: [] };
+	return { userId: null, venues: [], artists: [], events: [], performances: [], onboardingSeen: false };
 }
 
 /** @returns {string} AAAA-MM-JJ, calendrier local. */
@@ -154,7 +156,9 @@ function save(state) {
 		venues: state.venues,
 		artists: state.artists,
 		events: state.events,
-		performances: state.performances
+		performances: state.performances,
+		onboardingSeen: state.onboardingSeen === true,
+		seedVersion: state.seedVersion ?? 0
 	};
 	localStorage.setItem(storageKey(state.userId), JSON.stringify(payload));
 	localStorage.setItem(SESSION_KEY, state.userId);
@@ -176,7 +180,9 @@ function readUser(userId) {
 			venues: parsed.venues ?? [],
 			artists: parsed.artists ?? [],
 			events: parsed.events ?? [],
-			performances: parsed.performances ?? []
+			performances: parsed.performances ?? [],
+			onboardingSeen: parsed.onboardingSeen === true,
+			seedVersion: typeof parsed.seedVersion === 'number' ? parsed.seedVersion : 0
 		};
 	} catch {
 		return null;
@@ -194,9 +200,35 @@ export function login(identifier) {
 	if (!userId) return;
 
 	const saved = readUser(userId);
-	// Premier login `demo` seulement : ensuite on relit le localStorage.
-	const payload = saved ?? (userId === 'demo' ? createDemoData() : { venues: [], artists: [], events: [], performances: [] });
+	const empty = { venues: [], artists: [], events: [], performances: [], onboardingSeen: false };
+	// `demo` est recalculé quand la version du seed change : les dates suivent
+	// le jour du chargement, même si un ancien compte est déjà dans le navigateur.
+	// Ça remplace aussi les modifications faites sur ce compte démo.
+	const demo = () => ({ ...createDemoData(), onboardingSeen: true, seedVersion: DEMO_SEED_VERSION });
+	const payload =
+		userId === 'demo'
+			? saved && saved.seedVersion === DEMO_SEED_VERSION
+				? saved
+				: demo()
+			: (saved ?? empty);
 	commit({ userId, ...payload });
+}
+
+/**
+ * L'onboarding s'affiche une fois, pour un compte sans event, jamais pour `demo`.
+ * @param {AppData} [state]
+ */
+export function needsOnboarding(state = get(data)) {
+	if (!state.userId || state.userId === 'demo') return false;
+	if (state.onboardingSeen) return false;
+	return state.events.length === 0;
+}
+
+/** « Passer » ou « Ajouter mon 1er event » : l'onboarding ne revient pas pour ce compte. */
+export function completeOnboarding() {
+	const state = get(data);
+	if (!state.userId || state.onboardingSeen) return;
+	commit({ ...state, onboardingSeen: true });
 }
 
 /** Après un rechargement, rouvre le dernier identifiant. */

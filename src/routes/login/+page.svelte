@@ -1,6 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { login } from '#lib/store.js';
+	import { login, needsOnboarding } from '#lib/store.js';
 	import TextField from '#lib/components/TextField.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 
@@ -13,7 +13,7 @@
 		const name = identifier.trim();
 		if (!name) return;
 		login(name);
-		goto('/');
+		goto(needsOnboarding() ? '/onboarding' : '/');
 	}
 </script>
 
