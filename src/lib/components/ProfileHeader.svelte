@@ -12,9 +12,7 @@
 		<div class="who">
 			<span class="avatar" aria-hidden="true">{initial}</span>
 			<span class="profile-name">{name}</span>
-			{#if hideStats}
-				<button class="logout" type="button" onclick={onLogout}>Se déconnecter</button>
-			{/if}
+			<button class="logout" type="button" onclick={onLogout}>Se déconnecter</button>
 		</div>
 		<!-- La loupe est sur la maquette. Aucun écran de recherche pour cette étape : le bouton ne mène nulle part. -->
 		<button class="search-button" type="button" aria-label="Recherche">
@@ -36,6 +34,5 @@
 				<span class="stat-label">Groupes vus</span>
 			</p>
 		</div>
-		<button class="logout" type="button" onclick={onLogout}>Se déconnecter</button>
 	{/if}
 </header>

@@ -781,14 +781,18 @@ textarea,
 
 .profile-row {
 	justify-content: space-between;
+	gap: 12px;
 }
 
 .who {
+	flex: 1;
 	gap: 12px;
+	min-width: 0;
 }
 
 .avatar {
 	display: inline-flex;
+	flex: none;
 	align-items: center;
 	justify-content: center;
 	width: 52px;
@@ -802,8 +806,12 @@ textarea,
 }
 
 .profile-name {
+	min-width: 0;
+	overflow: hidden;
 	font-size: 26px;
 	font-weight: var(--weight-medium);
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .stats {
@@ -834,13 +842,26 @@ textarea,
 }
 
 .logout {
-	align-self: flex-start;
+	flex: none;
+	align-self: center;
 	min-height: var(--tap);
-	padding: 0;
+	padding: 0 0 0 4px;
 	border: 0;
 	background: transparent;
 	color: var(--text-on-dark-muted);
 	font-size: 14px;
+	font-weight: var(--weight-regular);
+	white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.logout:hover {
+		color: var(--text-on-dark);
+	}
+}
+
+.logout:active {
+	color: var(--text-on-dark);
 }
 
 /* Titres de section de l'accueil : Medium 36, interlettrage -3 %. */
@@ -2072,15 +2093,6 @@ button.field-box:active {
 	color: var(--text-on-dark-muted);
 	font-size: 16px;
 	line-height: 1.3;
-}
-
-.profile-compact .who {
-	min-width: 0;
-	flex: 1;
-}
-
-.profile-compact .logout {
-	flex: none;
 }
 
 .dock-solo {
