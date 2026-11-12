@@ -1077,10 +1077,12 @@ button {
 }
 
 .history-row {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: 12px;
 	padding: 12px;
+	padding-right: 16px;
 	background: var(--glass);
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-xl);
@@ -1094,17 +1096,19 @@ button {
 	min-width: 0;
 }
 
-.history-side {
-	display: flex;
-	flex: none;
-	flex-direction: column;
-	align-items: flex-end;
-	gap: 4px;
-}
-
 .history-delete {
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-end;
 	width: var(--tap);
 	height: var(--tap);
+	padding: 8px 10px 0 0;
+	border: 0;
+	background: transparent;
+	color: var(--text-on-dark-muted);
 }
 
 .modal-layer {
@@ -1115,11 +1119,13 @@ button {
 	align-items: center;
 	justify-content: center;
 	padding: 16px;
-	background: rgb(0% 0% 0% / 45%);
+	background: rgb(0% 0% 0% / 60%);
 }
 
-.modal-layer .glass-card {
+.modal-layer .glass-card,
+.delete-panel {
 	width: min(358px, 100%);
+	background: var(--surface-dark-raised);
 }
 
 .status-badge {
