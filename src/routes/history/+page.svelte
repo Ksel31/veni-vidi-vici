@@ -79,7 +79,7 @@
 						{event.status === 'missed' ? 'Raté' : 'Vu'}
 					</span>
 					<button class="history-delete" type="button" aria-label="Supprimer l'event" onclick={() => (deleteId = event.id)}>
-						<Icon name="x" size={16} />
+						<Icon name="x-fine" size={12} />
 					</button>
 				</article>
 			{/each}

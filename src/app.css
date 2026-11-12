@@ -1081,8 +1081,7 @@ button {
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	padding: 12px;
-	padding-right: 16px;
+	padding: 22px 16px 12px 12px;
 	background: var(--glass);
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-xl);
@@ -1105,10 +1104,20 @@ button {
 	justify-content: flex-end;
 	width: var(--tap);
 	height: var(--tap);
-	padding: 8px 10px 0 0;
+	padding: 10px 10px 0 0;
 	border: 0;
 	background: transparent;
-	color: var(--text-on-dark-muted);
+	color: color-mix(in srgb, var(--neutral-9) 45%, transparent);
+}
+
+.history-delete:active {
+	color: var(--text-on-dark);
+}
+
+@media (hover: hover) {
+	.history-delete:hover {
+		color: var(--text-on-dark);
+	}
 }
 
 .modal-layer {
