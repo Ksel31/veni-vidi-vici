@@ -3,18 +3,30 @@
 	let { venues, name = $bindable(''), city = $bindable(''), venueId = $bindable(null) } = $props();
 
 	const query = $derived(name.trim().toLowerCase());
+	const cityQuery = $derived(city.trim().toLowerCase());
 	const matches = $derived(
 		query
-			? venues.filter((venue) => venue.name.toLowerCase().includes(query)).slice(0, 6)
+			? venues
+					.filter((venue) => {
+						const nameOk = venue.name.toLowerCase().includes(query);
+						const cityOk = !cityQuery || venue.city.toLowerCase().includes(cityQuery);
+						return nameOk && cityOk;
+					})
+					.slice(0, 6)
 			: []
 	);
-	const known = $derived(venues.some((venue) => venue.name.toLowerCase() === query));
 
 	/** @param {string} value */
 	function onName(value) {
 		name = value;
-		const exact = venues.find((venue) => venue.name.toLowerCase() === value.trim().toLowerCase());
+		const text = value.trim().toLowerCase();
+		const exact = venues.find((venue) => {
+			if (venue.name.toLowerCase() !== text) return false;
+			if (!cityQuery) return true;
+			return venue.city.toLowerCase() === cityQuery;
+		});
 		venueId = exact ? exact.id : null;
+		if (exact) city = exact.city;
 	}
 
 	/** @param {import('#lib/store.js').Venue} venue */
@@ -25,23 +37,6 @@
 	}
 </script>
 
-<div class="field">
-	<label for="venue-name">Lieu</label>
-	<div class="field-box">
-		<span class="icon" style:width="20px" style:height="20px" style:--icon="url('/icons/map-pin.svg')"></span>
-		<input id="venue-name" value={name} autocomplete="off" oninput={(event) => onName(event.currentTarget.value)} />
-	</div>
-	{#if matches.length > 0 && !known}
-		<ul class="suggestions">
-			{#each matches as venue (venue.id)}
-				<li>
-					<button type="button" onclick={() => pick(venue)}>{venue.name}, {venue.city}</button>
-				</li>
-			{/each}
-		</ul>
-	{/if}
-</div>
-
 {#if name.trim() && !venueId}
 	<div class="field">
 		<label for="venue-city">Ville</label>
@@ -51,3 +46,20 @@
 		</div>
 	</div>
 {/if}
+
+<div class="field">
+	<label for="venue-name">Lieu, salle</label>
+	<div class="field-box">
+		<span class="icon" style:width="20px" style:height="20px" style:--icon="url('/icons/map-pin.svg')"></span>
+		<input id="venue-name" value={name} autocomplete="off" oninput={(event) => onName(event.currentTarget.value)} />
+	</div>
+	{#if matches.length > 0 && !venueId}
+		<ul class="suggestions">
+			{#each matches as venue (venue.id)}
+				<li>
+					<button type="button" onclick={() => pick(venue)}>{venue.name}, {venue.city}</button>
+				</li>
+			{/each}
+		</ul>
+	{/if}
+</div>

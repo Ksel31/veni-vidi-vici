@@ -64,6 +64,8 @@
 	let nameDraft = $state('');
 	/** @type {Record<string, string>} */
 	let setlists = $state({});
+	/** @type {Record<string, boolean>} */
+	let openSetlists = $state({});
 
 	// Brouillon local tant que le festival n'est pas confirmé.
 	$effect(() => {
@@ -76,6 +78,7 @@
 			addingName = false;
 			nameDraft = '';
 			setlists = {};
+			openSetlists = {};
 		}
 		if (commentFor !== event.id) {
 			commentFor = event.id;
@@ -109,13 +112,6 @@
 		if (billing === 'headliner') return 0;
 		if (billing === 'support') return 1;
 		return 2;
-	}
-
-	/** @param {import('#lib/store.js').Billing} billing */
-	function roleLabel(billing) {
-		if (billing === 'headliner') return "Tête d'affiche";
-		if (billing === 'support') return 'Première partie';
-		return '';
 	}
 
 	/** @param {string} id */
@@ -235,6 +231,16 @@
 		updatePerformance(band.id, { setlist: value });
 	}
 
+	/** @param {string} id */
+	function toggleSetlist(id) {
+		openSetlists = { ...openSetlists, [id]: !openSetlists[id] };
+	}
+
+	function finishReport() {
+		openSetlists = {};
+		window.scrollTo(0, 0);
+	}
+
 	/** @param {string} name */
 	function addCompanion(name) {
 		if (!event) return;
@@ -346,8 +352,10 @@
 				{#each lineup as band (band.id)}
 					<div class="lineup-row">
 						<span class="band-name">{artistName(band.artistId)}</span>
-						{#if roleLabel(band.billing)}
-							<span class="role-pill" class:role-support={band.billing === 'support'}>{roleLabel(band.billing)}</span>
+						{#if band.billing === 'headliner' || band.billing === 'support'}
+							<span class="role-pill" class:role-support={band.billing === 'support'} role="img" aria-label={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'} title={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}>
+								<Icon name={band.billing === 'headliner' ? 'crown' : 'mic-vocal'} size={18} />
+							</span>
 						{/if}
 					</div>
 				{/each}
@@ -435,7 +443,7 @@
 					</button>
 					<button class="btn btn-primary" type="button" onclick={confirmFestival}>
 						<Icon name="check" size={22} />
-						Confirmer ma présence
+						Confirmer
 					</button>
 				</div>
 			{/if}
@@ -500,8 +508,10 @@
 					{#each lineup as band (band.id)}
 						<div class="lineup-row">
 							<span class="band-name">{artistName(band.artistId)}</span>
-							{#if roleLabel(band.billing)}
-								<span class="role-pill" class:role-support={band.billing === 'support'}>{roleLabel(band.billing)}</span>
+							{#if band.billing === 'headliner' || band.billing === 'support'}
+								<span class="role-pill" class:role-support={band.billing === 'support'} role="img" aria-label={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'} title={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}>
+									<Icon name={band.billing === 'headliner' ? 'crown' : 'mic-vocal'} size={18} />
+								</span>
 							{/if}
 							<button class="thumb-btn" class:thumb-btn-on={band.thumb === 'up'} type="button" aria-label="J'ai aimé {artistName(band.artistId)}" aria-pressed={band.thumb === 'up'} onclick={() => setBandThumb(band.id, 'up')}>
 								<Icon name="thumbs-up" size={20} />
@@ -514,17 +524,30 @@
 				</div>
 
 				{#each lineup as band (band.id)}
-					<div class="glass-card">
-						<p class="card-title">Setlist de {artistName(band.artistId)}</p>
-						<label class="visually-hidden" for="setlist-{band.id}">Setlist, un titre par ligne</label>
-						<textarea
-							id="setlist-{band.id}"
-							class="setlist-box"
-							rows="5"
-							placeholder="Un titre par ligne"
-							value={setlistValue(band)}
-							oninput={(input) => onSetlist(band, input.currentTarget.value)}
-						></textarea>
+					{@const open = Boolean(openSetlists[band.id])}
+					<div class="glass-card setlist-card">
+						<button class="setlist-head" type="button" aria-expanded={open} onclick={() => toggleSetlist(band.id)}>
+							<span>
+								<span class="setlist-title">Setlist de {artistName(band.artistId)}</span>
+								{#if !open && setlistValue(band).trim()}
+									<span class="hint">Déjà remplie</span>
+								{/if}
+							</span>
+							<Icon name={open ? 'chevron-down' : 'chevron-right'} size={20} />
+						</button>
+						<div class="day-panel" class:day-panel-open={open}>
+							<div class="day-panel-inner">
+								<label class="visually-hidden" for="setlist-{band.id}">Setlist, un titre par ligne</label>
+								<textarea
+									id="setlist-{band.id}"
+									class="setlist-box"
+									rows="5"
+									placeholder="Un titre par ligne"
+									value={setlistValue(band)}
+									oninput={(input) => onSetlist(band, input.currentTarget.value)}
+								></textarea>
+							</div>
+						</div>
 					</div>
 				{/each}
 			{/if}
@@ -570,5 +593,11 @@
 			<Icon name="pencil" size={22} />
 			Modifier l'event
 		</a>
+		{#if event.status === 'attended'}
+			<button class="btn btn-primary" type="button" onclick={finishReport}>
+				<Icon name="check" size={22} />
+				Terminer
+			</button>
+		{/if}
 	{/if}
 </section>

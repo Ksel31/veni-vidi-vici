@@ -33,12 +33,12 @@
 		return addVenue({ name: venueName.trim(), city: venueCity.trim(), country: 'Belgique' });
 	}
 
-	/** @param {string} name */
-	function addBand(name) {
+	/** @param {string} name @param {'headliner' | 'support'} billing */
+	function addBand(name, billing) {
 		const trimmed = name.trim();
 		if (!trimmed) return;
 		if (bands.some((band) => band.name.toLowerCase() === trimmed.toLowerCase())) return;
-		bands = [...bands, { key: crypto.randomUUID(), name: trimmed, billing: 'headliner' }];
+		bands = [...bands, { key: crypto.randomUUID(), name: trimmed, billing }];
 	}
 
 	/** @param {string} key */
@@ -145,23 +145,30 @@
 		<p class="card-title">Groupes</p>
 		<div class="zone" data-zone="headliner">
 			<p class="zone-label">Tête d'affiche</p>
+			<ArtistField
+				artists={$data.artists}
+				taken={bands.map((band) => band.name)}
+				placeholder="Ajouter un groupe"
+				inputId="artist-headliner"
+				onAdd={(name) => addBand(name, 'headliner')}
+			/>
 			{#each headliners as band (band.key)}
 				{@render row(band)}
 			{/each}
 		</div>
 		<div class="zone" data-zone="support">
 			<p class="zone-label">Première partie</p>
+			<ArtistField
+				artists={$data.artists}
+				taken={bands.map((band) => band.name)}
+				placeholder="Ajouter un groupe"
+				inputId="artist-support"
+				onAdd={(name) => addBand(name, 'support')}
+			/>
 			{#each supports as band (band.key)}
 				{@render row(band)}
 			{/each}
 		</div>
-
-		<ArtistField
-			artists={$data.artists}
-			taken={bands.map((band) => band.name)}
-			placeholder="Ajouter un groupe"
-			onAdd={addBand}
-		/>
 	</div>
 
 	<div class="glass-card">
