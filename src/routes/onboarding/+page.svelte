@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { completeOnboarding, needsOnboarding } from '#lib/store.js';
 	import Icon from '#lib/components/Icon.svelte';
+	import TypeCard from '#lib/components/TypeCard.svelte';
 
 	const slides = [
 		{
@@ -10,21 +11,24 @@
 			icon: 'ticket',
 			eyebrow: 'Bienvenue dans Venidici !',
 			title: 'Ajoute tes events',
-			body: 'Concerts et festivals à venir, avec billet et line-up.'
+			body: 'Concerts et festivals à venir, avec billet et line-up.',
+			choices: false
 		},
 		{
 			photo: '/images/hero-bass.jpg',
 			icon: 'check',
 			eyebrow: '',
 			title: 'Confirme après la date',
-			body: 'Le lendemain, dis si tu y étais ou non.'
+			body: 'Le lendemain, dis si tu y étais ou non.',
+			choices: false
 		},
 		{
 			photo: '/images/hero-cowboy.jpg',
-			icon: 'history',
+			icon: '',
 			eyebrow: '',
 			title: 'Garde tes souvenirs',
-			body: 'Pouces, avis, setlist, photos : tout est gardé dans ton historique.'
+			body: 'Pouces, avis, setlist, photos : tout est gardé dans ton historique.',
+			choices: true
 		}
 	];
 
@@ -59,14 +63,18 @@
 		scrollToIndex(index + (event.key === 'ArrowRight' ? 1 : -1));
 	}
 
-	/** @param {string} href */
+	/**
+	 * « Passer » (écrans 1 et 2) mène à l'accueil vide.
+	 * Choisir Concert ou Festival ouvre le formulaire correspondant.
+	 * Dans les deux cas l'onboarding ne revient pas.
+	 * @param {string} href
+	 */
 	function leave(href) {
 		completeOnboarding();
 		goto(href);
 	}
 
 	// Un compte déjà onboardé (ou `demo`) qui ouvre l'URL à la main revient à l'accueil.
-	// Le contrôle est au montage : « Passer » et le CTA quittent la page eux-mêmes.
 	onMount(() => {
 		if (!needsOnboarding()) goto('/');
 	});
@@ -98,11 +106,13 @@
 					{/if}
 				</header>
 
-				<div class="onboarding-lower" class:onboarding-lower-last={i === 2}>
+				<div class="onboarding-lower">
 					<div class="onboarding-copy">
-						<div class="onboarding-disc">
-							<Icon name={slide.icon} size={44} />
-						</div>
+						{#if slide.icon}
+							<div class="onboarding-disc">
+								<Icon name={slide.icon} size={44} />
+							</div>
+						{/if}
 						<div class="onboarding-texts">
 							{#if slide.eyebrow}
 								<p class="onboarding-eyebrow">{slide.eyebrow}</p>
@@ -112,18 +122,31 @@
 						</div>
 					</div>
 
+					{#if slide.choices}
+						<div class="onboarding-choices">
+							<p class="onboarding-choice-title">Par quoi commencer ?</p>
+							<TypeCard
+								href="/add/concert"
+								icon="music"
+								title="Concert"
+								text="Une soirée, une salle, un à trois groupes."
+								onclick={() => completeOnboarding()}
+							/>
+							<TypeCard
+								href="/add/festival"
+								icon="tent"
+								title="Festival"
+								text="Un ou plusieurs jours, un line-up réparti par jour."
+								onclick={() => completeOnboarding()}
+							/>
+						</div>
+					{/if}
+
 					<div class="page-dots" aria-hidden="true">
 						{#each slides as _, dot (dot)}
 							<span class="page-dot" class:page-dot-on={index === dot}></span>
 						{/each}
 					</div>
-
-					{#if i === 2}
-						<a class="add-first" href="/add" onclick={() => completeOnboarding()}>
-							<Icon name="plus" size={26} />
-							Ajouter mon 1er event
-						</a>
-					{/if}
 				</div>
 
 				{#if i < 2}
