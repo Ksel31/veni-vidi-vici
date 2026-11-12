@@ -5,7 +5,7 @@
 	let { onCancel, onConfirm } = $props();
 </script>
 
-<div class="glass-card" role="dialog" aria-labelledby="delete-title">
+<div class="glass-card delete-panel" role="dialog" aria-labelledby="delete-title">
 	<p class="card-title" id="delete-title">Supprimer cet event ?</p>
 	<p class="hint">L'event, ses groupes et son compte rendu seront effacés.</p>
 	<div class="choice-row">

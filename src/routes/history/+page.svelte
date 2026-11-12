@@ -74,20 +74,13 @@
 							<span class="event-row-meta">{meta(event, venue)}</span>
 						</span>
 					</a>
-					<div class="history-side">
-						<span class="status-badge" class:status-missed={event.status === 'missed'}>
-							<Icon name={event.status === 'missed' ? 'x' : 'check'} size={16} />
-							{event.status === 'missed' ? 'Raté' : 'Vu'}
-						</span>
-						<button
-							class="icon-button history-delete"
-							type="button"
-							aria-label="Supprimer l'event"
-							onclick={() => (deleteId = event.id)}
-						>
-							<Icon name="trash" size={20} />
-						</button>
-					</div>
+					<span class="status-badge" class:status-missed={event.status === 'missed'}>
+						<Icon name={event.status === 'missed' ? 'x' : 'check'} size={16} />
+						{event.status === 'missed' ? 'Raté' : 'Vu'}
+					</span>
+					<button class="history-delete" type="button" aria-label="Supprimer l'event" onclick={() => (deleteId = event.id)}>
+						<Icon name="trash" size={16} />
+					</button>
 				</article>
 			{/each}
 		</div>
