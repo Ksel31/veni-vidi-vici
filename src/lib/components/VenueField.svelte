@@ -65,7 +65,7 @@
 </script>
 
 <div class="field">
-	<label for="venue-city">Ville</label>
+	<label for="venue-city">Ville (optionnel)</label>
 	<div class="field-box">
 		<span class="icon" style:width="20px" style:height="20px" style:--icon="url('/icons/map-pin.svg')"></span>
 		<input id="venue-city" value={city} autocomplete="off" oninput={(event) => onCity(event.currentTarget.value)} />
@@ -85,9 +85,9 @@
 <div class="day-panel venue-reveal" class:day-panel-open={Boolean(city.trim())} inert={!city.trim()}>
 	<div class="day-panel-inner">
 		<div class="field">
-			<label for="venue-name">Lieu, salle</label>
+			<label for="venue-name">Lieu, salle (optionnel)</label>
 			<div class="field-box">
-				<span class="icon" style:width="20px" style:height="20px" style:--icon="url('/icons/map-pin.svg')"></span>
+				<span class="icon" style:width="20px" style:height="20px" style:--icon="url('/icons/building-2.svg')"></span>
 				<input id="venue-name" value={name} autocomplete="off" oninput={(event) => onName(event.currentTarget.value)} />
 			</div>
 			{#if roomMatches.length > 0}

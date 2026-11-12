@@ -2,7 +2,10 @@
 	import { goto } from '$app/navigation';
 	import { data, addArtist, addEvent, addVenue } from '#lib/store.js';
 	import { dayChipLabel, daysFrom, daysUntil } from '#lib/present.js';
-	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
+	import AddStep from '#lib/components/AddStep.svelte';
+	import ExitConfirm from '#lib/components/ExitConfirm.svelte';
+	import FieldMessage from '#lib/components/FieldMessage.svelte';
+	import TicketFields from '#lib/components/TicketFields.svelte';
 	import VenueField from '#lib/components/VenueField.svelte';
 	import ArtistField from '#lib/components/ArtistField.svelte';
 	import DateRangeField from '#lib/components/DateRangeField.svelte';
@@ -17,13 +20,25 @@
 	let ticketBought = $state(false);
 	let priceText = $state('');
 
+	/** Étape affichée (1 : le festival, 2 : les groupes, 3 : billet). */
+	let step = $state(1);
+	/** « Suivant » touché alors qu'il manque quelque chose : les erreurs s'affichent sous les champs. */
+	let triedNext = $state(false);
+	let confirmingExit = $state(false);
+
 	/** @type {{ key: string, name: string, day: string | null, picking: boolean }[]} */
 	let bands = $state([]);
 
 	const festivalDays = $derived(daysFrom(startDate, endDate));
-	const canSave = $derived(
-		Boolean(title.trim() && startDate && endDate && endDate >= startDate) &&
-			bands.every((band) => chosenDay(band))
+	const titleEmpty = $derived(!title.trim());
+	const datesInvalid = $derived(!(startDate && endDate && endDate >= startDate));
+	// Les erreurs ne s'affichent qu'après un « Suivant » refusé.
+	const titleMissing = $derived(triedNext && titleEmpty);
+	const datesMissing = $derived(triedNext && datesInvalid);
+	const dayMissing = $derived(triedNext && bands.some((band) => !chosenDay(band)));
+	/** Quelque chose a été saisi : fermer demande alors confirmation. */
+	const dirty = $derived(
+		Boolean(title.trim() || startDate || venueCity.trim() || venueName.trim() || bands.length || ticketBought || priceText.trim())
 	);
 
 	/** Lieu connu, lieu nouveau (ville facultative), ou rien. */
@@ -63,8 +78,35 @@
 		return Number.isFinite(value) ? value : null;
 	}
 
+	/** @param {number} next */
+	function goToStep(next) {
+		step = next;
+		triedNext = false;
+		window.scrollTo(0, 0);
+	}
+
+	/** L'étape courante a tout ce qu'il lui faut pour passer à la suivante. */
+	function stepIsValid() {
+		if (step === 1) return !titleEmpty && !datesInvalid;
+		if (step === 2) return bands.every((band) => chosenDay(band));
+		return true;
+	}
+
+	function next() {
+		if (!stepIsValid()) {
+			triedNext = true;
+			return;
+		}
+		if (step < 3) goToStep(step + 1);
+		else save();
+	}
+
+	function close() {
+		if (dirty) confirmingExit = true;
+		else goto('/');
+	}
+
 	function save() {
-		if (!canSave) return;
 		const id = venueForSave();
 		if (venueName.trim() && !id) return;
 		const past = daysUntil(endDate) < 0;
@@ -93,64 +135,90 @@
 	<title>Nouveau festival — Veni Vidi Vici</title>
 </svelte:head>
 
-<section class="screen screen-pad add-form">
-	<ScreenHeader title="Nouveau festival" backHref="/add" />
-	<p class="hint">* Obligatoire</p>
-
-	<div class="glass-card">
-		<p class="card-title">Le festival</p>
-		<div class="field">
-			<label for="festival-title">Titre *</label>
+{#if step === 1}
+	<AddStep
+		title="Nouveau festival"
+		{step}
+		stepTitle="Quel festival ?"
+		help="Le titre et les dates sont obligatoires ; le lieu peut venir plus tard."
+		nextLabel="Suivant"
+		onNext={next}
+		onClose={close}
+	>
+		<div class="field" class:field-invalid={titleMissing}>
+			<label for="festival-title">Titre</label>
 			<div class="field-box">
 				<Icon name="tent" size={20} />
-				<input id="festival-title" bind:value={title} placeholder="Ex. Desertfest" autocomplete="off" />
+				<input
+					id="festival-title"
+					bind:value={title}
+					placeholder="Ex. Rock Werchter"
+					autocomplete="off"
+					aria-invalid={titleMissing}
+					aria-describedby={titleMissing ? 'title-error' : undefined}
+				/>
 			</div>
 		</div>
-		<DateRangeField bind:start={startDate} bind:end={endDate} />
+		{#if titleMissing}<FieldMessage id="title-error" text="Ajoute un titre pour enregistrer le festival." />{/if}
+		<DateRangeField
+			bind:start={startDate}
+			bind:end={endDate}
+			invalid={datesMissing}
+			describedBy={datesMissing ? 'dates-error' : undefined}
+		/>
+		{#if datesMissing}<FieldMessage id="dates-error" text="Choisis le premier et le dernier jour du festival." />{/if}
 		<VenueField venues={$data.venues} bind:name={venueName} bind:city={venueCity} bind:venueId />
-	</div>
-
-	<div class="glass-card">
-		<p class="card-title">Line-up à voir</p>
-		{#each bands as band (band.key)}
-			{@const day = chosenDay(band)}
-			{@const choosing = !day || band.picking}
-			<div class="festival-band">
-				<div class="band-line">
-					<span class="band-name">{band.name}</span>
-					{#if day && !band.picking}
-						<button class="day-pill" type="button" aria-expanded="false" aria-label="Changer le jour de {band.name}" onclick={() => reopenDay(band.key)}>
-							<span>{dayChipLabel(day)}</span>
-						</button>
-					{/if}
-					<button class="icon-button band-remove" type="button" aria-label="Retirer {band.name}" onclick={() => (bands = bands.filter((item) => item.key !== band.key))}>
-						<Icon name="x" size={16} />
+	</AddStep>
+{:else if step === 2}
+	<AddStep
+		title="Nouveau festival"
+		{step}
+		stepTitle="Quels groupes ?"
+		help="Ajoute les groupes que tu veux voir, avec leur jour."
+		nextLabel={bands.length ? 'Suivant' : 'Passer'}
+		onNext={next}
+		onBack={() => goToStep(1)}
+		onClose={close}
+	>
+	{#each bands as band (band.key)}
+		{@const day = chosenDay(band)}
+		{@const choosing = !day || band.picking}
+		<div class="festival-band">
+			<div class="band-line">
+				<span class="band-name">{band.name}</span>
+				{#if day && !band.picking}
+					<button class="day-pill" type="button" aria-expanded="false" aria-label="Changer le jour de {band.name}" onclick={() => reopenDay(band.key)}>
+						<span>{dayChipLabel(day)}</span>
 					</button>
-				</div>
-				<div class="day-panel" class:day-panel-open={choosing} inert={!choosing}>
-					<div class="day-panel-inner">
-						{#if festivalDays.length === 0}
-							<p class="hint">Indique d'abord les dates.</p>
-						{:else}
-							<p class="day-label">{day ? 'Jour *' : 'Choisis un jour *'}</p>
-							<div class="day-chips" role="group" aria-label="Jour de {band.name}">
-								{#each festivalDays as option (option)}
-									<button
-										class="chip"
-										class:chip-on={day === option}
-										type="button"
-										aria-pressed={day === option}
-										onclick={() => chooseDay(band.key, option)}
-									>
-										{dayChipLabel(option)}
-									</button>
-								{/each}
-							</div>
-						{/if}
-					</div>
+				{/if}
+				<button class="icon-button band-remove" type="button" aria-label="Retirer {band.name}" onclick={() => (bands = bands.filter((item) => item.key !== band.key))}>
+					<Icon name="x" size={16} />
+				</button>
+			</div>
+			<div class="day-panel" class:day-panel-open={choosing} inert={!choosing}>
+				<div class="day-panel-inner">
+					{#if festivalDays.length === 0}
+						<p class="hint">Indique d'abord les dates.</p>
+					{:else}
+						<p class="day-label">{day ? 'Jour' : 'Choisis un jour'}</p>
+						<div class="day-chips" role="group" aria-label="Jour de {band.name}">
+							{#each festivalDays as option (option)}
+								<button
+									class="chip"
+									class:chip-on={day === option}
+									type="button"
+									aria-pressed={day === option}
+									onclick={() => chooseDay(band.key, option)}
+								>
+									{dayChipLabel(option)}
+								</button>
+							{/each}
+						</div>
+					{/if}
 				</div>
 			</div>
-		{/each}
+		</div>
+	{/each}
 
 		<ArtistField
 			artists={$data.artists}
@@ -158,35 +226,30 @@
 			placeholder="Ajouter un groupe et son jour"
 			onAdd={addBand}
 		/>
-	</div>
+		{#if dayMissing}<FieldMessage id="day-error" text="Choisis un jour pour chaque groupe." />{/if}
+	</AddStep>
+{:else}
+	<AddStep
+		title="Nouveau festival"
+		{step}
+		stepTitle="Et le billet ?"
+		help="Tout est facultatif, tu pourras le compléter depuis la fiche."
+		nextLabel="Ajouter le festival"
+		nextIcon="plus"
+		onNext={next}
+		onBack={() => goToStep(2)}
+		onClose={close}
+	>
+		<TicketFields
+			bind:bought={ticketBought}
+			bind:priceText
+			boughtHint="Pas encore ? Décoche, tu pourras le cocher plus tard."
+			pricePlaceholder="289,00"
+			priceId="festival-price"
+		/>
+	</AddStep>
+{/if}
 
-	<div class="glass-card">
-		<p class="card-title">Billet</p>
-		<button class="check-row" type="button" aria-pressed={ticketBought} onclick={() => (ticketBought = !ticketBought)}>
-			<span class="check-box" class:check-on={ticketBought}>
-				{#if ticketBought}<Icon name="check" size={18} />{/if}
-			</span>
-			<span>
-				<span class="check-title">Billet acheté</span>
-				<span class="check-meta">Pas encore ? Décoche, tu pourras le cocher plus tard.</span>
-			</span>
-		</button>
-		<div class="field">
-			<label for="festival-price">Prix du billet</label>
-			<div class="field-box">
-				<Icon name="euro" size={20} />
-				<input id="festival-price" inputmode="decimal" bind:value={priceText} placeholder="289,00" autocomplete="off" />
-			</div>
-		</div>
-		<div class="upload-box">
-			<Icon name="upload" size={26} />
-			<p>Ajouter le billet</p>
-			<p class="hint">PDF ou image. L'envoi n'est pas encore branché.</p>
-		</div>
-	</div>
-
-	<button class="btn btn-primary" type="button" disabled={!canSave} onclick={save}>
-		<Icon name="plus" size={22} />
-		Ajouter le festival
-	</button>
-</section>
+{#if confirmingExit}
+	<ExitConfirm photo="festival" onLeave={() => goto('/')} onContinue={() => (confirmingExit = false)} />
+{/if}

@@ -2,7 +2,10 @@
 	import { goto } from '$app/navigation';
 	import { data, addArtist, addEvent, addVenue } from '#lib/store.js';
 	import { daysUntil } from '#lib/present.js';
-	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
+	import AddStep from '#lib/components/AddStep.svelte';
+	import ExitConfirm from '#lib/components/ExitConfirm.svelte';
+	import FieldMessage from '#lib/components/FieldMessage.svelte';
+	import TicketFields from '#lib/components/TicketFields.svelte';
 	import VenueField from '#lib/components/VenueField.svelte';
 	import ArtistField from '#lib/components/ArtistField.svelte';
 	import DateRangeField from '#lib/components/DateRangeField.svelte';
@@ -16,6 +19,12 @@
 	let ticketBought = $state(false);
 	let priceText = $state('');
 
+	/** Étape affichée (1 : quand et où, 2 : qui joue, 3 : billet). */
+	let step = $state(1);
+	/** « Suivant » touché sans la date : l'erreur s'affiche sous le champ. */
+	let triedNext = $state(false);
+	let confirmingExit = $state(false);
+
 	/** @type {{ key: string, name: string, billing: 'headliner' | 'support' }[]} */
 	let bands = $state([]);
 
@@ -24,7 +33,11 @@
 
 	const headliners = $derived(bands.filter((band) => band.billing === 'headliner'));
 	const supports = $derived(bands.filter((band) => band.billing === 'support'));
-	const canSave = $derived(Boolean(date));
+	const dateMissing = $derived(triedNext && !date);
+	/** Quelque chose a été saisi : fermer demande alors confirmation. */
+	const dirty = $derived(
+		Boolean(date || title.trim() || venueCity.trim() || venueName.trim() || bands.length || ticketBought || priceText.trim())
+	);
 
 	/** Lieu connu, lieu nouveau (ville facultative), ou rien. */
 	function venueForSave() {
@@ -94,8 +107,29 @@
 		return Number.isFinite(value) ? value : null;
 	}
 
+	/** @param {number} next */
+	function goToStep(next) {
+		step = next;
+		triedNext = false;
+		window.scrollTo(0, 0);
+	}
+
+	function next() {
+		if (step === 1 && !date) {
+			triedNext = true;
+			return;
+		}
+		if (step < 3) goToStep(step + 1);
+		else save();
+	}
+
+	function close() {
+		if (dirty) confirmingExit = true;
+		else goto('/');
+	}
+
 	function save() {
-		if (!canSave) return;
+		if (!date) return;
 		const id = venueForSave();
 		if (venueName.trim() && !id) return;
 		const past = daysUntil(date) < 0;
@@ -124,13 +158,26 @@
 	<title>Nouveau concert — Veni Vidi Vici</title>
 </svelte:head>
 
-<section class="screen screen-pad add-form">
-	<ScreenHeader title="Nouveau concert" backHref="/add" />
-	<p class="hint">* Obligatoire</p>
-
-	<div class="glass-card">
-		<p class="card-title">Quand et où</p>
-			<DateRangeField mode="single" label="Date *" inputId="concert-date" placeholder="Choisir la date" bind:start={date} />
+{#if step === 1}
+	<AddStep
+		title="Nouveau concert"
+		{step}
+		stepTitle="Quand et où ?"
+		help="La date est obligatoire. Le reste peut venir plus tard."
+		nextLabel="Suivant"
+		onNext={next}
+		onClose={close}
+	>
+		<DateRangeField
+			mode="single"
+			label="Date"
+			inputId="concert-date"
+			placeholder="Choisir la date"
+			invalid={dateMissing}
+			describedBy={dateMissing ? 'date-error' : undefined}
+			bind:start={date}
+		/>
+		{#if dateMissing}<FieldMessage id="date-error" text="Choisis la date du concert pour continuer." />{/if}
 		<VenueField venues={$data.venues} bind:name={venueName} bind:city={venueCity} bind:venueId />
 		<div class="field">
 			<label for="concert-title">Titre (optionnel)</label>
@@ -139,10 +186,18 @@
 				<input id="concert-title" bind:value={title} placeholder="Ex. tournée Wild God" autocomplete="off" />
 			</div>
 		</div>
-	</div>
-
-	<div class="glass-card">
-		<p class="card-title">Groupes</p>
+	</AddStep>
+{:else if step === 2}
+	<AddStep
+		title="Nouveau concert"
+		{step}
+		stepTitle="Qui joue ?"
+		help="Ajoute la tête d'affiche et, si tu veux, les premières parties."
+		nextLabel={bands.length ? 'Suivant' : 'Passer'}
+		onNext={next}
+		onBack={() => goToStep(1)}
+		onClose={close}
+	>
 		<div class="zone" data-zone="headliner">
 			<p class="zone-label">Tête d'affiche</p>
 			{#each headliners as band (band.key)}
@@ -169,38 +224,32 @@
 				onAdd={(name) => addBand(name, 'support')}
 			/>
 		</div>
-	</div>
+	</AddStep>
+{:else}
+	<AddStep
+		title="Nouveau concert"
+		{step}
+		stepTitle="Et le billet ?"
+		help="Tout est facultatif, tu pourras le compléter depuis la fiche."
+		nextLabel="Ajouter le concert"
+		nextIcon="plus"
+		onNext={next}
+		onBack={() => goToStep(2)}
+		onClose={close}
+	>
+		<TicketFields
+			bind:bought={ticketBought}
+			bind:priceText
+			boughtHint="Affiche la pastille sur la liste et le billet."
+			pricePlaceholder="65,00"
+			priceId="concert-price"
+		/>
+	</AddStep>
+{/if}
 
-	<div class="glass-card">
-		<p class="card-title">Billet</p>
-		<button class="check-row" type="button" aria-pressed={ticketBought} onclick={() => (ticketBought = !ticketBought)}>
-			<span class="check-box" class:check-on={ticketBought}>
-				{#if ticketBought}<Icon name="check" size={18} />{/if}
-			</span>
-			<span>
-				<span class="check-title">Billet acheté</span>
-				<span class="check-meta">Affiche la pastille sur la liste et le billet.</span>
-			</span>
-		</button>
-		<div class="field">
-			<label for="concert-price">Prix du billet</label>
-			<div class="field-box">
-				<Icon name="euro" size={20} />
-				<input id="concert-price" inputmode="decimal" bind:value={priceText} placeholder="65,00" autocomplete="off" />
-			</div>
-		</div>
-		<div class="upload-box">
-			<Icon name="upload" size={26} />
-			<p>Ajouter le billet</p>
-			<p class="hint">PDF ou image. L'envoi n'est pas encore branché.</p>
-		</div>
-	</div>
-
-	<button class="btn btn-primary" type="button" disabled={!canSave} onclick={save}>
-		<Icon name="plus" size={22} />
-		Ajouter le concert
-	</button>
-</section>
+{#if confirmingExit}
+	<ExitConfirm photo="concert" onLeave={() => goto('/')} onContinue={() => (confirmingExit = false)} />
+{/if}
 
 {#snippet row(/** @type {{ key: string, name: string, billing: 'headliner' | 'support' }} */ band)}
 	<div

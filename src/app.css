@@ -151,6 +151,10 @@
 	--weight-regular: 650;
 	--weight-medium: 750;
 	--weight-bold: 700;
+	/* Archivo (champs) : même épaisseur de fût que l'export Elyx (650), resserré à 94 % pour garder
+	   ses largeurs de texte à 14 px (mesuré sur « Bruxelles », « Ancienne Belgique », « 14 nov. 2026 »). */
+	--weight-input: 650;
+	--stretch-input: 94%;
 }
 
 /* Plage complète : le défaut du fichier Cabinet est 900. Une plage 400–500
@@ -219,12 +223,12 @@ input {
 	color: inherit;
 }
 
-/* Valeurs de champ : Archivo Light (ui.elyx), pas Cabinet. */
+/* Valeurs de champ : Archivo Regular (ui.elyx), pas Cabinet. */
 input,
 textarea {
 	font-family: var(--font-input);
-	font-weight: var(--weight-light);
-	font-stretch: 100%;
+	font-weight: var(--weight-input);
+	font-stretch: var(--stretch-input);
 }
 
 button,
@@ -306,13 +310,13 @@ button {
 .bg-add-concert::before,
 .bg-add-festival::before {
 	background-image:
-		linear-gradient(180deg, rgb(0% 0% 0% / 60%) 0%, rgb(0% 0% 0% / 72%) 40%, rgb(0% 0% 0% / 92%) 100%),
+		linear-gradient(180deg, rgb(0% 0% 0% / 78%) 0%, rgb(0% 0% 0% / 80%) 40%, rgb(0% 0% 0% / 92%) 100%),
 		url("/images/bg-add-concert.jpg");
 }
 
 .bg-add-festival::before {
 	background-image:
-		linear-gradient(180deg, rgb(0% 0% 0% / 60%) 0%, rgb(0% 0% 0% / 72%) 40%, rgb(0% 0% 0% / 92%) 100%),
+		linear-gradient(180deg, rgb(0% 0% 0% / 78%) 0%, rgb(0% 0% 0% / 80%) 40%, rgb(0% 0% 0% / 92%) 100%),
 		url("/images/bg-add-festival.jpg");
 }
 
@@ -400,8 +404,44 @@ button {
 	padding: 32px var(--space-m) 40px;
 }
 
+/* 12 px + 20 px de l'en-tête : le bouton rond est à 32 px du haut, comme dans les maquettes. */
 .screen-pad {
-	padding-top: var(--space-s);
+	padding-top: 12px;
+}
+
+/* Écrans secondaires (maquettes) : 12 px de marge d'écran, le contenu rentre de 8 px de plus
+   sous l'en-tête, qui porte déjà ses 8 px. La fiche d'un event à venir n'a pas ce retrait. */
+.screen-pad,
+.screen-detail {
+	padding-inline: max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-right, 0px));
+}
+
+.screen-pad > :not(.page-header),
+.screen-detail > :not(.page-header):not(.modal-layer) {
+	margin-inline: 8px;
+}
+
+.screen-pad > .btn,
+.screen-detail > .btn {
+	width: auto;
+}
+
+.screen-pad > .page-header + *,
+.screen-detail > .page-header + * {
+	margin-top: 8px;
+}
+
+.screen-pad.add-type > .page-header + * {
+	margin-top: 32px;
+}
+
+.screen-detail.screen-upcoming > .page-header + *,
+.screen-detail.add-form > .page-header + * {
+	margin-top: 4px;
+}
+
+.screen-detail.screen-upcoming > :not(.page-header):not(.modal-layer) {
+	margin-inline: 0;
 }
 
 .hint {
@@ -511,6 +551,7 @@ button {
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
 	font-weight: var(--weight-medium);
+	line-height: 1.2;
 }
 
 .field-box {
@@ -518,11 +559,16 @@ button {
 	align-items: center;
 	gap: 10px;
 	height: 48px;
-	padding: 0 14px;
+	padding: 0 calc(14px - var(--line-width));
 	background: var(--surface-dark);
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-m);
 	color: var(--text-on-dark-muted);
+	/* Valeur d'un champ (aussi quand c'est un bouton, comme la date) : Archivo Regular 14. */
+	font-family: var(--font-input);
+	font-size: 14px;
+	font-weight: var(--weight-input);
+	font-stretch: var(--stretch-input);
 }
 
 .field-box input {
@@ -532,13 +578,20 @@ button {
 	border: 0;
 	background: transparent;
 	color: var(--text-on-dark);
-	font-size: 16px;
+	font-size: 14px;
 	outline: none;
 }
 
 .field-box:focus-within {
 	outline: var(--focus-ring-width) solid var(--focus-ring);
 	outline-offset: var(--focus-ring-width);
+}
+
+/* Aide dans un champ vide : gris secondaire (ui.fieldEmpty), pas le gris du navigateur. */
+input::placeholder,
+textarea::placeholder {
+	color: var(--text-on-dark-muted);
+	opacity: 1;
 }
 
 input,
@@ -552,7 +605,8 @@ textarea,
 	display: flex;
 	flex-direction: column;
 	gap: 14px;
-	padding: var(--space-m);
+	/* Elyx compte le filet dans le rembourrage : 16 px depuis le bord, filet compris. */
+	padding: calc(var(--space-m) - var(--line-width));
 	background: var(--glass);
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-xl);
@@ -857,9 +911,10 @@ textarea,
 	flex: none;
 	align-self: center;
 	min-height: var(--tap);
-	padding: 0 0 0 4px;
-	border: 0;
-	background: transparent;
+	padding: 0 14px;
+	border: var(--line-width) solid var(--glass-border);
+	border-radius: var(--radius-pill);
+	background: var(--glass-strong);
 	color: var(--text-on-dark-muted);
 	font-size: 14px;
 	font-weight: var(--weight-regular);
@@ -868,11 +923,13 @@ textarea,
 
 @media (hover: hover) and (pointer: fine) {
 	.logout:hover {
+		background: var(--state-hover);
 		color: var(--text-on-dark);
 	}
 }
 
 .logout:active {
+	background: var(--state-pressed);
 	color: var(--text-on-dark);
 }
 
@@ -1058,9 +1115,8 @@ textarea,
 }
 
 .ticket-place {
-	font-size: 11px;
+	font-size: 13px;
 	font-weight: var(--weight-medium);
-	text-transform: uppercase;
 }
 
 .ticket-pill-on-green {
@@ -1234,6 +1290,20 @@ textarea,
 	font-weight: var(--weight-medium);
 }
 
+.status-pending {
+	position: relative;
+	border-color: var(--warning-border);
+	background: var(--warning-bg);
+	color: var(--warning-text);
+}
+
+/* Le badge est un lien : la zone tactile dépasse la pastille pour atteindre 44 px. */
+.status-pending::after {
+	content: "";
+	position: absolute;
+	inset: -9px -4px;
+}
+
 .status-missed {
 	border-color: var(--danger-border);
 	background: var(--danger-bg);
@@ -1271,7 +1341,7 @@ textarea,
 	display: flex;
 	align-items: center;
 	gap: var(--space-m);
-	padding: 20px;
+	padding: calc(20px - var(--line-width));
 	background: var(--glass);
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-xl);
@@ -1299,6 +1369,7 @@ textarea,
 }
 
 .type-title {
+	line-height: 1.2;
 	font-size: 26px;
 	font-weight: var(--weight-medium);
 	letter-spacing: -0.02em;
@@ -1316,6 +1387,7 @@ textarea,
 
 .card-title {
 	margin: 0;
+	line-height: 1.2;
 	font-size: 18px;
 	font-weight: var(--weight-medium);
 }
@@ -1475,6 +1547,7 @@ textarea,
 
 .zone-label {
 	margin: 0;
+	line-height: 1.2;
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
 	font-weight: var(--weight-medium);
@@ -1485,7 +1558,8 @@ textarea,
 	flex-wrap: wrap;
 	align-items: center;
 	gap: var(--space-s);
-	padding: 10px 12px;
+	/* event-edit.elyx : 10 px en haut et en bas (la poignée de glisser rend la ligne plus haute). */
+	padding: calc(10px - var(--line-width)) calc(12px - var(--line-width));
 	background: var(--surface-dark);
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-m);
@@ -1608,6 +1682,12 @@ button.role-pill.role-support:active::before {
 	background: transparent;
 }
 
+/* Ligne de concert (ui.lineupRow) : croix simple, grise ; la pastille ronde est celle du festival. */
+.band-row .band-remove {
+	border-color: transparent;
+	color: var(--text-on-dark-muted);
+}
+
 .day-chips {
 	display: flex;
 	flex: 1 0 100%;
@@ -1617,7 +1697,7 @@ button.role-pill.role-support:active::before {
 
 /* Ligne de festival : ouverte (choix du jour) ou repliée (nom + pilule). */
 .festival-band {
-	padding: 6px 8px;
+	padding: calc(6px - var(--line-width)) calc(8px - var(--line-width));
 	background: var(--surface-dark);
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-m);
@@ -1723,8 +1803,21 @@ button.role-pill.role-support:active::before {
 	transition: overflow 0s linear 180ms;
 }
 
-.venue-reveal .day-panel-inner {
-	padding-top: 14px;
+/* La salle n'existe qu'avec une ville : fermée, elle ne laisse pas d'écart de plus dans la carte ;
+   ouverte, la marge négative reprend le rembourrage du cadre de focus. */
+.venue-reveal {
+	margin-block: -14px 0;
+	transition:
+		grid-template-rows 180ms ease-out,
+		margin 180ms ease-out;
+}
+
+.venue-reveal.day-panel-open {
+	margin-block: -6px;
+}
+
+.venue-reveal.day-panel-open .day-panel-inner {
+	padding-bottom: 6px;
 }
 
 .festival-band .day-label,
@@ -1741,7 +1834,7 @@ button.role-pill.role-support:active::before {
 }
 
 .screen-detail {
-	padding-top: var(--space-s);
+	padding-top: 12px;
 	padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
 }
 
@@ -1753,40 +1846,19 @@ button.role-pill.role-support:active::before {
 	letter-spacing: -0.03em;
 }
 
-.name-line {
+/* Nom de l'event, puis son statut juste dessous (event-confirm.elyx : identity). */
+.identity {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	align-items: flex-start;
 	gap: 10px;
-}
-
-.name-line .detail-heading {
-	flex: 1;
-	min-width: 0;
-}
-
-.name-line .status-badge,
-.name-line .badge-link {
-	flex: none;
+	padding: 0 6px;
 }
 
 .detail-meta {
-	margin: -8px 0 0;
+	margin: 0;
 	color: var(--text-on-dark-muted);
 	font-size: 14px;
-}
-
-.badge-link {
-	display: inline-flex;
-	align-self: flex-start;
-	align-items: center;
-	gap: 6px;
-	min-height: var(--tap);
-	padding: 0 12px;
-	border-radius: var(--radius-s);
-	background: var(--warning);
-	color: var(--on-warning);
-	font-size: 14px;
-	font-weight: var(--weight-medium);
 }
 
 .field-box-text {
@@ -1797,7 +1869,6 @@ button.role-pill.role-support:active::before {
 .field-value {
 	min-width: 0;
 	color: var(--text-on-dark);
-	font-size: 16px;
 }
 
 .choice-row {
@@ -1993,7 +2064,7 @@ button.role-pill.role-support:active::before {
 	gap: 12px;
 	width: 100%;
 	min-height: var(--tap);
-	padding: 10px 12px;
+	padding: calc(10px - var(--line-width)) calc(12px - var(--line-width));
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-m);
 	background: var(--surface-dark);
@@ -2025,10 +2096,16 @@ button.role-pill.role-support:active::before {
 	margin: 0;
 	font-size: 16px;
 	font-weight: var(--weight-medium);
+	line-height: 1.2;
+}
+
+.check-title + .check-meta {
+	margin-top: 1px;
 }
 
 .check-meta {
 	display: block;
+	line-height: 1.2;
 	color: var(--text-on-dark-muted);
 	font-size: 13px;
 }
@@ -2047,8 +2124,8 @@ button.role-pill.role-support:active::before {
 		background: var(--light-hover);
 	}
 
-	.badge-link:hover {
-		background: var(--warning-hover);
+	a.status-pending:hover {
+		background: var(--warning-border);
 	}
 
 	button.field-box:hover {
@@ -2072,8 +2149,8 @@ button.role-pill.role-support:active::before {
 	background: var(--light-pressed);
 }
 
-.badge-link:active {
-	background: var(--warning-hover);
+a.status-pending:active {
+	background: var(--warning-border);
 }
 
 button.field-box:active {
@@ -2089,7 +2166,7 @@ button.field-box:active {
 	flex-direction: column;
 	align-items: center;
 	gap: 6px;
-	padding: 18px 12px;
+	padding: 16.5px 10.5px;
 	border: 1.5px dashed var(--border);
 	border-radius: var(--radius-m);
 	text-align: center;
@@ -2358,4 +2435,142 @@ button.field-box:active {
 	.onboarding-track {
 		scroll-behavior: auto;
 	}
+}
+
+/* Formulaires d'ajout en étapes (screens/add-concert*.elyx, add-festival*.elyx).
+   L'écran grandit avec son contenu ; les actions restent ancrées en bas. */
+.step-screen {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 20px;
+	min-height: 100dvh;
+	padding: 24px max(12px, env(safe-area-inset-right, 0px)) calc(32px + env(safe-area-inset-bottom, 0px))
+		max(12px, env(safe-area-inset-left, 0px));
+}
+
+.step-top {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.step-page-header {
+	padding: 8px 8px 0;
+}
+
+/* ui.stepHeader */
+.step-header {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 0 8px;
+}
+
+.step-label {
+	margin: 0;
+	line-height: 1.2;
+	color: var(--text-on-dark-muted);
+	font-size: 14px;
+	font-weight: var(--weight-medium);
+}
+
+/* Barre claire, pas lime : le lime est réservé aux CTA. */
+.step-track {
+	width: 100%;
+	height: 4px;
+	border-radius: var(--radius-pill);
+	background: var(--glass-strong);
+}
+
+.step-fill {
+	display: block;
+	height: 4px;
+	border-radius: var(--radius-pill);
+	background: var(--light);
+}
+
+.step-title {
+	margin: 0;
+	font-size: 30px;
+	font-weight: var(--weight-medium);
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+}
+
+.step-help {
+	margin: 0;
+	color: var(--text-on-dark-muted);
+	font-size: 15px;
+	font-weight: var(--weight-regular);
+	line-height: 1.3;
+}
+
+/* ui.stepActions */
+.step-actions {
+	display: flex;
+	gap: 12px;
+	padding: 0 8px;
+}
+
+.step-back {
+	flex: none;
+	width: 120px;
+}
+
+/* Champ en erreur : filet rouge ; le message se pose juste dessous. */
+.field-invalid .field-box {
+	border-color: var(--danger-text);
+}
+
+.field-message {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0;
+	color: var(--danger-text);
+	font-size: 13px;
+	font-weight: var(--weight-regular);
+	line-height: 1.3;
+}
+
+.upload-box .upload-hint {
+	color: var(--text-on-dark-muted);
+	font-family: var(--font-input);
+	font-size: 14px;
+	font-weight: var(--weight-input);
+	font-stretch: var(--stretch-input);
+	line-height: 1.3;
+}
+
+/* Quitter l'ajout : la question seule, sur la photo (screens/add-exit.elyx). */
+.exit-layer {
+	position: fixed;
+	z-index: 5;
+	top: 0;
+	right: 0;
+	left: 0;
+	width: min(100%, 390px);
+	height: 100dvh;
+	margin-inline: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+	background-size: cover;
+	background-position: center;
+}
+
+.exit-concert {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 78%) 0%, rgb(0% 0% 0% / 92%) 100%),
+		url("/images/bg-add-concert.jpg");
+}
+
+.exit-festival {
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 78%) 0%, rgb(0% 0% 0% / 92%) 100%),
+		url("/images/bg-add-festival.jpg");
 }
