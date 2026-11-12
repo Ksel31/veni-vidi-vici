@@ -63,6 +63,28 @@ Exemple d'entrée :
   - Statut : à trier
   - Source : Ruru
 
+- [ ] **Import Excel**
+  - Date : 12 nov. 2026
+  - Description : importer un tableau Excel déjà rempli, car aujourd'hui tout se saisit à la main.
+  - Priorité : à définir
+  - Statut : à trier
+  - Source : Gilles
+
+- [ ] **Ajout automatique d'un concert**
+  - Date : 12 nov. 2026
+  - Description : un bot récupère les infos publiques du concert (date, lieu, line-up) et remplit l'event, éventuellement déclenché par commande vocale.
+  - Priorité : à définir
+  - Statut : à trier
+  - Source : Sanguisugalaurent Stieoui
+
+- [ ] **Setlists automatiques**
+  - Date : 12 nov. 2026
+  - Description : setlists remplies automatiquement, sans devoir les chercher et les saisir soi-même.
+  - Note : rejoint l'import setlist.fm déjà prévu en phase 3.
+  - Priorité : à définir
+  - Statut : à trier
+  - Source : Sanguisugalaurent Stieoui
+
 ## ✅ Fait
 
 Rien pour l'instant.
