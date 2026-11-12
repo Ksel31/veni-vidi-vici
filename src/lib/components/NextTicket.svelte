@@ -1,5 +1,5 @@
 <script>
-	import { dateParts, eventTitle, findVenue } from '#lib/present.js';
+	import { dateParts, eventTitle, findVenue, venueLine } from '#lib/present.js';
 
 	/** @type {{ event: import('#lib/store.js').Event, performances: import('#lib/store.js').Performance[], artists: import('#lib/store.js').Artist[], venues: import('#lib/store.js').Venue[] }} */
 	let { event, performances, artists, venues } = $props();
@@ -7,7 +7,7 @@
 	const title = $derived(eventTitle(event, performances, artists));
 	const venue = $derived(findVenue(venues, event.venueId));
 	const date = $derived(dateParts(event.startDate));
-	const place = $derived(venue ? `${venue.name}, ${venue.city}` : '');
+	const place = $derived(venueLine(venue) ?? 'Lieu à venir');
 </script>
 
 <a class="ticket" href="/event/{event.id}">

@@ -40,6 +40,33 @@ export function dayCount(start, end) {
 	return daysUntil(end) - daysUntil(start) + 1;
 }
 
+const WEEKDAYS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+
+/** Libellé de puce, comme « Jeu 17 ». @param {string} iso */
+export function dayChipLabel(iso) {
+	const { year, month, day } = dateParts(iso);
+	const date = new Date(year, month - 1, day);
+	return `${WEEKDAYS[date.getDay()]} ${day}`;
+}
+
+/** Un jour ISO par date, du début à la fin inclus. @param {string} start @param {string} end */
+export function daysFrom(start, end) {
+	if (!start || !end || end < start) return [];
+	const first = dateParts(start);
+	const last = dateParts(end);
+	const cursor = new Date(first.year, first.month - 1, first.day);
+	const stop = new Date(last.year, last.month - 1, last.day);
+	/** @type {string[]} */
+	const list = [];
+	while (cursor <= stop) {
+		const month = String(cursor.getMonth() + 1).padStart(2, '0');
+		const day = String(cursor.getDate()).padStart(2, '0');
+		list.push(`${cursor.getFullYear()}-${month}-${day}`);
+		cursor.setDate(cursor.getDate() + 1);
+	}
+	return list;
+}
+
 /**
  * @param {import('./store.js').Event} event
  * @param {import('./store.js').Performance[]} performances
@@ -56,8 +83,17 @@ export function eventTitle(event, performances, artists) {
 
 /**
  * @param {import('./store.js').Venue[]} venues
- * @param {string} venueId
+ * @param {string | null | undefined} venueId
  */
 export function findVenue(venues, venueId) {
+	if (!venueId) return null;
 	return venues.find((venue) => venue.id === venueId) ?? null;
+}
+
+/** « Ancienne Belgique, Bruxelles », ou le nom seul si la ville est vide.
+ * @param {import('./store.js').Venue | null} venue
+ */
+export function venueLine(venue) {
+	if (!venue?.name) return null;
+	return venue.city ? `${venue.name}, ${venue.city}` : venue.name;
 }
