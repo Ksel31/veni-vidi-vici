@@ -34,9 +34,11 @@ Le propriétaire du projet est designer UI/UX avec des bases en code, pas dével
 
 **Objectif :** pouvoir parcourir toute l'appli au clic, sur desktop et en vue mobile, pour valider le parcours à l'usage. Ce n'est pas la version finale.
 
+Le prototype de code précédent a été écarté. Le projet repart d'un SvelteKit propre (JavaScript + JSDoc).
+
 **Stack :**
 - SvelteKit (TypeScript optionnel, JavaScript accepté pour rester simple).
-- **Aucun backend.** Les données vivent dans un store Svelte, sauvegardé dans `localStorage`, avec un bouton « Réinitialiser les données de démo ».
+- **Aucun backend.** Les données vivent dans un store Svelte, sauvegardé dans `localStorage`. Se connecter avec l'identifiant `demo` charge les données de démo ; tout autre identifiant ouvre une appli vide.
 - Repli autorisé si SvelteKit pose problème : Vite + Svelte en simple page.
 - Lancement : `npm install` puis `npm run dev`.
 
@@ -109,10 +111,12 @@ Toutes les données sont propres à un utilisateur (pas de partage entre comptes
 
 ## Règles métier
 
-- **« À confirmer »** n'est pas un statut stocké : c'est un event `planned` dont la date de fin (ou de début) est passée. L'accueil affiche un bandeau « N events à confirmer ».
+- **« À confirmer »** n'est pas un statut stocké : c'est un event `planned` dont la date de fin (ou de début) est passée. L'accueil affiche un bandeau « N events à confirmer », qui mène à la liste `/to-confirm`.
 - **Confirmer la présence** : sur la fiche d'un event passé, l'utilisateur choisit « Vu » ou « Raté ».
   - Concert : les passages suivent le statut de l'event.
   - Festival : l'utilisateur coche les jours faits, puis les groupes vus parmi ceux de ces jours. Les groupes non cochés passent en `missed`.
+  - Si un festival entier est marqué « Raté », tous ses passages passent en `missed`.
+- Le statut d'un passage est lié à la date de cet event : un groupe raté à un festival reste `missed` pour cette date. Le revoir plus tard est un autre event.
 - **Ajout d'un event passé** : la présence est pré-sélectionnée sur « Vu » (hypothèse à valider à l'usage).
 - **Tout est modifiable à tout moment** depuis la fiche : date, lieu, groupes, billets. Si la date repasse dans le futur, l'event redevient `planned`.
 - Pas de statut « reporté » : on modifie la date.
@@ -129,7 +133,8 @@ Toutes les données sont propres à un utilisateur (pas de partage entre comptes
 | Route | Écran | Contenu |
 |---|---|---|
 | `/login` | Connexion | identifiant + mot de passe factices |
-| `/` | Accueil | bandeau « à confirmer » si besoin, liste des events prévus triés par date, bouton « + » bien visible, accès à l'historique |
+| `/` | Accueil | bandeau « à confirmer » si besoin (vers `/to-confirm`), liste des events prévus triés par date, bouton « + » bien visible, accès à l'historique |
+| `/to-confirm` | À confirmer | events `planned` dont la date est passée ; chaque ligne ouvre la fiche |
 | `/history` | Historique | events vus et ratés, du plus récent au plus ancien, filtre par année |
 | `/add` | Ajout, étape 1 | choix : Concert ou Festival |
 | `/add/concert` | Ajout, étape 2 | date, lieu, groupes (avec tête d'affiche / première partie), billet (acheté, prix, fichier) |
@@ -139,19 +144,21 @@ Toutes les données sont propres à un utilisateur (pas de partage entre comptes
 
 Après un ajout, rediriger vers la fiche du nouvel event. Chaque écran a un moyen évident de revenir à l'accueil.
 
-**Parcours de référence :** Connexion → Accueil → (Historique | Events prévus | Ajouter → Type d'event → Infos) → Fiche event → (Modifier l'event) → selon la date : avant l'event, ou présence confirmée → (festival : jours et groupes) → compte rendu (dont photos souvenirs) → retour à l'accueil.
+**Parcours de référence :** Connexion → Accueil → (Historique | Events prévus | À confirmer | Ajouter → Type d'event → Infos) → Fiche event → (Modifier l'event) → selon la date : avant l'event, ou présence confirmée → (festival : jours et groupes) → compte rendu (dont photos souvenirs) → retour à l'accueil.
 
 ---
 
 ## Données de démo
 
-Au premier lancement, créer :
-- 1 concert passé et marqué vu, avec 2 groupes, un pouce et un avis ;
-- 1 concert passé encore `planned` (pour tester « à confirmer ») ;
-- 1 concert à venir avec billet acheté ;
-- 1 festival à venir sur 3 jours avec 8 groupes répartis sur les jours ;
-- 1 festival passé, `planned`, sur 2 jours (pour tester la sélection des jours et groupes) ;
-- 3 lieux belges, une dizaine d'artistes.
+Pas de bouton « Réinitialiser les données de démo ». À la place, un **compte démo** : se connecter avec l'identifiant `demo` charge les données de démo ; n'importe quel autre identifiant ouvre une appli vide. Les données vivent dans un store Svelte, sauvegardé dans `localStorage` (chaque compte a les siennes).
+
+Le compte `demo` contient :
+- 1 concert passé, déjà marqué vu, avec 2 groupes, un pouce et un avis ;
+- 1 concert passé encore `planned` (à confirmer) ;
+- 1 festival passé, `planned`, sur 2 jours, avec ses groupes répartis sur les jours (à confirmer) ;
+- 3 lieux belges et une poignée d'artistes.
+
+Pas d'event à venir dans la démo : on les crée en testant le parcours d'ajout.
 
 ---
 
@@ -172,7 +179,7 @@ Ne pas faire : vrai backend, vrais comptes, envoi réel de fichiers (billets, ph
 ## Checklist de validation de la phase 1
 
 - [ ] Je me connecte et j'arrive sur l'accueil.
-- [ ] Je vois le bandeau « à confirmer » et il m'amène à la bonne fiche.
+- [ ] Je vois le bandeau « à confirmer » : il m'amène à la liste, puis à la fiche d'un event.
 - [ ] J'ajoute un concert à venir et je le retrouve dans les prévus.
 - [ ] J'ajoute un festival avec un line-up sur plusieurs jours.
 - [ ] J'ajoute un concert passé et j'arrive directement au compte rendu.

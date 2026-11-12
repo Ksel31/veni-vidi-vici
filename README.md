@@ -64,7 +64,7 @@ npm install
 npm run dev
 ```
 
-Le code est en SvelteKit (JavaScript + JSDoc). Les routes visées sont `/login`, `/`, `/history`, `/add`, `/add/concert`, `/add/festival`, `/event/[id]` et `/event/[id]/edit`.
+Le code est en SvelteKit (JavaScript + JSDoc). Les routes visées sont `/login`, `/`, `/to-confirm`, `/history`, `/add`, `/add/concert`, `/add/festival`, `/event/[id]` et `/event/[id]/edit`.
 
 ## Phases suivantes
 
