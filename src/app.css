@@ -1107,7 +1107,7 @@ button {
 	padding: 10px 10px 0 0;
 	border: 0;
 	background: transparent;
-	color: color-mix(in srgb, var(--neutral-9) 45%, transparent);
+	color: var(--text-on-dark-muted);
 }
 
 .history-delete:active {
