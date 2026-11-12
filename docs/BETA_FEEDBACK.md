@@ -37,11 +37,7 @@ Exemple d'entrée :
 
 ## 🎨 Améliorations UX/UI
 
-- [ ] **Empty state de l'accueil**
-  - Description : quand il n'y a aucun event à venir, proposer un gros bouton « Ajouter mon premier concert », ou un petit onboarding.
-  - Priorité : à définir
-  - Statut : en cours
-  - Source : Ruru
+Rien pour l'instant.
 
 ## 💡 Idées de fonctionnalités
 
@@ -94,4 +90,9 @@ Exemple d'entrée :
 
 ## ✅ Fait
 
-Rien pour l'instant.
+- [x] **Empty state de l'accueil**
+  - Description : quand il n'y a aucun event à venir, proposer un gros bouton « Ajouter mon premier concert », ou un petit onboarding.
+  - Priorité : à définir
+  - Statut : fait
+  - Source : Ruru
+  - Fait le 12 nov. 2026 (PR #15)
