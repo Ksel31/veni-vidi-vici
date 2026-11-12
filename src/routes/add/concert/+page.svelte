@@ -213,8 +213,15 @@
 			<span></span><span></span><span></span>
 		</button>
 		<span class="band-name">{band.name}</span>
-		<button class="role-pill" class:role-support={band.billing === 'support'} type="button" onclick={() => toggleBilling(band.key)}>
-			{band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}
+		<button
+			class="role-pill"
+			class:role-support={band.billing === 'support'}
+			type="button"
+			aria-label={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}
+			title={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}
+			onclick={() => toggleBilling(band.key)}
+		>
+			<Icon name={band.billing === 'headliner' ? 'music' : 'user'} size={18} />
 		</button>
 		<button class="icon-button band-remove" type="button" aria-label="Retirer {band.name}" onclick={() => removeBand(band.key)}>
 			<Icon name="x" size={20} />
