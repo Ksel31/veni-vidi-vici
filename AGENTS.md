@@ -111,7 +111,7 @@ Toutes les données sont propres à un utilisateur (pas de partage entre comptes
 
 ## Règles métier
 
-- **« À confirmer »** n'est pas un statut stocké : c'est un event `planned` dont la date de fin (ou de début) est passée. Le jour même reste « à venir » : l'event ne devient « à confirmer » qu'à partir du lendemain. L'accueil affiche un bandeau « N events à confirmer », qui mène à la liste `/to-confirm`.
+- **« À confirmer »** n'est pas un statut stocké : c'est un event `planned` dont la date de fin (ou de début) est passée. Le jour même reste « à venir » : l'event ne devient « à confirmer » qu'à partir du lendemain. L'accueil affiche un bandeau « N events à confirmer », qui mène à la liste `/to-confirm`. Sur cette liste, « Raté » marque l'event tout de suite (un festival : tous ses passages en `missed`) et le retire de la liste, avec « Annuler » pendant 5 secondes. « Vu » ouvre la fiche.
 - **Confirmer la présence** : sur la fiche d'un event passé, l'utilisateur choisit « Vu » ou « Raté ».
   - Concert : les passages suivent le statut de l'event.
   - Festival : l'utilisateur coche les jours faits, puis les groupes vus parmi ceux de ces jours. Les groupes non cochés passent en `missed`.

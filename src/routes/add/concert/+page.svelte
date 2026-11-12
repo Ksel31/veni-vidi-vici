@@ -145,6 +145,9 @@
 		<p class="card-title">Groupes</p>
 		<div class="zone" data-zone="headliner">
 			<p class="zone-label">Tête d'affiche</p>
+			{#each headliners as band (band.key)}
+				{@render row(band)}
+			{/each}
 			<ArtistField
 				artists={$data.artists}
 				taken={bands.map((band) => band.name)}
@@ -152,12 +155,12 @@
 				inputId="artist-headliner"
 				onAdd={(name) => addBand(name, 'headliner')}
 			/>
-			{#each headliners as band (band.key)}
-				{@render row(band)}
-			{/each}
 		</div>
 		<div class="zone" data-zone="support">
 			<p class="zone-label">Première partie</p>
+			{#each supports as band (band.key)}
+				{@render row(band)}
+			{/each}
 			<ArtistField
 				artists={$data.artists}
 				taken={bands.map((band) => band.name)}
@@ -165,9 +168,6 @@
 				inputId="artist-support"
 				onAdd={(name) => addBand(name, 'support')}
 			/>
-			{#each supports as band (band.key)}
-				{@render row(band)}
-			{/each}
 		</div>
 	</div>
 
