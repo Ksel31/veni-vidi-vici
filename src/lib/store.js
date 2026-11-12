@@ -346,6 +346,42 @@ export function setPresence(eventId, status) {
 }
 
 /**
+ * Marque raté et renvoie l'état d'avant, pour le toast Annuler.
+ * @param {string} eventId
+ */
+export function missEvent(eventId) {
+	const state = get(data);
+	const current = state.events.find((event) => event.id === eventId);
+	if (!current) return null;
+	const snapshot = {
+		status: current.status,
+		performances: state.performances
+			.filter((performance) => performance.eventId === eventId)
+			.map((performance) => ({ id: performance.id, status: performance.status }))
+	};
+	setPresence(eventId, 'missed');
+	return snapshot;
+}
+
+/** @param {string} eventId @param {{ status: Event['status'], performances: { id: string, status: Performance['status'] }[] }} snapshot */
+export function undoMiss(eventId, snapshot) {
+	const state = get(data);
+	const current = state.events.find((event) => event.id === eventId);
+	if (!current || !state.userId || !snapshot) return;
+	const previous = new Map(snapshot.performances.map((item) => [item.id, item.status]));
+	const performances = state.performances.map((performance) => {
+		const status = previous.get(performance.id);
+		return status ? { ...performance, status } : performance;
+	});
+	const event = { ...current, status: snapshot.status };
+	commit({
+		...state,
+		events: state.events.map((item) => (item.id === eventId ? event : item)),
+		performances
+	});
+}
+
+/**
  * Festival vu : jours faits, groupes cochés en `seen`, les autres en `missed`.
  * @param {string} eventId
  * @param {string[]} daysAttended

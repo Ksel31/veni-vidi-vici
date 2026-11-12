@@ -8,13 +8,15 @@
 	const venue = $derived(findVenue(venues, event.venueId));
 	const date = $derived(dateParts(event.startDate));
 	const place = $derived(venueLine(venue) ?? 'Lieu à venir');
+	// Un titre long descend d'un cran pour tenir en trois lignes, sans être coupé.
+	const titleSize = $derived(title.length > 26 ? 'ticket-title-long' : title.length > 15 ? 'ticket-title-mid' : '');
 </script>
 
 {#snippet face()}
 	<img class="ticket-bg" src="/images/ticket-holo.png" alt="" />
 	<span class="ticket-body">
 		<span class="ticket-type">{event.type === 'festival' ? 'FESTIVAL' : 'CONCERT'}</span>
-		<span class="ticket-title">{title}</span>
+		<span class="ticket-title {titleSize}">{title}</span>
 		<span class="ticket-place">{place}</span>
 		{#if event.ticketBought}
 			<span class="ticket-pill ticket-pill-on-green">
