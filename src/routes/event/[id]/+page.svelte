@@ -269,28 +269,29 @@
 	{#if !event}
 		<p class="empty-title">Cet event n'existe pas.</p>
 	{:else}
-		{#if past && event.status === 'planned'}
-			<a class="badge-link" href="/to-confirm">
-				<Icon name="chevron-right" size={16} />
-				À confirmer
-			</a>
-		{:else if event.status === 'attended'}
-			<span class="status-badge">
-				<Icon name="check" size={16} />
-				Vu
-			</span>
-		{:else if event.status === 'missed'}
-			<span class="status-badge status-missed">
-				<Icon name="x" size={16} />
-				Raté
-			</span>
-		{/if}
-
 		{#if !past}
 			<h2 class="detail-heading">{untilHeading(daysUntil(event.startDate))}</h2>
 			<NextTicket {event} {performances} artists={$data.artists} venues={$data.venues} plain />
 		{:else}
-			<h2 class="detail-heading">{title}</h2>
+			<div class="name-line">
+				<h2 class="detail-heading">{title}</h2>
+				{#if event.status === 'planned'}
+					<a class="badge-link" href="/to-confirm">
+						<Icon name="chevron-right" size={16} />
+						À confirmer
+					</a>
+				{:else if event.status === 'attended'}
+					<span class="status-badge">
+						<Icon name="check" size={16} />
+						Vu
+					</span>
+				{:else if event.status === 'missed'}
+					<span class="status-badge status-missed">
+						<Icon name="x" size={16} />
+						Raté
+					</span>
+				{/if}
+			</div>
 			{#if event.type === 'festival' || event.status === 'attended'}
 				<p class="detail-meta">{eventSummary(event, venue)}</p>
 			{/if}

@@ -1428,6 +1428,22 @@ button {
 	letter-spacing: -0.03em;
 }
 
+.name-line {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.name-line .detail-heading {
+	flex: 1;
+	min-width: 0;
+}
+
+.name-line .status-badge,
+.name-line .badge-link {
+	flex: none;
+}
+
 .detail-meta {
 	margin: -8px 0 0;
 	color: var(--text-on-dark-muted);
