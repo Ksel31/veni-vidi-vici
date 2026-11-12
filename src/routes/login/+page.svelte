@@ -28,6 +28,10 @@
 		<div class="login-intro">
 			<h1>Veni, vidi, vici.</h1>
 			<p>Tes concerts et festivals, à venir et déjà vécus.</p>
+			<!-- Démo uniquement : à retirer en phase 2, avec .login-demo-hint. -->
+			<p class="login-demo-hint">
+				Pour tester : <strong>demo</strong> ouvre un compte déjà rempli, ton prénom part de zéro. Le mot de passe peut rester vide.
+			</p>
 		</div>
 
 		<div class="glass-card">
