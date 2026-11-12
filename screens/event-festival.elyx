@@ -101,7 +101,8 @@ export eventFestival = frame {
         fill: c.colors.text-on-dark-muted,
         contents: "Festival, 17 et 18 octobre 2026, Anvers",
         font-size: 14,
-        font-family: f.fonts.ui
+        font-family: f.fonts.ui,
+        font-style: "Regular"
       }
     }
 

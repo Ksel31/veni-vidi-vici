@@ -63,6 +63,7 @@ export eventUpcoming = frame {
       contents: "Dans 4 jours",
       font-size: 36,
       font-family: f.fonts.ui,
+      font-style: "Medium",
       line-height: 1,
       letter-spacing: -3%
     }

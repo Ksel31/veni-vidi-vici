@@ -272,7 +272,8 @@ export eventRow = frame {
       fill: c.colors.neutral-12,
       contents: "Lieu",
       font-size: 14,
-      font-family: f.fonts.ui
+      font-family: f.fonts.ui,
+      font-style: "Regular"
     }
 
     ticketState = frame : ticketPill {
@@ -366,7 +367,8 @@ export confirmCard = frame {
       fill: c.colors.neutral-1,
       contents: "Concert | Date | Lieu",
       font-size: 14,
-      font-family: f.fonts.ui
+      font-family: f.fonts.ui,
+      font-style: "Regular"
     }
   }
 
@@ -375,7 +377,8 @@ export confirmCard = frame {
     fill: c.colors.neutral-1,
     contents: "Tu y étais ?",
     font-size: 16,
-    font-family: f.fonts.ui
+    font-family: f.fonts.ui,
+    font-style: "Regular"
   }
 
   actions = frame {
@@ -466,7 +469,8 @@ export historyCard = frame {
       fill: c.colors.neutral-1,
       contents: "Concert | Date | Lieu",
       font-size: 14,
-      font-family: f.fonts.ui
+      font-family: f.fonts.ui,
+      font-style: "Regular"
     }
   }
 

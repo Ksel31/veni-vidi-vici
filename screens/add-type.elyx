@@ -59,6 +59,7 @@ export addType = frame {
       contents: "Quel type d'event ?",
       font-size: 36,
       font-family: f.fonts.ui,
+      font-style: "Regular",
       line-height: 1,
       letter-spacing: -3%
     }

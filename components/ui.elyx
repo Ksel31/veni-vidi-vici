@@ -51,6 +51,7 @@ export hint = text {
   contents: "Texte d'aide",
   font-size: 14,
   font-family: f.fonts.ui,
+  font-style: "Regular",
   line-height: 1.3
 }
 
@@ -150,7 +151,8 @@ export field = frame {
       fill: c.colors.text-on-dark,
       contents: "Valeur",
       font-size: 16,
-      font-family: f.fonts.ui
+      font-family: f.fonts.ui,
+      font-style: "Regular"
     }
   }
 }
@@ -252,7 +254,8 @@ export checkRow = frame {
       fill: c.colors.text-on-dark-muted,
       contents: "Détail",
       font-size: 13,
-      font-family: f.fonts.ui
+      font-family: f.fonts.ui,
+      font-style: "Regular"
     }
   }
 }
@@ -398,7 +401,8 @@ export pastRow = frame {
       fill: c.colors.text-on-dark-muted,
       contents: "Lieu",
       font-size: 14,
-      font-family: f.fonts.ui
+      font-family: f.fonts.ui,
+      font-style: "Regular"
     }
   }
 
@@ -518,6 +522,7 @@ export typeCard = frame {
       contents: "Une soirée, une salle.",
       font-size: 14,
       font-family: f.fonts.ui,
+      font-style: "Regular",
       line-height: 1.3
     }
   }
@@ -701,11 +706,13 @@ export uploadBox = frame {
     font-style: "Medium"
   }
 
+  // .upload-box p l'emporte sur .hint : 16 px, Medium, couleur du hint.
   uploadHint = text {
     fill: c.colors.text-on-dark-muted,
     contents: "PDF ou image. L'envoi n'est pas encore branché.",
-    font-size: 13,
-    font-family: f.fonts.ui
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
   }
 }
 
@@ -749,7 +756,8 @@ export fileRow = frame {
       fill: c.colors.text-on-dark-muted,
       contents: "PDF, 240 Ko",
       font-size: 13,
-      font-family: f.fonts.ui
+      font-family: f.fonts.ui,
+      font-style: "Regular"
     }
   }
 
@@ -916,6 +924,118 @@ export undoToast = frame {
       font-size: 16,
       font-family: f.fonts.ui,
       font-style: "Medium"
+    }
+  }
+}
+
+// Ligne de festival repliée : nom Medium 16, pilule crème 24 px (zone 44) texte Medium 13, croix 16 dans un cercle 28.
+export festivalBand = frame {
+  left: 0px,
+  top: 2200px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 2px},
+  fill: c.colors.surface-dark,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-m,
+  padding: [6px, 8px],
+  children: [bandName, dayPill, bandRemove],
+
+  bandName = text {
+    width: 100%,
+    fill: c.colors.text-on-dark,
+    contents: "Groupe",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  dayPill = frame {
+    width: .auto,
+    height: l.lengths.tap,
+    min-width: l.lengths.tap,
+    layout: {justify-content: .center, align-items: .center},
+    padding: [10px, 0px],
+    children: dayFace,
+
+    dayFace = frame {
+      width: .auto,
+      height: 24px,
+      layout: {justify-content: .center, align-items: .center},
+      fill: c.colors.light,
+      corner-radius: 32px,
+      padding: [0px, 14px],
+      children: dayLabel,
+
+      dayLabel = text {
+        fill: c.colors.neutral-1,
+        contents: "Sam 17",
+        font-size: 13,
+        font-family: f.fonts.ui,
+        font-style: "Medium",
+        line-height: 1
+      }
+    }
+  }
+
+  bandRemove = frame {
+    width: l.lengths.tap,
+    height: l.lengths.tap,
+    layout: {justify-content: .center, align-items: .center},
+    children: removeFace,
+
+    removeFace = frame {
+      width: 28px,
+      height: 28px,
+      layout: {justify-content: .center, align-items: .center},
+      fill: c.colors.surface-dark,
+      border: {color: c.colors.border, width: 1px},
+      corner-radius: 32px,
+      children: removeGlyph,
+
+      removeGlyph = asset {
+        width: 16px,
+        height: 16px,
+        fill: c.colors.text-on-dark,
+        contents: crossIcon
+      }
+    }
+  }
+}
+
+// Champ d'ajout d'un groupe : le libellé à gauche, le « + » au bout à droite (ArtistField).
+export artistAddField = frame {
+  left: 0px,
+  top: 2320px,
+  width: 100%,
+  height: 48px,
+  layout: {align-items: .center},
+  fill: c.colors.surface-dark,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-m,
+  padding: [0px, 6px, 0px, 14px],
+  children: [fieldValue, addArtist],
+
+  fieldValue = text {
+    width: 100%,
+    fill: c.colors.text-on-dark-muted,
+    contents: "Ajouter un groupe",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Regular"
+  }
+
+  addArtist = frame {
+    width: l.lengths.tap,
+    height: l.lengths.tap,
+    layout: {justify-content: .center, align-items: .center},
+    children: addGlyph,
+
+    addGlyph = asset {
+      width: 20px,
+      height: 20px,
+      fill: c.colors.text-on-dark,
+      contents: plusIcon
     }
   }
 }

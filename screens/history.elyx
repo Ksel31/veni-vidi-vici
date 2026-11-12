@@ -47,6 +47,7 @@ export history = frame {
       contents: "Historique",
       font-size: 36,
       font-family: f.fonts.ui,
+      font-style: "Regular",
       line-height: 1,
       letter-spacing: -3%
     }
