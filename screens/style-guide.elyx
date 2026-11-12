@@ -3460,7 +3460,7 @@ export styleGuide = frame {
 
       profileGroupLabel = text {
         fill: c.colors.text-on-dark,
-        contents: "profileHeader · avatar, recherche et trois chiffres clés",
+        contents: "profileHeader · avatar, recherche, trois chiffres clés, déconnexion",
         font-size: 14,
         font-family: f.fonts.ui
       }

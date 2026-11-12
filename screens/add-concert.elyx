@@ -3,12 +3,14 @@ use "fonts/CabinetGrotesk-Variable.ttf"
 import "images/bg-add-concert.jpg" as bgPhoto
 import "components/screen-header.elyx" as headers
 import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
 import "components/ui.elyx" as ui
 import "icons/lucide/music.svg" as musicIcon
 import "icons/lucide/plus.svg" as plusIcon
 import "screens/event-upcoming.elyx" as eventUpcoming
 import "icons/lucide/calendar.svg" as calendarIcon
 import "icons/lucide/map-pin.svg" as mapPinIcon
+import "icons/lucide/mic-vocal.svg" as micIcon
 import "icons/lucide/euro.svg" as euroIcon
 import "screens/event-report.elyx" as eventReport
 
@@ -16,7 +18,7 @@ import "screens/event-report.elyx" as eventReport
 // Date à venir → fiche de l'event ; date passée → présence pré-sélectionnée sur « Vu », direct au compte rendu.
 export addConcert = frame {
   title: "Ajouter un concert",
-  caption: "Étape 2. Lieu et groupes s'autocomplètent sur ce qui existe déjà, sinon ils sont créés à la volée.",
+  caption: "Étape 2. La ville est toujours là ; la salle n'apparaît qu'une fois la ville remplie. Les groupes s'ajoutent sous chaque rôle, au-dessus du champ.",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -55,13 +57,18 @@ export addConcert = frame {
     height: .auto,
     layout: {direction: .column, item-gap: 14px},
     padding: [20px, 8px, 0px],
-    children: [whenWhere, bands, ticket, submit],
+    children: [required, whenWhere, bands, ticket, submit],
+
+    required = text : ui.hint {
+      contents: "* Obligatoire"
+    }
 
     whenWhere = frame : ui.glassCard {
       overrides: [
         insert(dateField, after = ui.glassCard.cardTitle),
-        insert(venueField, after = dateField),
-        insert(titleField, after = venueField)
+        insert(cityField, after = dateField),
+        insert(roomField, after = cityField),
+        insert(titleField, after = roomField)
       ],
 
       cardTitle {
@@ -80,23 +87,39 @@ export addConcert = frame {
         }
 
         fieldLabel {
-          contents: "Date"
+          contents: "Date *"
         }
       }
 
-      venueField = frame : ui.field {
+      cityField = frame : ui.field {
         fieldBox {
           fieldGlyph {
             contents: mapPinIcon
           }
 
           fieldValue {
-            contents: "Ancienne Belgique, Bruxelles"
+            contents: "Bruxelles"
           }
         }
 
         fieldLabel {
-          contents: "Lieu"
+          contents: "Ville"
+        }
+      }
+
+      roomField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: mapPinIcon
+          }
+
+          fieldValue {
+            contents: "Ancienne Belgique"
+          }
+        }
+
+        fieldLabel {
+          contents: "Lieu, salle"
         }
       }
 
@@ -107,7 +130,7 @@ export addConcert = frame {
           }
 
           fieldValue {
-            contents: "Ex. soirée anniversaire"
+            contents: "Ex. tournée Wild God"
           }
         }
 
@@ -119,49 +142,106 @@ export addConcert = frame {
 
     bands = frame : ui.glassCard {
       overrides: [
-        insert(headliner, after = ui.glassCard.cardTitle),
-        insert(support, after = headliner),
-        insert(addBand, after = support)
+        insert(zoneHead, after = ui.glassCard.cardTitle),
+        insert(zoneSupport, after = zoneHead)
       ],
 
       cardTitle {
         contents: "Groupes"
       }
 
-      headliner = frame : ui.lineupRow {
-        bandName {
-          contents: "Nick Cave"
+      zoneHead = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        overflow: .visible,
+        children: [zoneLabel, headliner, addHead],
+
+        zoneLabel = text {
+          width: 100%,
+          fill: c.colors.text-on-dark-muted,
+          contents: "Tête d'affiche",
+          font-size: 13,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
         }
-      }
 
-      support = frame : ui.lineupRow {
-        bandRole {
-          fill[0].color: c.colors.glass-strong,
-          border[0].color: c.colors.border,
+        headliner = frame : ui.lineupRow {
+          dragHandle {
+            display: .visible
+          }
 
-          bandRoleLabel {
-            fill[0].color: c.colors.text-on-dark,
-            contents: "Première partie"
+          bandName {
+            contents: "Nick Cave"
           }
         }
 
-        bandName {
-          contents: "Cat Power"
+        addHead = frame : ui.fieldEmpty {
+          fieldLabel {
+            display: .none
+          }
+
+          fieldBox {
+            fieldGlyph {
+              contents: plusIcon
+            }
+
+            fieldValue {
+              contents: "Ajouter un groupe"
+            }
+          }
         }
       }
 
-      addBand = frame : ui.fieldEmpty {
-        fieldLabel {
-          display: .none
+      zoneSupport = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        overflow: .visible,
+        children: [zoneLabel, support, addSupport],
+
+        zoneLabel = text {
+          width: 100%,
+          fill: c.colors.text-on-dark-muted,
+          contents: "Première partie",
+          font-size: 13,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
         }
 
-        fieldBox {
-          fieldGlyph {
-            contents: plusIcon
+        support = frame : ui.lineupRow {
+          dragHandle {
+            display: .visible
           }
 
-          fieldValue {
-            contents: "Ajouter un groupe"
+          bandRole {
+            fill[0].color: c.colors.glass-strong,
+            border[0].color: c.colors.border,
+
+            bandRoleGlyph {
+              fill[0].color: c.colors.text-on-dark,
+              contents: micIcon
+            }
+          }
+
+          bandName {
+            contents: "Cat Power"
+          }
+        }
+
+        addSupport = frame : ui.fieldEmpty {
+          fieldLabel {
+            display: .none
+          }
+
+          fieldBox {
+            fieldGlyph {
+              contents: plusIcon
+            }
+
+            fieldValue {
+              contents: "Ajouter un groupe"
+            }
           }
         }
       }

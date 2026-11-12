@@ -3,6 +3,7 @@ use "fonts/CabinetGrotesk-Variable.ttf"
 import "images/bg-add-festival.jpg" as bgPhoto
 import "components/screen-header.elyx" as headers
 import "components/ui.elyx" as ui
+import "tokens/colors.elyx" as c
 import "icons/lucide/plus.svg" as plusIcon
 import "screens/event-upcoming.elyx" as eventUpcoming
 import "icons/lucide/calendar.svg" as calendarIcon
@@ -13,7 +14,7 @@ import "icons/lucide/tent.svg" as tentIcon
 // Ajout d'un festival : titre obligatoire, dates de début et de fin, lieu, line-up « à voir » avec un jour par groupe, billet.
 export addFestival = frame {
   title: "Ajouter un festival",
-  caption: "Étape 2. Le titre est obligatoire ; chaque groupe reçoit le jour de son passage.",
+  caption: "Étape 2. Un seul calendrier (premier toucher = début, second = fin). La ville d'abord, la salle ensuite. Le jour choisi est une petite pilule centrée ; la croix est plus petite.",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -52,13 +53,18 @@ export addFestival = frame {
     height: .auto,
     layout: {direction: .column, item-gap: 14px},
     padding: [20px, 8px, 0px],
-    children: [whenWhere, lineup, ticket, submit],
+    children: [required, whenWhere, lineup, ticket, submit],
+
+    required = text : ui.hint {
+      contents: "* Obligatoire"
+    }
 
     whenWhere = frame : ui.glassCard {
       overrides: [
         insert(titleField, after = ui.glassCard.cardTitle),
         insert(dates, after = titleField),
-        insert(venueField, after = dates)
+        insert(cityField, after = dates),
+        insert(roomField, after = cityField)
       ],
 
       cardTitle {
@@ -77,66 +83,55 @@ export addFestival = frame {
         }
 
         fieldLabel {
-          contents: "Titre"
+          contents: "Titre *"
         }
       }
 
-      dates = frame {
-        width: 100%,
-        height: .auto,
-        layout: {item-gap: 12px},
-        children: [startField, endField],
-
-        startField = frame : ui.field {
-          width: 153px,
-
-          fieldBox {
-            fieldGlyph {
-              contents: calendarIcon
-            }
-
-            fieldValue {
-              contents: "17 juil."
-            }
+      dates = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: calendarIcon
           }
 
-          fieldLabel {
-            contents: "Début"
+          fieldValue {
+            contents: "17 – 20 juil. 2026"
           }
         }
 
-        endField = frame : ui.field {
-          width: 153px,
-
-          fieldBox {
-            fieldGlyph {
-              contents: calendarIcon
-            }
-
-            fieldValue {
-              contents: "20 juil."
-            }
-          }
-
-          fieldLabel {
-            contents: "Fin"
-          }
+        fieldLabel {
+          contents: "Dates *"
         }
       }
 
-      venueField = frame : ui.field {
+      cityField = frame : ui.field {
         fieldBox {
           fieldGlyph {
             contents: mapPinIcon
           }
 
           fieldValue {
-            contents: "Werchter, Belgique"
+            contents: "Werchter"
           }
         }
 
         fieldLabel {
-          contents: "Lieu"
+          contents: "Ville"
+        }
+      }
+
+      roomField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: mapPinIcon
+          }
+
+          fieldValue {
+            contents: "Rock Werchter"
+          }
+        }
+
+        fieldLabel {
+          contents: "Lieu, salle"
         }
       }
     }
@@ -160,8 +155,30 @@ export addFestival = frame {
         }
 
         bandRole {
+          width: .auto,
+          height: 24px,
+          padding: [0px, 10px],
+
+          bandRoleGlyph {
+            display: .none
+          }
+
           bandRoleLabel {
+            display: .visible,
             contents: "Jeu 17"
+          }
+        }
+
+        bandRemove {
+          width: 28px,
+          height: 28px,
+          fill: c.colors.surface-dark,
+          border: {color: c.colors.border, width: 1px},
+          corner-radius: 32px,
+
+          bandRemoveGlyph {
+            width: 16px,
+            height: 16px
           }
         }
       }
@@ -172,8 +189,30 @@ export addFestival = frame {
         }
 
         bandRole {
+          width: .auto,
+          height: 24px,
+          padding: [0px, 10px],
+
+          bandRoleGlyph {
+            display: .none
+          }
+
           bandRoleLabel {
+            display: .visible,
             contents: "Jeu 17"
+          }
+        }
+
+        bandRemove {
+          width: 28px,
+          height: 28px,
+          fill: c.colors.surface-dark,
+          border: {color: c.colors.border, width: 1px},
+          corner-radius: 32px,
+
+          bandRemoveGlyph {
+            width: 16px,
+            height: 16px
           }
         }
       }
@@ -184,8 +223,30 @@ export addFestival = frame {
         }
 
         bandRole {
+          width: .auto,
+          height: 24px,
+          padding: [0px, 10px],
+
+          bandRoleGlyph {
+            display: .none
+          }
+
           bandRoleLabel {
+            display: .visible,
             contents: "Ven 18"
+          }
+        }
+
+        bandRemove {
+          width: 28px,
+          height: 28px,
+          fill: c.colors.surface-dark,
+          border: {color: c.colors.border, width: 1px},
+          corner-radius: 32px,
+
+          bandRemoveGlyph {
+            width: 16px,
+            height: 16px
           }
         }
       }
@@ -196,8 +257,30 @@ export addFestival = frame {
         }
 
         bandRole {
+          width: .auto,
+          height: 24px,
+          padding: [0px, 10px],
+
+          bandRoleGlyph {
+            display: .none
+          }
+
           bandRoleLabel {
+            display: .visible,
             contents: "Sam 19"
+          }
+        }
+
+        bandRemove {
+          width: 28px,
+          height: 28px,
+          fill: c.colors.surface-dark,
+          border: {color: c.colors.border, width: 1px},
+          corner-radius: 32px,
+
+          bandRemoveGlyph {
+            width: 16px,
+            height: 16px
           }
         }
       }

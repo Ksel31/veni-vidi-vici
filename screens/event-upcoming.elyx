@@ -11,11 +11,12 @@ import "icons/lucide/calendar.svg" as calendarIcon
 import "icons/lucide/map-pin.svg" as mapPinIcon
 import "icons/lucide/euro.svg" as euroIcon
 import "icons/lucide/pencil.svg" as pencilIcon
+import "icons/lucide/mic-vocal.svg" as micIcon
 
 // Fiche d'un event à venir : billet, compte à rebours, infos et line-up. Tout se modifie depuis le bouton du bas.
 export eventUpcoming = frame {
   title: "Fiche : event à venir",
-  caption: "Avant la date : compte à rebours et infos. Le compte rendu n'apparaît qu'une fois l'event marqué « Vu ».",
+  caption: "Avant la date : compte à rebours et infos. Le jour même dit « Aujourd'hui », jamais « J-0 ». Rôles en icônes. Sous Modifier : Supprimer.",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -54,7 +55,7 @@ export eventUpcoming = frame {
     height: .auto,
     layout: {direction: .column, item-gap: 14px},
     padding: [20px, 0px, 0px],
-    children: [countdown, ticket, infos, ticketCard, lineup, edit],
+    children: [countdown, ticket, infos, ticketCard, lineup, edit, remove],
 
     countdown = text {
       width: 100%,
@@ -147,13 +148,7 @@ export eventUpcoming = frame {
         }
       }
 
-      ticketFile = frame : ui.fileRow {
-        fileTexts {
-          fileName {
-            contents: "nick-cave-billet.pdf"
-          }
-        }
-      }
+      ticketFile = frame : ui.uploadBox {}
     }
 
     lineup = frame : ui.glassCard {
@@ -181,9 +176,9 @@ export eventUpcoming = frame {
           fill[0].color: c.colors.glass-strong,
           border[0].color: c.colors.border,
 
-          bandRoleLabel {
+          bandRoleGlyph {
             fill[0].color: c.colors.text-on-dark,
-            contents: "Première partie"
+            contents: micIcon
           }
         }
 
@@ -209,5 +204,7 @@ export eventUpcoming = frame {
         contents: "Modifier l'event"
       }
     }
+
+    remove = frame : ui.dangerButton {}
   }
 }

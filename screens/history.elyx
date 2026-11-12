@@ -11,7 +11,7 @@ import "screens/event-report.elyx" as eventReport
 // Historique : events vus et ratés, du plus récent au plus ancien, filtrés par année. Onglet « historique » actif.
 export history = frame {
   title: "Historique",
-  caption: "Vidi : tout ce qui est passé. Filtre par année ; un event vu mène à son compte rendu.",
+  caption: "Vidi : tout ce qui est passé. Filtre par année ; un event vu mène à son compte rendu. La croix olive (neutral-11, trait 2) en haut à droite supprime ; la pastille Vu ou Raté ne bouge pas. La confirmation est le panneau opaque ui.deleteConfirm, sur un voile noir à 60 %.",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -85,6 +85,12 @@ export history = frame {
     children: [dour, alcest, messa],
 
     dour = frame : ui.pastRow {
+      padding: [22px, 16px, 12px, 12px],
+
+      deleteMark {
+        display: .visible
+      }
+
       info {
         eventTitle {
           contents: "Dour Festival"
@@ -107,6 +113,12 @@ export history = frame {
     }
 
     alcest = frame : ui.pastRow {
+      padding: [22px, 16px, 12px, 12px],
+
+      deleteMark {
+        display: .visible
+      }
+
       status {
         fill[0].color: c.colors.danger-bg,
         border[0].color: c.colors.danger-border,
@@ -144,6 +156,12 @@ export history = frame {
     }
 
     messa = frame : ui.pastRow {
+      padding: [22px, 16px, 12px, 12px],
+
+      deleteMark {
+        display: .visible
+      }
+
       connections[0].label: "Compte rendu",
       connections[0].target: eventReport.eventReport,
 

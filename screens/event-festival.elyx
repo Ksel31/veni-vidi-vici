@@ -3,15 +3,19 @@ use "fonts/CabinetGrotesk-Variable.ttf"
 import "images/bg-event-festival.jpg" as bgPhoto
 import "components/screen-header.elyx" as headers
 import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
 import "components/ui.elyx" as ui
+import "icons/lucide/x.svg" as crossIcon
+import "icons/lucide/pencil.svg" as pencilIcon
 import "screens/event-report.elyx" as eventReport
+import "screens/event-edit.elyx" as eventEdit
 
 // Fiche d'un festival passé, encore « prévu » : on coche les jours faits, puis les groupes vus parmi ces jours.
 // Les groupes non cochés passent en « raté ». Un jour décoché retire ses groupes de la liste.
 export eventFestival = frame {
   title: "Fiche : confirmer un festival",
-  caption: "Après la date : d'abord les jours faits, ensuite les groupes vus parmi ces jours.",
+  caption: "Après la date : jours faits, puis groupes vus. Le statut est à côté du nom. Le bouton dit « Confirmer », à côté de « Raté ». Pas de second bouton de confirmation en bas.",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -50,26 +54,46 @@ export eventFestival = frame {
     height: .auto,
     layout: {direction: .column, item-gap: 14px},
     padding: [24px, 8px, 0px],
-    children: [identity, days, saturday, sunday, submit],
+    children: [identity, days, saturday, sunday, answers, edit, remove],
 
     identity = frame {
       width: 100%,
       height: .auto,
-      layout: {direction: .column, item-gap: 10px},
+      layout: {direction: .column, item-gap: 8px},
       padding: [0px, 6px],
-      children: [badge, eventTitle, eventMeta],
+      children: [nameLine, eventMeta],
 
-      badge = frame : ui.statusBadgePending {}
-
-      eventTitle = text {
+      nameLine = frame {
         width: 100%,
-        fill: c.colors.text-on-dark,
-        contents: "Desertfest Belgium",
-        font-size: 40,
-        font-family: f.fonts.ui,
-        font-style: "Medium",
-        line-height: 1,
-        letter-spacing: -3%
+        height: .auto,
+        layout: {align-items: .center, item-gap: 10px},
+        children: [eventTitle, badge],
+
+        eventTitle = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "Desertfest Belgium",
+          font-size: 36,
+          font-family: f.fonts.ui,
+          font-style: "Medium",
+          line-height: 1.05,
+          letter-spacing: -3%
+        }
+
+        badge = frame : ui.statusBadgePending {
+          height: l.lengths.tap,
+          padding: [0px, 12px],
+          fill[0].color: c.colors.warning,
+          border[0].color: .transparent,
+
+          badgeGlyph {
+            fill[0].color: c.colors.on-warning
+          }
+
+          badgeLabel {
+            fill[0].color: c.colors.on-warning
+          }
+        }
       }
 
       eventMeta = text {
@@ -134,7 +158,7 @@ export eventFestival = frame {
           }
 
           checkMeta {
-            contents: "Main Stage, 18:30"
+            display: .none
           }
         }
       }
@@ -146,7 +170,7 @@ export eventFestival = frame {
           }
 
           checkMeta {
-            contents: "Main Stage, 20:00"
+            display: .none
           }
         }
       }
@@ -158,7 +182,7 @@ export eventFestival = frame {
           }
 
           checkMeta {
-            contents: "Main Stage, 21:45"
+            display: .none
           }
         }
       }
@@ -176,13 +200,45 @@ export eventFestival = frame {
       }
     }
 
-    submit = frame : ui.primaryButton {
-      connections[0].label: "Confirmer : compte rendu",
-      connections[0].target: eventReport.eventReport,
+    answers = frame {
+      width: 100%,
+      height: .auto,
+      layout: {item-gap: 12px},
+      children: [missed, confirm],
 
-      buttonLabel {
-        contents: "Confirmer ma présence"
+      missed = frame : ui.secondaryButton {
+        buttonGlyph {
+          contents: crossIcon
+        }
+
+        buttonLabel {
+          contents: "Raté"
+        }
+      }
+
+      confirm = frame : ui.primaryButton {
+        connections[0].label: "Confirmer : compte rendu",
+        connections[0].target: eventReport.eventReport,
+
+        buttonLabel {
+          contents: "Confirmer"
+        }
       }
     }
+
+    edit = frame : ui.secondaryButton {
+      connections[0].label: "Modifier l'event",
+      connections[0].target: eventEdit.eventEdit,
+
+      buttonGlyph {
+        contents: pencilIcon
+      }
+
+      buttonLabel {
+        contents: "Modifier l'event"
+      }
+    }
+
+    remove = frame : ui.dangerButton {}
   }
 }
