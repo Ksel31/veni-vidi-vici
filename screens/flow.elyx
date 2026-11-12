@@ -48,8 +48,12 @@ flowAddType = frame : addType.addType {
 }
 
 flowEventConfirm = frame : eventConfirm.eventConfirm {
-  left: 2100px,
-  top: 0px
+  left: 2518px,
+  top: -45px,
+  overrides: [
+    insert(header, after = .nil),
+    remove(eventConfirm.eventConfirm.header)
+  ]
 }
 
 flowEventFestival = frame : eventFestival.eventFestival {

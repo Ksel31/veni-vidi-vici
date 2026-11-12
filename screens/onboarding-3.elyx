@@ -1,15 +1,18 @@
 use "fonts/CabinetGrotesk-Variable.ttf"
 
 import "images/hero-cowboy.jpg" as photo
-import "icons/lucide/history.svg" as stepIcon
+import "icons/lucide/tent.svg" as tentIcon
 import "components/onboarding.elyx" as onboarding
-import "components/tab-bar.elyx" as nav
-import "screens/add-type.elyx" as addType
+import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
+import "components/ui.elyx" as ui
+import "screens/add-concert.elyx" as addConcert
+import "screens/add-festival.elyx" as addFestival
 
-// Onboarding, étape 3 sur 3 : les souvenirs. Le CTA « Ajouter mon 1er event » n'apparaît qu'ici, à la place de « Suivant ».
+// Onboarding, étape 3 sur 3 : les souvenirs, puis on passe à l'action. Le choix Concert / Festival de l'ajout est directement ici, sans bouton intermédiaire.
 export onboarding3 = frame {
   title: "Onboarding 3/3",
-  caption: "« Garde tes souvenirs ». Dernier écran : plus de « Passer », le bouton « Ajouter mon 1er event » prend la place de « Suivant » et ouvre l'ajout.",
+  caption: "Dernier écran : « Garde tes souvenirs », puis « Par quoi commencer ? » avec les deux choix de l'étape 1 de l'ajout (Concert, Festival), sans bouton « Ajouter ». Plus de « Passer » : choisir un type est la sortie.",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -32,25 +35,24 @@ export onboarding3 = frame {
   padding: [24px, 20px, 32px],
   children: [top, lower],
 
-  // Dernier écran : le logo reste, « Passer » disparaît (le CTA est la sortie).
+  // Dernier écran : le logo reste, « Passer » disparaît.
   top = frame : onboarding.onboardingTop {
     skip {
       display: .none
     }
   }
 
+  // Le vide de 92 px sous les points les garde à la même hauteur que sur les étapes 1 et 2.
   lower = frame {
     width: 100%,
     height: .auto,
     layout: {direction: .column, item-gap: 28px},
-    overflow: .visible,
-    children: [content, dotsRow, action],
+    padding: [0px, 0px, 92px],
+    children: [content, choices, dotsRow],
 
     content = frame : onboarding.onboardingContent {
       disc {
-        glyph {
-          contents: stepIcon
-        }
+        display: .none
       }
 
       texts {
@@ -64,6 +66,55 @@ export onboarding3 = frame {
       }
     }
 
+    choices = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 12px},
+      children: [heading, concertChoice, festivalChoice],
+
+      heading = text {
+        width: 100%,
+        fill: c.colors.text-on-dark,
+        contents: "Par quoi commencer ?",
+        font-size: 22,
+        font-family: f.fonts.ui,
+        font-style: "Medium",
+        letter-spacing: -2%
+      }
+
+      concertChoice = frame : ui.typeCard {
+        connections[0].label: "Concert",
+        connections[0].target: addConcert.addConcert,
+
+        typeTexts {
+          typeText {
+            contents: "Une soirée, une salle, un à trois groupes."
+          }
+        }
+      }
+
+      festivalChoice = frame : ui.typeCard {
+        connections[0].label: "Festival",
+        connections[0].target: addFestival.addFestival,
+
+        typeDisc {
+          typeGlyph {
+            contents: tentIcon
+          }
+        }
+
+        typeTexts {
+          typeText {
+            contents: "Un ou plusieurs jours, un line-up réparti par jour."
+          }
+
+          typeTitle {
+            contents: "Festival"
+          }
+        }
+      }
+    }
+
     dotsRow = frame {
       width: 100%,
       height: .auto,
@@ -71,13 +122,6 @@ export onboarding3 = frame {
       children: dots,
 
       dots = frame : onboarding.pageDots3 {}
-    }
-
-    action = frame : nav.addButtonFirst {
-      left: 0px,
-      top: 0px,
-      connections[0].label: "Ajouter",
-      connections[0].target: addType.addType
     }
   }
 }

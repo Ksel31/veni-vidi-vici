@@ -7,10 +7,10 @@ import "components/profile.elyx" as profileParts
 import "components/tab-bar.elyx" as nav
 import "screens/add-type.elyx" as addType
 
-// Accueil d'un compte sans aucun event, une fois l'onboarding vu ou passé : une phrase et le CTA en bas.
+// Accueil d'un compte sans aucun event, une fois l'onboarding vu ou passé : un bloc centré (titre, phrase, CTA).
 export homeEmpty = frame {
   title: "Accueil vide",
-  caption: "Arrivée après l'onboarding (terminé ou passé), qui ne revient pas. Une phrase et le CTA « Ajouter mon 1er event » en bas. Dès le premier event enregistré, le « + » rond et la barre d'onglets reviennent (voir Accueil).",
+  caption: "Arrivée après l'onboarding (terminé ou passé), qui ne revient pas. Titre, phrase et CTA « Ajouter mon 1er event » forment un seul bloc centré dans l'écran. Dès le premier event enregistré, le « + » rond et la barre d'onglets reviennent (voir Accueil).",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -31,7 +31,7 @@ export homeEmpty = frame {
   ],
   corner-radius: 48px,
   padding: [24px, 12px, 0px],
-  children: [profile, content, bottomFade, addFirst],
+  children: [profile, centered],
 
   // Les trois chiffres seraient à 0 : on les masque tant qu'il n'y a aucun event.
   profile = frame : profileParts.profileHeader {
@@ -40,59 +40,59 @@ export homeEmpty = frame {
     }
   }
 
-  content = frame {
-    width: 100%,
-    height: .auto,
-    layout: {direction: .column, item-gap: 12px},
-    padding: [32px, 0px, 0px],
-    children: [title, empty],
-
-    title = text {
-      width: 100%,
-      fill: c.colors.text-on-dark,
-      contents: "Events à venir",
-      font-size: 36,
-      font-family: f.fonts.ui,
-      font-style: "Medium",
-      line-height: 1,
-      letter-spacing: -3%
-    }
-
-    empty = text {
-      width: 100%,
-      fill: c.colors.text-on-dark-muted,
-      contents: "Aucun event pour l'instant. Ajoute le prochain concert ou festival que tu prévois.",
-      font-size: 16,
-      font-family: f.fonts.ui,
-      font-style: "Regular",
-      line-height: 1.3
-    }
-  }
-
-  bottomFade = frame {
+  // Un seul bloc (titre, description, bouton), centré verticalement dans tout l'écran. La lueur du bouton dépasse : pas de coupe.
+  centered = frame {
     left: 0px,
-    bottom: 0px,
+    top: 0px,
     width: 100%,
-    height: 190px,
+    height: 100%,
     ignore-stack: .true,
-    fill: {
-      linear-gradient: {
-        angle: 180deg,
-        stops: [
-          stop(0%, rgb(6.7%, 6.7%, 6.7%, 0%)),
-          stop(70%, rgb(6.7%, 6.7%, 6.7%, 92%))
-        ]
+    layout: {direction: .column, justify-content: .center},
+    overflow: .visible,
+    padding: [0px, 20px],
+    children: block,
+
+    block = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 28px},
+      overflow: .visible,
+      children: [texts, addFirst],
+
+      texts = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 12px},
+        children: [title, empty],
+
+        title = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "Events à venir",
+          font-size: 36,
+          font-family: f.fonts.ui,
+          font-style: "Medium",
+          line-height: 1,
+          letter-spacing: -3%
+        }
+
+        empty = text {
+          width: 100%,
+          fill: c.colors.text-on-dark-muted,
+          contents: "Aucun event pour l'instant. Ajoute le prochain concert ou festival que tu prévois.",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Regular",
+          line-height: 1.3
+        }
+      }
+
+      addFirst = frame : nav.addButtonFirst {
+        left: 0px,
+        top: 0px,
+        connections[0].label: "Ajouter",
+        connections[0].target: addType.addType
       }
     }
-  }
-
-  addFirst = frame : nav.addButtonFirst {
-    left: 20px,
-    right: 20px,
-    bottom: 32px,
-    width: .auto,
-    ignore-stack: .true,
-    connections[0].label: "Ajouter",
-    connections[0].target: addType.addType
   }
 }
