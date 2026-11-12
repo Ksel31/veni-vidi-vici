@@ -352,7 +352,7 @@
 				<div class="upload-box">
 					<Icon name="upload" size={26} />
 					<p>Ajouter le billet</p>
-					<p class="hint">PDF ou image. L'envoi n'est pas encore branché.</p>
+					<p class="hint">PDF ou image.</p>
 				</div>
 			</div>
 		{/if}
@@ -393,11 +393,11 @@
 				<div class="choice-row">
 					<button class="btn btn-secondary" type="button" aria-pressed={event.status === 'missed'} onclick={markMissed}>
 						<Icon name="x" size={22} />
-						Raté
+						Non, raté
 					</button>
 					<button class="btn btn-primary" type="button" onclick={markAttended}>
 						<Icon name="check" size={22} />
-						Vu
+						Oui, j'y étais
 					</button>
 				</div>
 			</div>
@@ -593,7 +593,7 @@
 				<div class="upload-box">
 					<Icon name="upload" size={26} />
 					<p>Ajouter le billet</p>
-					<p class="hint">PDF ou image. L'envoi n'est pas encore branché.</p>
+					<p class="hint">PDF ou image.</p>
 				</div>
 			</div>
 

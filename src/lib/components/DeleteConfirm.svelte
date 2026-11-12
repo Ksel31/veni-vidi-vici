@@ -12,7 +12,7 @@
 		<button class="btn btn-secondary" type="button" onclick={onCancel}>Annuler</button>
 		<button class="btn btn-primary" type="button" onclick={onConfirm}>
 			<Icon name="trash" size={22} />
-			Supprimer
+			Supprimer l'event
 		</button>
 	</div>
 </div>

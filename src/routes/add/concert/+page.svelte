@@ -3,10 +3,20 @@
 	import { data, addArtist, addEvent, addVenue } from '#lib/store.js';
 	import { daysUntil } from '#lib/present.js';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
+	import StepHeader from '#lib/components/StepHeader.svelte';
+	import StepActions from '#lib/components/StepActions.svelte';
+	import ExitAddDialog from '#lib/components/ExitAddDialog.svelte';
 	import VenueField from '#lib/components/VenueField.svelte';
 	import ArtistField from '#lib/components/ArtistField.svelte';
 	import DateRangeField from '#lib/components/DateRangeField.svelte';
 	import Icon from '#lib/components/Icon.svelte';
+
+	/** Étape courante du formulaire (1 : lieu, 2 : groupes, 3 : billet). */
+	let step = $state(1);
+	/** Le panneau « Quitter l'ajout ? » est ouvert. */
+	let leaving = $state(false);
+	/** La date manque : on l'a signalé après un clic sur « Suivant ». */
+	let dateError = $state(false);
 
 	let date = $state('');
 	let title = $state('');
@@ -24,7 +34,43 @@
 
 	const headliners = $derived(bands.filter((band) => band.billing === 'headliner'));
 	const supports = $derived(bands.filter((band) => band.billing === 'support'));
-	const canSave = $derived(Boolean(date));
+
+	const stepTitle = $derived(
+		step === 1 ? 'Quand et où ?' : step === 2 ? 'Qui joue ?' : 'Et le billet ?'
+	);
+	const stepHelp = $derived(
+		step === 1
+			? 'La date est obligatoire. Le reste peut venir plus tard.'
+			: step === 2
+				? "Ajoute la tête d'affiche et, si tu veux, les premières parties."
+				: 'Tout est facultatif, tu pourras le compléter depuis la fiche.'
+	);
+	/** À l'étape 2, le bouton dit « Passer » tant qu'aucun groupe n'est ajouté. */
+	const nextLabel = $derived(
+		step === 3 ? 'Ajouter le concert' : step === 2 && bands.length === 0 ? 'Passer' : 'Suivant'
+	);
+
+	/** Des champs ont été remplis : la croix demande confirmation. */
+	const dirty = $derived(
+		Boolean(
+			date ||
+				title.trim() ||
+				venueName.trim() ||
+				venueCity.trim() ||
+				bands.length ||
+				ticketBought ||
+				priceText.trim()
+		)
+	);
+
+	$effect(() => {
+		if (date) dateError = false;
+	});
+
+	$effect(() => {
+		step;
+		if (typeof window !== 'undefined') window.scrollTo(0, 0);
+	});
 
 	/** Lieu connu, lieu nouveau (ville facultative), ou rien. */
 	function venueForSave() {
@@ -95,7 +141,7 @@
 	}
 
 	function save() {
-		if (!canSave) return;
+		if (!date) return;
 		const id = venueForSave();
 		if (venueName.trim() && !id) return;
 		const past = daysUntil(date) < 0;
@@ -118,89 +164,145 @@
 		);
 		if (eventId) goto(`/event/${eventId}`);
 	}
+
+	function goNext() {
+		if (step === 1) {
+			if (!date) {
+				dateError = true;
+				document.getElementById('concert-date')?.focus();
+				return;
+			}
+			step = 2;
+			return;
+		}
+		if (step === 2) {
+			step = 3;
+			return;
+		}
+		save();
+	}
+
+	function requestClose() {
+		if (dirty) leaving = true;
+		else goto('/add');
+	}
 </script>
 
 <svelte:head>
 	<title>Nouveau concert — Veni Vidi Vici</title>
 </svelte:head>
 
-<section class="screen screen-pad add-form">
-	<ScreenHeader title="Nouveau concert" backHref="/add" />
-	<p class="hint">* Obligatoire</p>
+{#if leaving}
+	<section class="screen screen-exit">
+		<ExitAddDialog onLeave={() => goto('/')} onStay={() => (leaving = false)} />
+	</section>
+{:else}
+	<section class="screen add-stepper">
+		<div class="add-step-top">
+			<ScreenHeader title="Nouveau concert" close onClose={requestClose} />
+			<StepHeader {step} title={stepTitle} help={stepHelp} />
 
-	<div class="glass-card">
-		<p class="card-title">Quand et où</p>
-			<DateRangeField mode="single" label="Date *" inputId="concert-date" placeholder="Choisir la date" bind:start={date} />
-		<VenueField venues={$data.venues} bind:name={venueName} bind:city={venueCity} bind:venueId />
-		<div class="field">
-			<label for="concert-title">Titre (optionnel)</label>
-			<div class="field-box">
-				<Icon name="music" size={20} />
-				<input id="concert-title" bind:value={title} placeholder="Ex. tournée Wild God" autocomplete="off" />
-			</div>
+			{#if step === 1}
+				<div class="glass-card">
+					<DateRangeField
+						mode="single"
+						label="Date"
+						inputId="concert-date"
+						placeholder="Choisir la date"
+						bind:start={date}
+						invalid={dateError}
+						errorMessage="La date est obligatoire."
+					/>
+					<VenueField venues={$data.venues} bind:name={venueName} bind:city={venueCity} bind:venueId />
+					<div class="field">
+						<label for="concert-title">Titre (optionnel)</label>
+						<div class="field-box">
+							<Icon name="music" size={20} />
+							<input
+								id="concert-title"
+								bind:value={title}
+								placeholder="Ex. tournée Wild God"
+								autocomplete="off"
+							/>
+						</div>
+					</div>
+				</div>
+			{:else if step === 2}
+				<div class="glass-card">
+					<div class="zone" data-zone="headliner">
+						<p class="zone-label">Tête d'affiche</p>
+						{#each headliners as band (band.key)}
+							{@render row(band)}
+						{/each}
+						<ArtistField
+							artists={$data.artists}
+							taken={bands.map((band) => band.name)}
+							placeholder="Ajouter un groupe"
+							inputId="artist-headliner"
+							onAdd={(name) => addBand(name, 'headliner')}
+						/>
+					</div>
+					<div class="zone" data-zone="support">
+						<p class="zone-label">Première partie</p>
+						{#each supports as band (band.key)}
+							{@render row(band)}
+						{/each}
+						<ArtistField
+							artists={$data.artists}
+							taken={bands.map((band) => band.name)}
+							placeholder="Ajouter un groupe"
+							inputId="artist-support"
+							onAdd={(name) => addBand(name, 'support')}
+						/>
+					</div>
+				</div>
+			{:else}
+				<div class="glass-card">
+					<button
+						class="check-row"
+						type="button"
+						aria-pressed={ticketBought}
+						onclick={() => (ticketBought = !ticketBought)}
+					>
+						<span class="check-box" class:check-on={ticketBought}>
+							{#if ticketBought}<Icon name="check" size={18} />{/if}
+						</span>
+						<span>
+							<span class="check-title">Billet acheté</span>
+							<span class="check-meta">Affiche la pastille sur la liste et le billet.</span>
+						</span>
+					</button>
+					<div class="field">
+						<label for="concert-price">Prix du billet (optionnel)</label>
+						<div class="field-box">
+							<Icon name="euro" size={20} />
+							<input
+								id="concert-price"
+								inputmode="decimal"
+								bind:value={priceText}
+								placeholder="65,00"
+								autocomplete="off"
+							/>
+						</div>
+					</div>
+					<div class="upload-box">
+						<Icon name="upload" size={26} />
+						<p>Ajouter le billet</p>
+						<p class="hint">PDF ou image.</p>
+					</div>
+				</div>
+			{/if}
 		</div>
-	</div>
 
-	<div class="glass-card">
-		<p class="card-title">Groupes</p>
-		<div class="zone" data-zone="headliner">
-			<p class="zone-label">Tête d'affiche</p>
-			{#each headliners as band (band.key)}
-				{@render row(band)}
-			{/each}
-			<ArtistField
-				artists={$data.artists}
-				taken={bands.map((band) => band.name)}
-				placeholder="Ajouter un groupe"
-				inputId="artist-headliner"
-				onAdd={(name) => addBand(name, 'headliner')}
-			/>
-		</div>
-		<div class="zone" data-zone="support">
-			<p class="zone-label">Première partie</p>
-			{#each supports as band (band.key)}
-				{@render row(band)}
-			{/each}
-			<ArtistField
-				artists={$data.artists}
-				taken={bands.map((band) => band.name)}
-				placeholder="Ajouter un groupe"
-				inputId="artist-support"
-				onAdd={(name) => addBand(name, 'support')}
-			/>
-		</div>
-	</div>
-
-	<div class="glass-card">
-		<p class="card-title">Billet</p>
-		<button class="check-row" type="button" aria-pressed={ticketBought} onclick={() => (ticketBought = !ticketBought)}>
-			<span class="check-box" class:check-on={ticketBought}>
-				{#if ticketBought}<Icon name="check" size={18} />{/if}
-			</span>
-			<span>
-				<span class="check-title">Billet acheté</span>
-				<span class="check-meta">Affiche la pastille sur la liste et le billet.</span>
-			</span>
-		</button>
-		<div class="field">
-			<label for="concert-price">Prix du billet</label>
-			<div class="field-box">
-				<Icon name="euro" size={20} />
-				<input id="concert-price" inputmode="decimal" bind:value={priceText} placeholder="65,00" autocomplete="off" />
-			</div>
-		</div>
-		<div class="upload-box">
-			<Icon name="upload" size={26} />
-			<p>Ajouter le billet</p>
-			<p class="hint">PDF ou image. L'envoi n'est pas encore branché.</p>
-		</div>
-	</div>
-
-	<button class="btn btn-primary" type="button" disabled={!canSave} onclick={save}>
-		<Icon name="plus" size={22} />
-		Ajouter le concert
-	</button>
-</section>
+		<StepActions
+			showBack={step > 1}
+			{nextLabel}
+			nextIcon={step === 3 ? 'plus' : undefined}
+			onBack={() => (step -= 1)}
+			onNext={goNext}
+		/>
+	</section>
+{/if}
 
 {#snippet row(/** @type {{ key: string, name: string, billing: 'headliner' | 'support' }} */ band)}
 	<div

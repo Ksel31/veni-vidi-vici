@@ -2,14 +2,16 @@
 	import Icon from './Icon.svelte';
 	import { dateParts } from '#lib/present.js';
 
-	/** @type {{ start?: string, end?: string, mode?: 'single' | 'range', label?: string, inputId?: string, placeholder?: string }} */
+	/** @type {{ start?: string, end?: string, mode?: 'single' | 'range', label?: string, inputId?: string, placeholder?: string, invalid?: boolean, errorMessage?: string }} */
 	let {
 		start = $bindable(''),
 		end = $bindable(''),
 		mode = 'range',
-		label: fieldLabel = 'Dates *',
+		label: fieldLabel = 'Dates',
 		inputId = 'date-range',
-		placeholder = 'Choisir les dates'
+		placeholder = 'Choisir les dates',
+		invalid = false,
+		errorMessage = ''
 	} = $props();
 
 	const MONTHS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
@@ -127,12 +129,25 @@
 	}
 </script>
 
-<div class="field">
+<div class="field" class:field-invalid={invalid}>
 	<label for={inputId}>{fieldLabel}</label>
-	<button id={inputId} class="field-box range-field" type="button" aria-expanded={open} onclick={toggle}>
+	<button
+		id={inputId}
+		class="field-box range-field"
+		type="button"
+		aria-expanded={open}
+		aria-describedby={invalid && errorMessage ? `${inputId}-error` : undefined}
+		onclick={toggle}
+	>
 		<Icon name="calendar" size={20} />
 		<span class:range-empty={!rangeText}>{rangeText || placeholder}</span>
 	</button>
+	{#if invalid && errorMessage}
+		<p class="field-message" id="{inputId}-error" role="alert">
+			<Icon name="x" size={16} />
+			{errorMessage}
+		</p>
+	{/if}
 	{#if open}
 		<div class="calendar">
 			<div class="cal-nav">
