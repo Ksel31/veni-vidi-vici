@@ -120,11 +120,11 @@
 					<span class="band-name">{band.name}</span>
 					{#if day && !band.picking}
 						<button class="day-pill" type="button" aria-expanded="false" aria-label="Changer le jour de {band.name}" onclick={() => reopenDay(band.key)}>
-							{dayChipLabel(day)}
+							<span>{dayChipLabel(day)}</span>
 						</button>
 					{/if}
 					<button class="icon-button band-remove" type="button" aria-label="Retirer {band.name}" onclick={() => (bands = bands.filter((item) => item.key !== band.key))}>
-						<Icon name="x" size={20} />
+						<Icon name="x" size={16} />
 					</button>
 				</div>
 				<div class="day-panel" class:day-panel-open={choosing} inert={!choosing}>

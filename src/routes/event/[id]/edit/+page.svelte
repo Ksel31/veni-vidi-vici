@@ -264,11 +264,11 @@
 						<span class="band-name">{band.name}</span>
 						{#if day && !band.picking}
 							<button class="day-pill" type="button" aria-expanded="false" aria-label="Changer le jour de {band.name}" onclick={() => reopenDay(band.key)}>
-								{dayChipLabel(day)}
+								<span>{dayChipLabel(day)}</span>
 							</button>
 						{/if}
 						<button class="icon-button band-remove" type="button" aria-label="Retirer {band.name}" onclick={() => removeBand(band.key)}>
-							<Icon name="x" size={20} />
+							<Icon name="x" size={16} />
 						</button>
 					</div>
 					<div class="day-panel" class:day-panel-open={choosing} inert={!choosing}>
@@ -341,7 +341,10 @@
 			<p class="hint">L'event, ses groupes et son compte rendu seront effacés.</p>
 			<div class="choice-row">
 				<button class="btn btn-secondary" type="button" onclick={() => (confirmingDelete = false)}>Annuler</button>
-				<button class="btn btn-primary" type="button" onclick={removeEvent}>Supprimer</button>
+				<button class="btn btn-primary" type="button" onclick={removeEvent}>
+					<Icon name="trash" size={22} />
+					Supprimer
+				</button>
 			</div>
 		</div>
 	{:else}
@@ -363,8 +366,15 @@
 			<span></span><span></span><span></span>
 		</button>
 		<span class="band-name">{band.name}</span>
-		<button class="role-pill" class:role-support={band.billing === 'support'} type="button" onclick={() => toggleBilling(band.key)}>
-			{band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}
+		<button
+			class="role-pill"
+			class:role-support={band.billing === 'support'}
+			type="button"
+			aria-label={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}
+			title={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}
+			onclick={() => toggleBilling(band.key)}
+		>
+			<Icon name={band.billing === 'headliner' ? 'music' : 'user'} size={18} />
 		</button>
 		<button class="icon-button band-remove" type="button" aria-label="Retirer {band.name}" onclick={() => removeBand(band.key)}>
 			<Icon name="x" size={20} />
