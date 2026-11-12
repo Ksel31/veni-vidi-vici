@@ -1500,6 +1500,10 @@ button.role-pill.role-support:active::before {
 	transition: grid-template-rows 180ms ease-out;
 }
 
+.venue-reveal .day-panel-inner {
+	padding-top: 14px;
+}
+
 .day-panel-open {
 	grid-template-rows: 1fr;
 }
