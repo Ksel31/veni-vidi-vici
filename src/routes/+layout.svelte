@@ -15,7 +15,7 @@
 	const show = $derived(ready && ((path === '/login' && !loggedIn) || (path !== '/login' && loggedIn)));
 
 	const background = $derived(
-		path === '/login' ? 'bg-login' : path === '/' ? 'bg-home' : path === '/to-confirm' ? 'bg-confirm' : 'bg-plain'
+		path === '/login' ? 'bg-login' : path === '/' ? 'bg-home' : path === '/to-confirm' ? 'bg-confirm' : path === '/history' ? 'bg-history' : 'bg-plain'
 	);
 
 	onMount(() => {
