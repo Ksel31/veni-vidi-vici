@@ -1,6 +1,7 @@
 <script>
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { data, setFestivalAttendance, setPresence, updateEvent, updatePerformance } from '#lib/store.js';
+	import { data, deleteEvent, setFestivalAttendance, setPresence, updateEvent, updatePerformance } from '#lib/store.js';
 	import {
 		dayHeading,
 		daysFrom,
@@ -20,6 +21,7 @@
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import NextTicket from '#lib/components/NextTicket.svelte';
 	import Icon from '#lib/components/Icon.svelte';
+	import DeleteConfirm from '#lib/components/DeleteConfirm.svelte';
 
 	const eventId = $derived(page.params.id ?? '');
 	const event = $derived($data.events.find((item) => item.id === eventId) ?? null);
@@ -61,6 +63,7 @@
 	let comment = $state('');
 	let commentFor = $state('');
 	let addingName = $state(false);
+	let confirmingDelete = $state(false);
 	let nameDraft = $state('');
 	/** @type {Record<string, string>} */
 	let setlists = $state({});
@@ -239,6 +242,14 @@
 	function finishReport() {
 		openSetlists = {};
 		window.scrollTo(0, 0);
+	}
+
+	function removeThisEvent() {
+		if (!event) return;
+		const back = past ? '/history' : '/';
+		deleteEvent(event.id);
+		confirmingDelete = false;
+		goto(back);
 	}
 
 	/** @param {string} name */
@@ -596,11 +607,20 @@
 			<Icon name="pencil" size={22} />
 			Modifier l'event
 		</a>
+		<button class="btn btn-danger" type="button" onclick={() => (confirmingDelete = true)}>
+			<Icon name="trash" size={22} />
+			Supprimer l'event
+		</button>
 		{#if event.status === 'attended'}
 			<button class="btn btn-primary" type="button" onclick={finishReport}>
 				<Icon name="check" size={22} />
 				Terminer
 			</button>
+		{/if}
+		{#if confirmingDelete}
+			<div class="modal-layer">
+				<DeleteConfirm onCancel={() => (confirmingDelete = false)} onConfirm={removeThisEvent} />
+			</div>
 		{/if}
 	{/if}
 </section>
