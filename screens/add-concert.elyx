@@ -2,28 +2,22 @@ use "fonts/CabinetGrotesk-Variable.ttf"
 
 import "images/bg-add-concert.jpg" as bgPhoto
 import "components/screen-header.elyx" as headers
-import "tokens/colors.elyx" as c
-import "tokens/fonts.elyx" as f
 import "components/ui.elyx" as ui
 import "icons/lucide/music.svg" as musicIcon
-import "icons/lucide/plus.svg" as plusIcon
-import "screens/event-upcoming.elyx" as eventUpcoming
 import "icons/lucide/calendar.svg" as calendarIcon
 import "icons/lucide/map-pin.svg" as mapPinIcon
-import "icons/lucide/mic-vocal.svg" as micIcon
-import "icons/lucide/euro.svg" as euroIcon
-import "screens/event-report.elyx" as eventReport
+import "icons/lucide/building-2.svg" as buildingIcon
+import "screens/add-concert-2.elyx" as step2
 
-// Ajout d'un concert : date, lieu, groupes (tête d'affiche / première partie), billet.
-// Date à venir → fiche de l'event ; date passée → présence pré-sélectionnée sur « Vu », direct au compte rendu.
+// Ajout d'un concert, étape 1/3 : quand et où. Seule la date est obligatoire ; la ville d'abord, la salle ensuite.
 export addConcert = frame {
-  title: "Ajouter un concert",
-  caption: "Étape 2. La ville est toujours là ; la salle n'apparaît qu'une fois la ville remplie. Les groupes s'ajoutent sous chaque rôle, au-dessus du champ.",
+  title: "Ajouter un concert, étape 1/3",
+  caption: "Un concert se saisit en 3 étapes : quand et où, groupes, billet. La salle n'apparaît qu'une fois la ville remplie.",
   left: 0px,
   top: 0px,
   width: 390px,
-  height: .auto,
-  layout: {direction: .column},
+  height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
   fill: [
     {image: {ref: bgPhoto}},
     {
@@ -38,32 +32,47 @@ export addConcert = frame {
     }
   ],
   corner-radius: 48px,
-  padding: [24px, 12px, 40px],
-  children: [header, body],
+  padding: [24px, 12px, 32px],
+  children: [top, actions],
 
-  header = frame : headers.pageHeader {
-    padding-top: 8px,
-    padding-left: 8px,
-    padding-bottom: 0px,
-    padding-right: 8px,
-
-    pageTitle {
-      contents: "Nouveau concert"
-    }
-  }
-
-  body = frame {
+  top = frame {
     width: 100%,
     height: .auto,
-    layout: {direction: .column, item-gap: 14px},
-    padding: [20px, 8px, 0px],
-    children: [required, whenWhere, bands, ticket, submit],
+    layout: {direction: .column, item-gap: 20px},
+    children: [header, intro, card],
 
-    required = text : ui.hint {
-      contents: "* Obligatoire"
+    header = frame : headers.pageHeader {
+      padding-top: 8px,
+      padding-left: 8px,
+      padding-bottom: 0px,
+      padding-right: 8px,
+
+      pageTitle {
+        contents: "Nouveau concert"
+      }
     }
 
-    whenWhere = frame : ui.glassCard {
+    intro = frame : ui.stepHeader {
+      stepTrack {
+        stepFill {
+          width: 117px
+        }
+      }
+
+      stepLabel {
+        contents: "Étape 1/3"
+      }
+
+      stepTitle {
+        contents: "Quand et où ?"
+      }
+
+      stepHelp {
+        contents: "Seule la date est obligatoire. Le reste peut venir plus tard."
+      }
+    }
+
+    card = frame : ui.glassCard {
       overrides: [
         insert(dateField, after = ui.glassCard.cardTitle),
         insert(cityField, after = dateField),
@@ -72,7 +81,7 @@ export addConcert = frame {
       ],
 
       cardTitle {
-        contents: "Quand et où"
+        display: .none
       }
 
       dateField = frame : ui.field {
@@ -110,7 +119,7 @@ export addConcert = frame {
       roomField = frame : ui.field {
         fieldBox {
           fieldGlyph {
-            contents: mapPinIcon
+            contents: buildingIcon
           }
 
           fieldValue {
@@ -139,145 +148,16 @@ export addConcert = frame {
         }
       }
     }
+  }
 
-    bands = frame : ui.glassCard {
-      overrides: [
-        insert(zoneHead, after = ui.glassCard.cardTitle),
-        insert(zoneSupport, after = zoneHead)
-      ],
-
-      cardTitle {
-        contents: "Groupes"
-      }
-
-      zoneHead = frame {
-        width: 100%,
-        height: .auto,
-        layout: {direction: .column, item-gap: 8px},
-        overflow: .visible,
-        children: [zoneLabel, headliner, addHead],
-
-        zoneLabel = text {
-          width: 100%,
-          fill: c.colors.text-on-dark-muted,
-          contents: "Tête d'affiche",
-          font-size: 13,
-          font-family: f.fonts.ui,
-          font-style: "Medium"
-        }
-
-        headliner = frame : ui.lineupRow {
-          padding: [10px, 12px],
-
-          dragHandle {
-            display: .visible
-          }
-
-          bandName {
-            contents: "Nick Cave"
-          }
-        }
-
-        addHead = frame : ui.artistAddField {}
-      }
-
-      zoneSupport = frame {
-        width: 100%,
-        height: .auto,
-        layout: {direction: .column, item-gap: 8px},
-        overflow: .visible,
-        children: [zoneLabel, support, addSupport],
-
-        zoneLabel = text {
-          width: 100%,
-          fill: c.colors.text-on-dark-muted,
-          contents: "Première partie",
-          font-size: 13,
-          font-family: f.fonts.ui,
-          font-style: "Medium"
-        }
-
-        support = frame : ui.lineupRow {
-          padding: [10px, 12px],
-
-          dragHandle {
-            display: .visible
-          }
-
-          bandRole {
-            fill[0].color: c.colors.glass-strong,
-            border[0].color: c.colors.border,
-
-            bandRoleGlyph {
-              fill[0].color: c.colors.text-on-dark,
-              contents: micIcon
-            }
-          }
-
-          bandName {
-            contents: "Cat Power"
-          }
-        }
-
-        addSupport = frame : ui.artistAddField {}
-      }
+  actions = frame : ui.stepActions {
+    next {
+      connections[0].target: step2.addConcert2,
+      connections[0].label: "Suivant"
     }
 
-    ticket = frame : ui.glassCard {
-      overrides: [
-        insert(ticketBought, after = ui.glassCard.cardTitle),
-        insert(ticketPrice, after = ticketBought),
-        insert(ticketUpload, after = ticketPrice)
-      ],
-
-      cardTitle {
-        contents: "Billet"
-      }
-
-      ticketPrice = frame : ui.field {
-        fieldBox {
-          fieldGlyph {
-            contents: euroIcon
-          }
-
-          fieldValue {
-            contents: "65,00"
-          }
-        }
-
-        fieldLabel {
-          contents: "Prix du billet"
-        }
-      }
-
-      ticketUpload = frame : ui.uploadBox {}
-
-      ticketBought = frame : ui.checkRow {
-        checkTexts {
-          checkTitle {
-            contents: "Billet acheté"
-          }
-
-          checkMeta {
-            contents: "Affiche la pastille sur la liste et le billet."
-          }
-        }
-      }
-    }
-
-    submit = frame : ui.primaryButton {
-      connections[0].label: "Date à venir",
-      connections[0].target: eventUpcoming.eventUpcoming,
-      connections[1].label: "Date passée : « Vu » d'office",
-      connections[1].target: eventReport.eventReport,
-
-      buttonGlyph {
-        contents: plusIcon
-      }
-
-      buttonLabel {
-        contents: "Ajouter le concert"
-      }
+    back {
+      display: .none
     }
   }
 }

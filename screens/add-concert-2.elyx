@@ -1,0 +1,170 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-add-concert.jpg" as bgPhoto
+import "components/screen-header.elyx" as headers
+import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
+import "components/ui.elyx" as ui
+import "icons/lucide/mic-vocal.svg" as micIcon
+import "screens/add-concert-3.elyx" as step3
+
+// Ajout d'un concert, étape 2/3 : les groupes. Deux zones (tête d'affiche, première partie), chacune avec son champ d'ajout.
+export addConcert2 = frame {
+  title: "Ajouter un concert, étape 2/3",
+  caption: "Les groupes s'ajoutent sous chaque rôle, au-dessus du champ. Étape facultative : on peut passer à la suivante sans groupe.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 60%)),
+          stop(40%, rgb(0%, 0%, 0%, 72%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 32px],
+  children: [top, actions],
+
+  top = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 20px},
+    children: [header, intro, card],
+
+    header = frame : headers.pageHeader {
+      padding-top: 8px,
+      padding-left: 8px,
+      padding-bottom: 0px,
+      padding-right: 8px,
+
+      pageTitle {
+        contents: "Nouveau concert"
+      }
+    }
+
+    intro = frame : ui.stepHeader {
+      stepLabel {
+        contents: "Étape 2/3"
+      }
+
+      stepTitle {
+        contents: "Qui joue ?"
+      }
+
+      stepHelp {
+        contents: "Ajoute la tête d'affiche et, si tu veux, les premières parties."
+      }
+
+      stepTrack {
+        stepFill {
+          width: 233px
+        }
+      }
+    }
+
+    card = frame : ui.glassCard {
+      overrides: [
+        insert(zoneHead, after = ui.glassCard.cardTitle),
+        insert(zoneSupport, after = zoneHead)
+      ],
+
+      cardTitle {
+        display: .none
+      }
+
+      zoneHead = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        overflow: .visible,
+        children: [zoneLabel, headliner, addHead],
+
+        zoneLabel = text {
+          width: 100%,
+          fill: c.colors.text-on-dark-muted,
+          contents: "Tête d'affiche",
+          font-size: 13,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        headliner = frame : ui.lineupRow {
+          padding-top: 10px,
+          padding-left: 12px,
+          padding-bottom: 10px,
+          padding-right: 12px,
+
+          bandName {
+            contents: "Nick Cave"
+          }
+
+          dragHandle {
+            display: .visible
+          }
+        }
+
+        addHead = frame : ui.artistAddField {}
+      }
+
+      zoneSupport = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 8px},
+        overflow: .visible,
+        children: [zoneLabel, support, addSupport],
+
+        zoneLabel = text {
+          width: 100%,
+          fill: c.colors.text-on-dark-muted,
+          contents: "Première partie",
+          font-size: 13,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        support = frame : ui.lineupRow {
+          padding-top: 10px,
+          padding-left: 12px,
+          padding-bottom: 10px,
+          padding-right: 12px,
+
+          bandRole {
+            fill[0].color: c.colors.glass-strong,
+            border[0].color: c.colors.border,
+
+            bandRoleGlyph {
+              fill[0].color: c.colors.text-on-dark,
+              contents: micIcon
+            }
+          }
+
+          bandName {
+            contents: "Cat Power"
+          }
+
+          dragHandle {
+            display: .visible
+          }
+        }
+
+        addSupport = frame : ui.artistAddField {}
+      }
+    }
+  }
+
+  actions = frame : ui.stepActions {
+    next {
+      connections[0].target: step3.addConcert3,
+      connections[0].label: "Suivant"
+    }
+  }
+}

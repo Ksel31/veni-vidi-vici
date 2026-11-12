@@ -1052,3 +1052,95 @@ export artistAddField = frame {
     }
   }
 }
+
+// Stepper des formulaires d'ajout : « Étape 2/3 », barre de progression claire (pas de lime : il est réservé aux CTA),
+// puis la question de l'étape et une phrase d'aide. La largeur de `stepFill` se règle par écran (33 %, 66 %, 100 %…).
+export stepHeader = frame {
+  left: 2000px,
+  top: 0px,
+  width: 100%,
+  height: .auto,
+  layout: {direction: .column, item-gap: 12px},
+  padding: [0px, 8px],
+  children: [stepLabel, stepTrack, stepTitle, stepHelp],
+
+  stepLabel = text {
+    width: 100%,
+    fill: c.colors.text-on-dark-muted,
+    contents: "Étape 1/3",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  stepTrack = frame {
+    width: 100%,
+    height: 4px,
+    fill: c.colors.glass-strong,
+    corner-radius: l.lengths.radius-pill,
+    children: stepFill,
+
+    stepFill = frame {
+      left: 0px,
+      top: 0px,
+      width: 33%,
+      height: 4px,
+      fill: c.colors.light,
+      corner-radius: l.lengths.radius-pill
+    }
+  }
+
+  stepTitle = text {
+    width: 100%,
+    fill: c.colors.text-on-dark,
+    contents: "Question de l'étape",
+    font-size: 30,
+    font-family: f.fonts.ui,
+    font-style: "Medium",
+    line-height: 1.05,
+    letter-spacing: -3%
+  }
+
+  stepHelp = text {
+    width: 100%,
+    fill: c.colors.text-on-dark-muted,
+    contents: "Phrase d'aide",
+    font-size: 15,
+    font-family: f.fonts.ui,
+    font-style: "Regular",
+    line-height: 1.3
+  }
+}
+
+// Pied de page du stepper : « Retour » (verre) + « Suivant » (lime). Sur la 1re étape, `back` est masqué.
+export stepActions = frame {
+  left: 2000px,
+  top: 200px,
+  width: 100%,
+  height: .auto,
+  layout: {item-gap: 12px},
+  padding: [0px, 8px],
+  children: [back, next],
+
+  back = frame : secondaryButton {
+    width: 120px,
+
+    buttonGlyph {
+      display: .none
+    }
+
+    buttonLabel {
+      contents: "Retour"
+    }
+  }
+
+  next = frame : primaryButton {
+    buttonGlyph {
+      display: .none
+    }
+
+    buttonLabel {
+      contents: "Suivant"
+    }
+  }
+}

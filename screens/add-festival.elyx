@@ -3,23 +3,21 @@ use "fonts/CabinetGrotesk-Variable.ttf"
 import "images/bg-add-festival.jpg" as bgPhoto
 import "components/screen-header.elyx" as headers
 import "components/ui.elyx" as ui
-import "tokens/colors.elyx" as c
-import "icons/lucide/plus.svg" as plusIcon
-import "screens/event-upcoming.elyx" as eventUpcoming
 import "icons/lucide/calendar.svg" as calendarIcon
-import "icons/lucide/map-pin.svg" as mapPinIcon
-import "icons/lucide/euro.svg" as euroIcon
 import "icons/lucide/tent.svg" as tentIcon
+import "icons/lucide/map-pin.svg" as mapPinIcon
+import "icons/lucide/building-2.svg" as buildingIcon
+import "screens/add-festival-2.elyx" as step2
 
-// Ajout d'un festival : titre obligatoire, dates de début et de fin, lieu, line-up « à voir » avec un jour par groupe, billet.
+// Ajout d'un festival, étape 1/3 : le titre et les dates, les deux seules infos obligatoires.
 export addFestival = frame {
-  title: "Ajouter un festival",
-  caption: "Étape 2. Un seul calendrier (premier toucher = début, second = fin). La ville d'abord, la salle ensuite. Le jour choisi est une petite pilule centrée ; la croix est plus petite.",
+  title: "Ajouter un festival, étape 1/3",
+  caption: "Un festival se saisit en 3 étapes : titre, dates et lieu, line-up, billet. Un seul calendrier (premier toucher = début, second = fin).",
   left: 0px,
   top: 0px,
   width: 390px,
-  height: .auto,
-  layout: {direction: .column},
+  height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
   fill: [
     {image: {ref: bgPhoto}},
     {
@@ -34,32 +32,47 @@ export addFestival = frame {
     }
   ],
   corner-radius: 48px,
-  padding: [24px, 12px, 40px],
-  children: [header, body],
+  padding: [24px, 12px, 32px],
+  children: [top, actions],
 
-  header = frame : headers.pageHeader {
-    padding-top: 8px,
-    padding-left: 8px,
-    padding-bottom: 0px,
-    padding-right: 8px,
-
-    pageTitle {
-      contents: "Nouveau festival"
-    }
-  }
-
-  body = frame {
+  top = frame {
     width: 100%,
     height: .auto,
-    layout: {direction: .column, item-gap: 14px},
-    padding: [20px, 8px, 0px],
-    children: [required, whenWhere, lineup, ticket, submit],
+    layout: {direction: .column, item-gap: 20px},
+    children: [header, intro, card],
 
-    required = text : ui.hint {
-      contents: "* Obligatoire"
+    header = frame : headers.pageHeader {
+      padding-top: 8px,
+      padding-left: 8px,
+      padding-bottom: 0px,
+      padding-right: 8px,
+
+      pageTitle {
+        contents: "Nouveau festival"
+      }
     }
 
-    whenWhere = frame : ui.glassCard {
+    intro = frame : ui.stepHeader {
+      stepTrack {
+        stepFill {
+          width: 117px
+        }
+      }
+
+      stepLabel {
+        contents: "Étape 1/3"
+      }
+
+      stepTitle {
+        contents: "Quel festival ?"
+      }
+
+      stepHelp {
+        contents: "Le titre et les dates sont obligatoires ; le lieu peut venir plus tard."
+      }
+    }
+
+    card = frame : ui.glassCard {
       overrides: [
         insert(titleField, after = ui.glassCard.cardTitle),
         insert(dates, after = titleField),
@@ -68,7 +81,7 @@ export addFestival = frame {
       ],
 
       cardTitle {
-        contents: "Le festival"
+        display: .none
       }
 
       titleField = frame : ui.field {
@@ -122,7 +135,7 @@ export addFestival = frame {
       roomField = frame : ui.field {
         fieldBox {
           fieldGlyph {
-            contents: mapPinIcon
+            contents: buildingIcon
           }
 
           fieldValue {
@@ -135,136 +148,16 @@ export addFestival = frame {
         }
       }
     }
+  }
 
-    lineup = frame : ui.glassCard {
-      overrides: [
-        insert(band1, after = ui.glassCard.cardTitle),
-        insert(band2, after = band1),
-        insert(band3, after = band2),
-        insert(band4, after = band3),
-        insert(addBand, after = band4)
-      ],
-
-      cardTitle {
-        contents: "Line-up à voir"
-      }
-
-      band1 = frame : ui.festivalBand {
-        bandName {
-          contents: "Gojira"
-        }
-
-        dayPill {
-          dayFace {
-            dayLabel {
-              contents: "Jeu 17"
-            }
-          }
-        }
-      }
-
-      band2 = frame : ui.festivalBand {
-        bandName {
-          contents: "Idles"
-        }
-
-        dayPill {
-          dayFace {
-            dayLabel {
-              contents: "Jeu 17"
-            }
-          }
-        }
-      }
-
-      band3 = frame : ui.festivalBand {
-        bandName {
-          contents: "Mastodon"
-        }
-
-        dayPill {
-          dayFace {
-            dayLabel {
-              contents: "Ven 18"
-            }
-          }
-        }
-      }
-
-      band4 = frame : ui.festivalBand {
-        bandName {
-          contents: "Turnstile"
-        }
-
-        dayPill {
-          dayFace {
-            dayLabel {
-              contents: "Sam 19"
-            }
-          }
-        }
-      }
-
-      addBand = frame : ui.artistAddField {
-        fieldValue {
-          contents: "Ajouter un groupe et son jour"
-        }
-      }
+  actions = frame : ui.stepActions {
+    next {
+      connections[0].target: step2.addFestival2,
+      connections[0].label: "Suivant"
     }
 
-    ticket = frame : ui.glassCard {
-      overrides: [
-        insert(ticketBought, after = ui.glassCard.cardTitle),
-        insert(ticketPrice, after = ticketBought),
-        insert(ticketUpload, after = ticketPrice)
-      ],
-
-      cardTitle {
-        contents: "Billet"
-      }
-
-      ticketPrice = frame : ui.field {
-        fieldBox {
-          fieldGlyph {
-            contents: euroIcon
-          }
-
-          fieldValue {
-            contents: "289,00"
-          }
-        }
-
-        fieldLabel {
-          contents: "Prix du billet"
-        }
-      }
-
-      ticketUpload = frame : ui.uploadBox {}
-
-      ticketBought = frame : ui.checkRow {
-        checkTexts {
-          checkTitle {
-            contents: "Billet acheté"
-          }
-
-          checkMeta {
-            contents: "Pas encore ? Décoche, tu pourras le cocher plus tard."
-          }
-        }
-      }
-    }
-
-    submit = frame : ui.primaryButton {
-      connections[0].label: "Fiche du nouvel event",
-      connections[0].target: eventUpcoming.eventUpcoming,
-
-      buttonGlyph {
-        contents: plusIcon
-      }
-
-      buttonLabel {
-        contents: "Ajouter le festival"
-      }
+    back {
+      display: .none
     }
   }
 }
