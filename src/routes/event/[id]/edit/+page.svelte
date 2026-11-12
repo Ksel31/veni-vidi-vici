@@ -374,7 +374,7 @@
 			title={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}
 			onclick={() => toggleBilling(band.key)}
 		>
-			<Icon name={band.billing === 'headliner' ? 'music' : 'user'} size={18} />
+			<Icon name={band.billing === 'headliner' ? 'crown' : 'mic-vocal'} size={18} />
 		</button>
 		<button class="icon-button band-remove" type="button" aria-label="Retirer {band.name}" onclick={() => removeBand(band.key)}>
 			<Icon name="x" size={20} />
