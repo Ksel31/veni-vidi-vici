@@ -1,5 +1,5 @@
 import { get, writable } from 'svelte/store';
-import { createDemoData } from './demo-data.js';
+import { createDemoData, DEMO_SEED_VERSION } from './demo-data.js';
 
 // `localStorage` n'existe pas pendant le rendu serveur.
 const browser = typeof localStorage !== 'undefined';
@@ -68,6 +68,7 @@ const browser = typeof localStorage !== 'undefined';
  * @property {Event[]} events
  * @property {Performance[]} performances
  * @property {boolean} onboardingSeen
+ * @property {number} [seedVersion]
  */
 
 /**
@@ -156,7 +157,8 @@ function save(state) {
 		artists: state.artists,
 		events: state.events,
 		performances: state.performances,
-		onboardingSeen: state.onboardingSeen === true
+		onboardingSeen: state.onboardingSeen === true,
+		seedVersion: state.seedVersion ?? 0
 	};
 	localStorage.setItem(storageKey(state.userId), JSON.stringify(payload));
 	localStorage.setItem(SESSION_KEY, state.userId);
@@ -179,7 +181,8 @@ function readUser(userId) {
 			artists: parsed.artists ?? [],
 			events: parsed.events ?? [],
 			performances: parsed.performances ?? [],
-			onboardingSeen: parsed.onboardingSeen === true
+			onboardingSeen: parsed.onboardingSeen === true,
+			seedVersion: typeof parsed.seedVersion === 'number' ? parsed.seedVersion : 0
 		};
 	} catch {
 		return null;
@@ -198,9 +201,16 @@ export function login(identifier) {
 
 	const saved = readUser(userId);
 	const empty = { venues: [], artists: [], events: [], performances: [], onboardingSeen: false };
-	// Premier login `demo` seulement : ensuite on relit le localStorage.
-	// Le compte démo ne passe jamais par l'onboarding.
-	const payload = saved ?? (userId === 'demo' ? { ...createDemoData(), onboardingSeen: true } : empty);
+	// `demo` est recalculé quand la version du seed change : les dates suivent
+	// le jour du chargement, même si un ancien compte est déjà dans le navigateur.
+	// Ça remplace aussi les modifications faites sur ce compte démo.
+	const demo = () => ({ ...createDemoData(), onboardingSeen: true, seedVersion: DEMO_SEED_VERSION });
+	const payload =
+		userId === 'demo'
+			? saved && saved.seedVersion === DEMO_SEED_VERSION
+				? saved
+				: demo()
+			: (saved ?? empty);
 	commit({ userId, ...payload });
 }
 

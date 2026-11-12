@@ -143,12 +143,13 @@
 	--font-display: "Wagon", sans-serif;
 	--font-input: "Archivo", sans-serif;
 
-	/* Graisses nommées des fichiers variables (axe wght).
-	   Cabinet et Archivo : Light 300, Regular 400, Medium 500, Bold 700.
-	   Wagon n'existe qu'en Bold. */
-	--weight-light: 300;
-	--weight-regular: 400;
-	--weight-medium: 500;
+	/* Graisses optiques, calées sur l'épaisseur des fûts des exports Elyx
+	   (pas sur le nom d'instance : Medium du fichier est 500, l'export est plus épais).
+	   Light 575, Regular 650, Medium 750. Bold 700 = Wagon, police statique,
+	   dont le « 14 » du billet a déjà la même épaisseur que l'export. */
+	--weight-light: 575;
+	--weight-regular: 650;
+	--weight-medium: 750;
 	--weight-bold: 700;
 }
 

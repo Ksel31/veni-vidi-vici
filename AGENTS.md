@@ -156,13 +156,15 @@ Après un ajout, rediriger vers la fiche du nouvel event. Chaque écran a un moy
 
 Pas de bouton « Réinitialiser les données de démo ». À la place, un **compte démo** : se connecter avec l'identifiant `demo` charge les données de démo ; n'importe quel autre identifiant ouvre une appli vide. Les données vivent dans un store Svelte, sauvegardé dans `localStorage` (chaque compte a les siennes).
 
-Le compte `demo` contient :
-- 1 concert passé, déjà marqué vu, avec 2 groupes, un pouce et un avis ;
+Le compte `demo` contient, avec des dates calculées au chargement :
+- 1 concert passé, déjà marqué vu, avec 2 groupes, un pouce et un avis (il y a environ 2 mois) ;
 - 1 concert passé encore `planned` (à confirmer) ;
 - 1 festival passé, `planned`, sur 2 jours, avec ses groupes répartis sur les jours (à confirmer) ;
-- 3 lieux belges et une poignée d'artistes.
+- 1 concert à venir avec billet acheté (dans 3 jours) ;
+- 1 festival à venir sur 3 jours avec 8 groupes répartis sur les jours ;
+- 3 lieux belges et une dizaine d'artistes.
 
-Pas d'event à venir dans la démo : on les crée en testant le parcours d'ajout.
+Un compte `demo` déjà enregistré est réécrit quand `DEMO_SEED_VERSION` change, pour que ces dates restent justes.
 
 ---
 
