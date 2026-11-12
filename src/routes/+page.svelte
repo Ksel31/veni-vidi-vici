@@ -27,7 +27,7 @@
 	<title>Accueil — Veni Vidi Vici</title>
 </svelte:head>
 
-<section class="screen screen-home">
+<section class="screen screen-home" class:screen-home-empty={isEmpty}>
 	{#if $data.userId}
 		<ProfileHeader
 			name={$data.userId}
@@ -41,8 +41,16 @@
 
 	{#if isEmpty}
 		<div class="empty-home">
-			<h1 class="section-title">Events à venir</h1>
-			<p class="empty-lead">Aucun event pour l'instant. Ajoute le prochain concert ou festival que tu prévois.</p>
+			<div class="empty-home-block">
+				<div class="empty-home-texts">
+					<h1 class="section-title">Events à venir</h1>
+					<p class="empty-lead">Aucun event pour l'instant. Ajoute le prochain concert ou festival que tu prévois.</p>
+				</div>
+				<a class="add-first" href="/add">
+					<Icon name="plus" size={26} />
+					Ajouter mon 1er event
+				</a>
+			</div>
 		</div>
 	{:else}
 		{#if next}
@@ -74,14 +82,6 @@
 	{/if}
 </section>
 
-{#if isEmpty}
-	<div class="dock dock-solo">
-		<div class="bottom-fade"></div>
-		<a class="add-first" href="/add">
-			<Icon name="plus" size={26} />
-			Ajouter mon 1er event
-		</a>
-	</div>
-{:else}
+{#if !isEmpty}
 	<TabBar />
 {/if}
