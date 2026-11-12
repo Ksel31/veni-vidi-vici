@@ -9,6 +9,7 @@
 	import ArtistField from '#lib/components/ArtistField.svelte';
 	import DateRangeField from '#lib/components/DateRangeField.svelte';
 	import Icon from '#lib/components/Icon.svelte';
+	import DeleteConfirm from '#lib/components/DeleteConfirm.svelte';
 
 	const eventId = $derived(page.params.id ?? '');
 	const event = $derived($data.events.find((item) => item.id === eventId) ?? null);
@@ -349,17 +350,7 @@
 		Enregistrer
 	</button>
 	{#if confirmingDelete}
-		<div class="glass-card">
-			<p class="card-title">Supprimer cet event ?</p>
-			<p class="hint">L'event, ses groupes et son compte rendu seront effacés.</p>
-			<div class="choice-row">
-				<button class="btn btn-secondary" type="button" onclick={() => (confirmingDelete = false)}>Annuler</button>
-				<button class="btn btn-primary" type="button" onclick={removeEvent}>
-					<Icon name="trash" size={22} />
-					Supprimer
-				</button>
-			</div>
-		</div>
+		<DeleteConfirm onCancel={() => (confirmingDelete = false)} onConfirm={removeEvent} />
 	{:else}
 		<button class="btn btn-secondary" type="button" onclick={() => (confirmingDelete = true)}>Supprimer l'event</button>
 	{/if}

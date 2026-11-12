@@ -474,13 +474,16 @@
 				<p class="card-title">Avec qui ?</p>
 				<div class="companion-row">
 					{#each event.companions as name (name)}
-						<button class="chip" type="button" aria-label="Retirer {name}" onclick={() => removeCompanion(name)}>
-							{name}
+						<button class="chip chip-person" type="button" aria-label="Retirer {name}" onclick={() => removeCompanion(name)}>
 							<Icon name="x" size={16} />
+							{name}
 						</button>
 					{/each}
 					{#if !addingName}
-						<button class="chip" type="button" onclick={() => (addingName = true)}>+ Prénom</button>
+						<button class="chip chip-person" type="button" onclick={() => (addingName = true)}>
+							<Icon name="plus" size={16} />
+							Prénom
+						</button>
 					{/if}
 				</div>
 				{#if addingName}
