@@ -1,138 +1,70 @@
 <script>
-	import { onMount } from 'svelte';
-	import { data, historyEvents, login, restoreSession, toConfirmEvents } from '#lib/store.js';
+	import { goto } from '$app/navigation';
+	import { data, historyEvents, logout, toConfirmEvents, upcomingEvents } from '#lib/store.js';
+	import { untilHeading, daysUntil } from '#lib/present.js';
+	import ProfileHeader from '#lib/components/ProfileHeader.svelte';
+	import NextTicket from '#lib/components/NextTicket.svelte';
+	import EventRow from '#lib/components/EventRow.svelte';
+	import Icon from '#lib/components/Icon.svelte';
+	import TabBar from '#lib/components/TabBar.svelte';
 
-	/** Échelles Radix, dans l'ordre de tokens/colors.elyx. */
-	const scales = [
-		{ id: 'neutral', label: 'Neutre' },
-		{ id: 'lime', label: 'Lime' },
-		{ id: 'red', label: 'Rouge' },
-		{ id: 'amber', label: 'Ambre' },
-		{ id: 'green', label: 'Vert' }
-	];
+	const upcoming = $derived(upcomingEvents($data));
+	const next = $derived(upcoming[0] ?? null);
+	const later = $derived(upcoming.slice(1));
+	const confirmList = $derived(toConfirmEvents($data));
+	const seenEvents = $derived(historyEvents($data).filter((event) => event.status === 'attended').length);
+	const seenBands = $derived($data.performances.filter((performance) => performance.status === 'seen').length);
+	const heading = $derived(next ? untilHeading(daysUntil(next.startDate)) : '');
 
-	const steps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-	const statusLabel = {
-		planned: 'Prévu',
-		attended: 'Vu',
-		missed: 'Raté'
-	};
-
-	let identifier = $state('');
-
-	onMount(() => {
-		restoreSession();
-	});
-
-	/** @param {SubmitEvent} event */
-	function connect(event) {
-		event.preventDefault();
-		login(identifier);
-	}
-
-	/** @param {import('#lib/store.js').Event[]} events */
-	function byDate(events) {
-		return [...events].sort((a, b) => a.startDate.localeCompare(b.startDate));
-	}
-
-	/** @param {string} iso */
-	function formatDate(iso) {
-		const [year, month, day] = iso.split('-').map(Number);
-		return new Date(year, month - 1, day).toLocaleDateString('fr-FR', {
-			day: 'numeric',
-			month: 'short',
-			year: 'numeric'
-		});
-	}
-
-	/** @param {import('#lib/store.js').Event} event */
-	function whenLabel(event) {
-		const start = formatDate(event.startDate);
-		if (event.endDate && event.endDate !== event.startDate) {
-			return `${start} – ${formatDate(event.endDate)}`;
-		}
-		return start;
-	}
-
-	/**
-	 * @param {import('#lib/store.js').Event} event
-	 * @param {import('#lib/store.js').Event[]} confirmList
-	 */
-	function statusLine(event, confirmList) {
-		const label = statusLabel[event.status];
-		if (confirmList.some((item) => item.id === event.id)) return `${label}, à confirmer`;
-		return label;
+	function signOut() {
+		logout();
+		goto('/login');
 	}
 </script>
 
-<main class="sample">
-	<img class="sample-logo" src="/images/logo-white.svg" alt="Veni Vidi Vici" />
+<svelte:head>
+	<title>Accueil — Veni Vidi Vici</title>
+</svelte:head>
 
-	<section class="debug" aria-label="Essai temporaire des données">
-		<h2>Temporaire — essai des données</h2>
-		<p class="type-meta">Pas l'écran de connexion. Sert à vérifier que les données restent dans le navigateur.</p>
+<section class="screen screen-home">
+	{#if $data.userId}
+		<ProfileHeader
+			name={$data.userId}
+			upcoming={upcoming.length}
+			{seenEvents}
+			{seenBands}
+			onLogout={signOut}
+		/>
+	{/if}
 
-		<form onsubmit={connect}>
-			<label for="debug-user">Identifiant</label>
-			<input id="debug-user" bind:value={identifier} autocomplete="off" spellcheck="false" />
-			<button type="submit" disabled={identifier.trim() === ''}>Se connecter</button>
-		</form>
+	{#if next}
+		<h1 class="section-title">{heading}</h1>
+		<NextTicket event={next} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
+	{/if}
 
-		{#if $data.userId}
-			{@const confirmList = toConfirmEvents($data)}
-			{@const historyList = historyEvents($data)}
-			<p>Compte « {$data.userId} »</p>
-			<p class="debug-counts">
-				{$data.events.length} events · {confirmList.length} à confirmer · {historyList.length} dans l'historique
-			</p>
-			{#if $data.events.length === 0}
-				<p class="type-meta">Aucun event.</p>
-			{:else}
-				<ul class="debug-list">
-					{#each byDate($data.events) as event (event.id)}
-						<li>{event.title || 'Sans titre'} — {whenLabel(event)} — {statusLine(event, confirmList)}</li>
-					{/each}
-				</ul>
-			{/if}
+	<div class="upcoming-block">
+		{#if next}
+			<h2 class="section-title">Events à venir</h2>
+		{:else}
+			<h1 class="section-title">Events à venir</h1>
 		{/if}
-	</section>
+		{#if confirmList.length > 0}
+			<a class="confirm-pill" href="/to-confirm">
+				{confirmList.length === 1 ? '1 event à confirmer' : `${confirmList.length} events à confirmer`}
+				<Icon name="chevron-right" size={16} />
+			</a>
+		{/if}
 
-	<h1 class="type-section">Titre de section</h1>
-	<p class="type-profile">Prénom et chiffres</p>
-	<p class="type-card">Titre de carte</p>
-	<p class="type-body">Texte courant. Cabinet Grotesk Regular, pour un avis ou une note.</p>
-	<p class="type-meta">Lieu, libellé, pastille</p>
-	<p class="type-ticket">14 NOV</p>
-	<p class="type-meta">Wagon Bold, réservé aux chiffres du billet</p>
+		{#if upcoming.length === 0}
+			<!-- L'accueil vide n'est pas dessiné dans les maquettes. -->
+			<p class="empty-title">Aucun event à venir.</p>
+			<p class="hint">Cet écran vide n'est pas encore dessiné.</p>
+		{:else}
+			{#each later as event (event.id)}
+				<EventRow {event} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
+			{/each}
+		{/if}
+	</div>
+</section>
 
-	<section class="glass-card">
-		<p class="type-card">Verre sombre</p>
-		<p class="type-meta">Carte posée sur la photo, filet clair.</p>
-		<p class="type-body accent">Texte accent</p>
-	</section>
-
-	<ul class="pills">
-		<li class="pill pill-brand">Marque</li>
-		<li class="pill pill-missed">Raté</li>
-		<li class="pill pill-pending">À confirmer</li>
-		<li class="pill pill-seen">Vu</li>
-	</ul>
-
-	<section class="scale-block">
-		<h2 class="type-card">Couleurs</h2>
-		{#each scales as scale (scale.id)}
-			<p class="scale-label">{scale.label}</p>
-			<div class="scale" role="img" aria-label="{scale.label}, échelons 1 à 12">
-				{#each steps as step (step)}
-					<span class="swatch" style="background: var(--{scale.id}-{step})"></span>
-				{/each}
-			</div>
-			<div class="steps" aria-hidden="true">
-				{#each steps as step (step)}
-					<span>{step}</span>
-				{/each}
-			</div>
-		{/each}
-	</section>
-</main>
+<TabBar />
