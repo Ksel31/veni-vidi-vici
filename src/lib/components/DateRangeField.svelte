@@ -23,6 +23,7 @@
 	const today = new Date();
 	let viewYear = $state(today.getFullYear());
 	let viewMonth = $state(today.getMonth() + 1);
+	const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
 	const rangeText = $derived(formatRange(start, end));
 	const cells = $derived(monthCells(viewYear, viewMonth));
@@ -118,10 +119,11 @@
 
 	/** @param {string} iso */
 	function dayClass(iso) {
-		if (!start) return '';
-		if (iso === start || iso === end) return 'cal-day-on';
-		if (end && iso > start && iso < end) return 'cal-day-in';
-		return '';
+		const classes = [];
+		if (iso === todayIso) classes.push('cal-day-today');
+		if (start && (iso === start || iso === end)) classes.push('cal-day-on');
+		else if (start && end && iso > start && iso < end) classes.push('cal-day-in');
+		return classes.join(' ');
 	}
 </script>
 

@@ -54,7 +54,7 @@ Le prototype de code précédent a été écarté. Le projet repart d'un SvelteK
 - Composants réutilisables : `components/` (`event-card`, `tab-bar`, `profile`, `screen-header`, `ui`). Les écrans les assemblent, ils ne les recréent pas.
 - Un écran = une intention : accueil (à venir), à confirmer, historique, avec une barre d'onglets flottante en bas et le « + » à droite.
 - Mobile d'abord (largeur ~390 px), utilisable sur desktop.
-- Pas d'animations, sauf le repli d'une ligne de groupe de festival (voir règles métier).
+- Pas d'animations, sauf le repli d'une ligne de groupe de festival et d'une setlist (voir règles métier).
 
 ---
 
@@ -119,9 +119,9 @@ Toutes les données sont propres à un utilisateur (pas de partage entre comptes
 - Le statut d'un passage est lié à la date de cet event : un groupe raté à un festival reste `missed` pour cette date. Le revoir plus tard est un autre event.
 - **Ajout d'un event passé** : la présence est pré-sélectionnée sur « Vu ». L'event est enregistré `attended`. Concert : les passages passent en `seen`. Festival : les passages restent `to_see` jusqu'à ce que les jours et les groupes soient cochés sur la fiche.
 - **Pour enregistrer un event** : un concert demande la date. Un festival demande le titre et la plage de dates (début et fin). Le lieu, la ville et les groupes sont optionnels. Si un groupe est ajouté à un festival, il doit avoir un jour avant l'enregistrement. Le titre d'un concert reste optionnel.
-- **Lieu** : un champ nom, avec autocomplétion sur les lieux déjà saisis. Si le nom est nouveau, un champ ville apparaît. Les deux sont optionnels. Le pays vaut Belgique par défaut. Sans lieu, l'accueil, le billet, l'historique et « à confirmer » affichent « Lieu à venir » (pas de ligne vide, pas de « undefined »).
-- **Festival, jour de passage** : les dates se choisissent dans un seul calendrier (premier toucher = début, second = fin). Ensuite, une puce par jour entre le début et la fin (libellé du type « Jeu 17 »). L'utilisateur touche celle du groupe. Une fois le jour choisi, la ligne se replie : le nom et le jour (petite pilule) sur la même ligne. Toucher la pilule rouvre le choix. Ce repli est la seule animation : environ 180 ms, ease-out, en CSS, coupée si `prefers-reduced-motion: reduce`.
-- **Concert, rôles** : deux zones, « Tête d'affiche » et « Première partie ». Chaque groupe a une poignée pour le glisser d'une zone à l'autre. Toucher la pastille du rôle bascule aussi tête d'affiche / première partie.
+- **Lieu** : le champ s'appelle « Lieu, salle », avec autocomplétion sur les lieux déjà saisis. Si le nom est nouveau, le champ ville apparaît au-dessus. Une ville déjà saisie filtre les suggestions. Les deux sont optionnels. Le pays vaut Belgique par défaut. Sans lieu, l'accueil, le billet, l'historique et « à confirmer » affichent « Lieu à venir » (pas de ligne vide, pas de « undefined »).
+- **Festival, jour de passage** : les dates se choisissent dans un seul calendrier (premier toucher = début, second = fin). Ensuite, une puce par jour entre le début et la fin (libellé du type « Jeu 17 »). L'utilisateur touche celle du groupe. Une fois le jour choisi, la ligne se replie : le nom et le jour (petite pilule) sur la même ligne. Toucher la pilule rouvre le choix. Ce repli, et celui d'une setlist dans le compte rendu, sont les seules animations : environ 180 ms, ease-out, en CSS, coupées si `prefers-reduced-motion: reduce`.
+- **Concert, rôles** : deux zones, « Tête d'affiche » et « Première partie ». Chaque zone a son champ d'ajout. Chaque groupe a une poignée pour le glisser d'une zone à l'autre. Toucher la pastille du rôle (couronne ou micro) bascule aussi tête d'affiche / première partie.
 - Lieux et artistes : autocomplétion sur ceux déjà saisis, création à la volée sinon.
 - **Tout est modifiable à tout moment** depuis la fiche : date, lieu, groupes, billets. Si la date repasse à aujourd'hui ou plus tard, l'event redevient `planned` et tous ses passages repassent en `to_see`.
 - Pas de statut « reporté » : on modifie la date.

@@ -1218,9 +1218,17 @@ button {
 	pointer-events: none;
 }
 
+.cal-day-today {
+	box-shadow: inset 0 0 0 2px var(--text-on-dark);
+}
+
 .cal-day-on {
 	background: var(--light);
 	color: var(--neutral-1);
+}
+
+.cal-day-today.cal-day-on {
+	box-shadow: inset 0 0 0 2px var(--neutral-1);
 }
 
 .cal-day-in {
@@ -1652,8 +1660,78 @@ button.role-pill.role-support:active::before {
 }
 
 .lineup-row .role-pill {
+	position: relative;
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
 	min-height: 32px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--radius-pill);
+	background: transparent;
+	color: var(--neutral-1);
 	pointer-events: none;
+}
+
+.lineup-row .role-pill::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background: var(--light);
+}
+
+.lineup-row .role-pill.role-support {
+	color: var(--text-on-dark);
+	background: transparent;
+	border: 0;
+}
+
+.lineup-row .role-pill.role-support::before {
+	background: var(--glass-strong);
+	box-shadow: inset 0 0 0 var(--line-width) var(--border);
+}
+
+.lineup-row .role-pill .icon {
+	position: relative;
+	z-index: 1;
+}
+
+.setlist-card {
+	gap: 0;
+}
+
+.setlist-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-s);
+	width: 100%;
+	min-height: var(--tap);
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	text-align: left;
+}
+
+.setlist-head > span {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.setlist-title {
+	font-size: 18px;
+	font-weight: 500;
+}
+
+.setlist-card .day-panel-open .day-panel-inner {
+	padding-top: 12px;
 }
 
 .setlist-box {
