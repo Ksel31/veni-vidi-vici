@@ -1,0 +1,67 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-add-concert.jpg" as bgPhoto
+import "components/redone/ui.elyx" as ui
+import "icons/lucide/x.svg" as closeIcon
+import "icons/lucide/chevron-right.svg" as continueIcon
+import "screens/redone/home.elyx" as home
+
+// Quitter l'ajout : confirmation avant de perdre la saisie. Le choix sûr (« Continuer ») est le bouton principal.
+export addExit = frame {
+  title: "Quitter l'ajout ?",
+  caption: "La croix de l'en-tête ouvre cette question seulement si des champs sont remplis. « Continuer » est le bouton lime : le choix qui ne perd rien.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {justify-content: .center, align-items: .center},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 78%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: 16px,
+  children: panel,
+
+  panel = frame : ui.deleteDialog {
+    left: 0px,
+    top: 0px,
+
+    dialogTitle {
+      contents: "Quitter l'ajout ?"
+    }
+
+    dialogHint {
+      contents: "Ce que tu as saisi ne sera pas enregistré."
+    }
+
+    dialogActions {
+      cancel {
+        connections[0].label: "Quitter",
+        connections[0].target: home.home,
+
+        buttonLabel {
+          contents: "Quitter"
+        }
+      }
+
+      confirm {
+        buttonGlyph {
+          contents: continueIcon
+        }
+
+        buttonLabel {
+          contents: "Continuer"
+        }
+      }
+    }
+  }
+}

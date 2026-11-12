@@ -1,0 +1,74 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/hero-concert.jpg" as photo
+import "components/redone/onboarding.elyx" as onboarding
+import "screens/redone/home-empty.elyx" as homeEmpty
+import "screens/redone/onboarding-2.elyx" as next
+
+// Onboarding, étape 1 sur 3 : le logo et l'accueil. un swipe (ou la flèche) mène à l'étape 2 ; « Passer » à l'accueil vide.
+export onboarding1 = frame {
+  title: "Onboarding 1/3",
+  caption: "Premier écran d'un compte vide : logo, « Bienvenue dans Venidici ! », puis « Ajoute tes events ». On swipe pour continuer (une flèche discrète à mi-hauteur, à droite, y invite ; pas de bouton « Suivant »), « Passer » mène à l'accueil vide. Jamais affiché sur le compte démo.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
+  fill: [
+    {image: {ref: photo}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 40%)),
+          stop(45%, rgb(0%, 0%, 0%, 55%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 20px, 32px],
+  children: [top, lower, arrow],
+
+  top = frame : onboarding.onboardingTop {
+    skip {
+      connections[0].target: homeEmpty.homeEmpty,
+      connections[0].label: "Passer"
+    }
+  }
+
+  lower = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 28px},
+    padding: [0px, 0px, 92px],
+    children: [content, dotsRow],
+
+    content = frame : onboarding.onboardingContent {
+      texts {
+        eyebrow {
+          display: .visible
+        }
+      }
+    }
+
+    dotsRow = frame {
+      width: 100%,
+      height: .auto,
+      layout: {justify-content: .center},
+      children: dots,
+
+      dots = frame : onboarding.pageDots {}
+    }
+  }
+
+  // Invite à swiper : bord droit, à mi-hauteur. Le vide de 92 px sous les points garde le contenu au même endroit que l'étape 3.
+  arrow = frame : onboarding.swipeHint {
+    top: 398px,
+    right: 12px,
+    ignore-stack: .true,
+    connections[0].label: "Swipe",
+    connections[0].target: next.onboarding2
+  }
+}

@@ -1,0 +1,58 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "tokens/fonts.elyx" as f
+
+// Repères de relecture pour flow-redone : une pastille numérotée posée sur l'élément modifié, et une carte « Modifications » sous l'écran.
+// Rose vif volontairement hors palette : ça ne se confond avec rien de l'interface et ça se supprime d'un bloc.
+export pin = frame {
+  left: 0px,
+  top: 0px,
+  width: 26px,
+  height: 26px,
+  layout: {justify-content: .center, align-items: .center},
+  fill: rgb(100%, 18%, 62%),
+  border: {color: rgb(100%, 100%, 100%), width: 2px},
+  corner-radius: 13px,
+  children: pinNumber,
+
+  pinNumber = text {
+    fill: rgb(100%, 100%, 100%),
+    contents: "1",
+    font-size: 13,
+    font-family: f.fonts.ui,
+    font-style: "Medium",
+    line-height: 1
+  }
+}
+
+export note = frame {
+  left: 100px,
+  top: 0px,
+  width: 390px,
+  height: .auto,
+  layout: {direction: .column, item-gap: 8px},
+  fill: rgb(22%, 4%, 14%),
+  border: {color: rgb(100%, 18%, 62%), width: 1.5px},
+  corner-radius: 18px,
+  padding: 14px,
+  children: [noteTitle, noteBody],
+
+  noteTitle = text {
+    width: 100%,
+    fill: rgb(100%, 60%, 80%),
+    contents: "Modifications",
+    font-size: 13,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  noteBody = text {
+    width: 100%,
+    fill: rgb(100%, 100%, 100%),
+    contents: "1. …",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Regular",
+    line-height: 1.35
+  }
+}

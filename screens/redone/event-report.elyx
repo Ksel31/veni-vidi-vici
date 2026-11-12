@@ -1,0 +1,575 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-event-report.jpg" as bgPhoto
+import "components/redone/screen-header.elyx" as headers
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+import "components/redone/ui.elyx" as ui
+import "icons/lucide/x.svg" as crossIcon
+import "icons/lucide/chevron-right.svg" as chevronRightIcon
+import "icons/lucide/plus.svg" as plusIcon
+import "images/bg-add-concert.jpg" as photoA
+import "images/bg-event-upcoming.jpg" as photoB
+import "images/bg-add-type.jpg" as photoC
+import "icons/lucide/euro.svg" as euroIcon
+import "icons/lucide/thumbs-down.svg" as thumbsDownIcon
+import "icons/lucide/mic-vocal.svg" as micIcon
+import "icons/lucide/pencil.svg" as pencilIcon
+import "icons/lucide/chevron-down.svg" as chevronDownIcon
+import "screens/redone/event-edit.elyx" as eventEdit
+
+// Fiche d'un event vu, avec son compte rendu : pouce global, avis d'une ligne, accompagnants, pouce par groupe, setlist.
+// Le compte rendu n'existe qu'une fois l'event marqué « Vu ». Dernier écran du parcours : retour à l'accueil par la flèche.
+export eventReport = frame {
+  title: "Fiche : compte rendu",
+  caption: "Event vu : le badge « Vu » est sous le nom. Pouces, avis, accompagnants (croix à gauche), setlist repliable (180 ms, coupée si mouvement réduit). « Terminer » ferme les setlists. Pas de bouton « Confirmer ».",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: .auto,
+  layout: {direction: .column},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 45%)),
+          stop(40%, rgb(0%, 0%, 0%, 70%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 40px],
+  children: [header, body],
+
+  header = frame : headers.pageHeader {
+    padding-top: 8px,
+    padding-left: 8px,
+    padding-bottom: 0px,
+    padding-right: 8px,
+
+    pageTitle {
+      contents: "Compte rendu"
+    }
+  }
+
+  body = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 14px},
+    padding: [24px, 8px, 0px],
+    children: [
+      identity,
+      opinion,
+      companions,
+      bands,
+      setlist,
+      setlistClosed,
+      photos,
+      ticketCard,
+      markMissed,
+      edit,
+      remove,
+      finish
+    ],
+
+    identity = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 8px},
+      padding: [0px, 6px],
+      children: [eventTitle, eventMeta, badge],
+
+      eventTitle = text {
+        width: 100%,
+        fill: c.colors.text-on-dark,
+        contents: "Messa",
+        font-size: 36,
+        font-family: f.fonts.ui,
+        font-style: "Medium",
+        line-height: 1.05,
+        letter-spacing: -3%
+      }
+
+      eventMeta = text {
+        width: 100%,
+        fill: c.colors.text-on-dark-muted,
+        contents: "Concert, Ven 19 mars 2026, Trix, Anvers",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Regular"
+      }
+
+      badge = frame : ui.statusBadge {}
+    }
+
+    opinion = frame : ui.glassCard {
+      overrides: [
+        insert(thumbs, after = ui.glassCard.cardTitle),
+        insert(comment, after = thumbs)
+      ],
+
+      cardTitle {
+        contents: "Ton avis"
+      }
+
+      thumbs = frame {
+        width: 100%,
+        height: .auto,
+        layout: {item-gap: 10px},
+        children: [thumbUp, thumbDown],
+
+        thumbUp = frame : ui.thumbButtonOn {}
+
+        thumbDown = frame : ui.thumbButton {
+          thumbGlyph {
+            contents: thumbsDownIcon
+          }
+
+          thumbLabel {
+            contents: "Bof"
+          }
+        }
+      }
+
+      comment = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            display: .none
+          }
+
+          fieldValue {
+            contents: "Un mur de son, le rappel valait le déplacement."
+          }
+        }
+
+        fieldLabel {
+          contents: "En une ligne"
+        }
+      }
+    }
+
+    companions = frame : ui.glassCard {
+      overrides: [insert(people, after = ui.glassCard.cardTitle)],
+
+      cardTitle {
+        contents: "Avec qui ?"
+      }
+
+      people = frame {
+        width: 100%,
+        height: .auto,
+        layout: {item-gap: 8px, wrap: .true, line-gap: 8px},
+        children: [julie, marc, addPerson],
+
+        julie = frame {
+          width: .auto,
+          height: l.lengths.tap,
+          layout: {
+            justify-content: .center,
+            align-items: .center,
+            item-gap: 8px
+          },
+          fill: c.colors.glass-strong,
+          border: c.colors.border,
+          corner-radius: l.lengths.radius-m,
+          padding: [0px, 16px],
+          children: [personGlyph, personLabel],
+
+          personGlyph = asset {
+            width: 16px,
+            height: 16px,
+            fill: c.colors.text-on-dark,
+            contents: crossIcon
+          }
+
+          personLabel = text {
+            fill: c.colors.text-on-dark,
+            contents: "Julie",
+            font-size: 14,
+            font-family: f.fonts.ui,
+            font-style: "Medium"
+          }
+        }
+
+        marc = frame {
+          width: .auto,
+          height: l.lengths.tap,
+          layout: {
+            justify-content: .center,
+            align-items: .center,
+            item-gap: 8px
+          },
+          fill: c.colors.glass-strong,
+          border: c.colors.border,
+          corner-radius: l.lengths.radius-m,
+          padding: [0px, 16px],
+          children: [personGlyph, personLabel],
+
+          personGlyph = asset {
+            width: 16px,
+            height: 16px,
+            fill: c.colors.text-on-dark,
+            contents: crossIcon
+          }
+
+          personLabel = text {
+            fill: c.colors.text-on-dark,
+            contents: "Marc",
+            font-size: 14,
+            font-family: f.fonts.ui,
+            font-style: "Medium"
+          }
+        }
+
+        addPerson = frame {
+          width: .auto,
+          height: l.lengths.tap,
+          layout: {
+            justify-content: .center,
+            align-items: .center,
+            item-gap: 8px
+          },
+          fill: c.colors.glass-strong,
+          border: c.colors.border,
+          corner-radius: l.lengths.radius-m,
+          padding: [0px, 16px],
+          children: [personGlyph, personLabel],
+
+          personGlyph = asset {
+            width: 16px,
+            height: 16px,
+            fill: c.colors.text-on-dark,
+            contents: plusIcon
+          }
+
+          personLabel = text {
+            fill: c.colors.text-on-dark,
+            contents: "Prénom",
+            font-size: 14,
+            font-family: f.fonts.ui,
+            font-style: "Medium"
+          }
+        }
+      }
+    }
+
+    bands = frame : ui.glassCard {
+      overrides: [
+        insert(headliner, after = ui.glassCard.cardTitle),
+        insert(support, after = headliner)
+      ],
+
+      cardTitle {
+        contents: "Groupes"
+      }
+
+      headliner = frame : ui.lineupRow {
+        overrides: [
+          insert(thumbUp, after = ui.lineupRow.bandRole),
+          insert(thumbDown, after = thumbUp)
+        ],
+
+        bandRemove {
+          display: .none
+        }
+
+        bandName {
+          contents: "Messa"
+        }
+
+        thumbUp = frame : ui.thumbButtonOn {
+          width: l.lengths.tap,
+          corner-radius: l.lengths.radius-pill,
+          padding-top: 0px,
+          padding-left: 0px,
+          padding-bottom: 0px,
+          padding-right: 0px,
+
+          thumbLabel {
+            display: .none
+          }
+        }
+
+        thumbDown = frame : ui.thumbButton {
+          width: l.lengths.tap,
+          corner-radius: l.lengths.radius-pill,
+          padding-top: 0px,
+          padding-left: 0px,
+          padding-bottom: 0px,
+          padding-right: 0px,
+
+          thumbLabel {
+            display: .none
+          }
+
+          thumbGlyph {
+            contents: thumbsDownIcon
+          }
+        }
+      }
+
+      support = frame : ui.lineupRow {
+        overrides: [
+          insert(thumbUp, after = ui.lineupRow.bandRole),
+          insert(thumbDown, after = thumbUp)
+        ],
+
+        bandRole {
+          fill[0].color: c.colors.glass-strong,
+          border[0].color: c.colors.border,
+
+          bandRoleGlyph {
+            fill[0].color: c.colors.text-on-dark,
+            contents: micIcon
+          }
+        }
+
+        bandRemove {
+          display: .none
+        }
+
+        bandName {
+          contents: "Wiegedood"
+        }
+
+        thumbUp = frame : ui.thumbButton {
+          width: l.lengths.tap,
+          corner-radius: l.lengths.radius-pill,
+          padding-top: 0px,
+          padding-left: 0px,
+          padding-bottom: 0px,
+          padding-right: 0px,
+
+          thumbLabel {
+            display: .none
+          }
+        }
+
+        thumbDown = frame : ui.thumbButton {
+          width: l.lengths.tap,
+          corner-radius: l.lengths.radius-pill,
+          padding-top: 0px,
+          padding-left: 0px,
+          padding-bottom: 0px,
+          padding-right: 0px,
+
+          thumbLabel {
+            display: .none
+          }
+
+          thumbGlyph {
+            contents: thumbsDownIcon
+          }
+        }
+      }
+    }
+
+    setlist = frame : ui.glassCard {
+      overrides: [
+        insert(setlistHead, after = ui.glassCard.cardTitle),
+        insert(songs, after = setlistHead)
+      ],
+
+      cardTitle {
+        display: .none
+      }
+
+      setlistHead = frame {
+        width: 100%,
+        height: .auto,
+        layout: {
+          justify-content: .space-between,
+          align-items: .center,
+          item-gap: 8px
+        },
+        children: [setlistTitle, setlistChevron],
+
+        setlistTitle = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "Setlist de Messa",
+          font-size: 18,
+          font-family: f.fonts.ui,
+          font-style: "Medium"
+        }
+
+        setlistChevron = asset {
+          width: 20px,
+          height: 20px,
+          fill: c.colors.text-on-dark,
+          contents: chevronDownIcon
+        }
+      }
+
+      songs = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 6px},
+        fill: c.colors.surface-dark,
+        border: c.colors.glass-border,
+        corner-radius: l.lengths.radius-m,
+        padding: 14px,
+        children: songsText,
+
+        songsText = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "1. Suspended in Lament\n2. Hour of the Wolf\n3. Leah\n4. Rubedo\n5. Immolation",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Regular",
+          line-height: 1.45
+        }
+      }
+    }
+
+    setlistClosed = frame : ui.glassCard {
+      overrides: [insert(setlistHead, after = ui.glassCard.cardTitle)],
+
+      cardTitle {
+        display: .none
+      }
+
+      setlistHead = frame {
+        width: 100%,
+        height: .auto,
+        layout: {
+          justify-content: .space-between,
+          align-items: .center,
+          item-gap: 8px
+        },
+        children: [setlistTexts, setlistChevron],
+
+        setlistTexts = frame {
+          width: 100%,
+          height: .auto,
+          layout: {direction: .column, item-gap: 2px},
+          children: [setlistTitle, setlistHint],
+
+          setlistTitle = text {
+            width: 100%,
+            fill: c.colors.text-on-dark,
+            contents: "Setlist de Wiegedood",
+            font-size: 18,
+            font-family: f.fonts.ui,
+            font-style: "Medium"
+          }
+
+          setlistHint = text : ui.hint {
+            contents: "Déjà remplie"
+          }
+        }
+
+        setlistChevron = asset {
+          width: 20px,
+          height: 20px,
+          fill: c.colors.text-on-dark,
+          contents: chevronRightIcon
+        }
+      }
+    }
+
+    photos = frame : ui.glassCard {
+      overrides: [insert(photoGrid, after = ui.glassCard.cardTitle)],
+
+      cardTitle {
+        contents: "Photos souvenirs"
+      }
+
+      photoGrid = frame {
+        width: 100%,
+        height: .auto,
+        layout: {item-gap: 9px, wrap: .true, line-gap: 9px},
+        children: [photo1, photo2, photo3, addPhoto],
+
+        photo1 = frame {
+          width: 100px,
+          height: 100px,
+          fill: {image: {ref: photoA}},
+          corner-radius: l.lengths.radius-m
+        }
+
+        photo2 = frame {
+          width: 100px,
+          height: 100px,
+          fill: {image: {ref: photoB}},
+          corner-radius: l.lengths.radius-m
+        }
+
+        photo3 = frame {
+          width: 100px,
+          height: 100px,
+          fill: {image: {ref: photoC}},
+          corner-radius: l.lengths.radius-m
+        }
+
+        addPhoto = frame : ui.photoAdd {}
+      }
+    }
+
+    ticketCard = frame : ui.glassCard {
+      overrides: [
+        insert(priceInfo, after = ui.glassCard.cardTitle),
+        insert(ticketFile, after = priceInfo)
+      ],
+
+      cardTitle {
+        contents: "Billet"
+      }
+
+      priceInfo = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: euroIcon
+          }
+
+          fieldValue {
+            contents: "38,00 €"
+          }
+        }
+
+        fieldLabel {
+          contents: "Prix du billet"
+        }
+      }
+
+      ticketFile = frame : ui.uploadBox {}
+    }
+
+    markMissed = frame : ui.secondaryButton {
+      buttonGlyph {
+        contents: crossIcon
+      }
+
+      buttonLabel {
+        contents: "Marquer comme raté"
+      }
+    }
+
+    edit = frame : ui.secondaryButton {
+      connections[0].label: "Modifier l'event",
+      connections[0].target: eventEdit.eventEdit,
+
+      buttonGlyph {
+        contents: pencilIcon
+      }
+
+      buttonLabel {
+        contents: "Modifier l'event"
+      }
+    }
+
+    remove = frame : ui.dangerButton {}
+
+    finish = frame : ui.primaryButton {
+      buttonLabel {
+        contents: "Terminer"
+      }
+    }
+  }
+}

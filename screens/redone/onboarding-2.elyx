@@ -1,0 +1,84 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/hero-bass.jpg" as photo
+import "icons/lucide/check.svg" as stepIcon
+import "components/redone/onboarding.elyx" as onboarding
+import "screens/redone/home-empty.elyx" as homeEmpty
+import "screens/redone/onboarding-3.elyx" as next
+
+// Onboarding, étape 2 sur 3 : la confirmation après la date.
+export onboarding2 = frame {
+  title: "Onboarding 2/3",
+  caption: "« Confirme après la date » : le lendemain, tu dis si tu y étais (Vu) ou non (Raté). Logo et « Passer » en haut, la flèche à mi-hauteur invite à swiper.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
+  fill: [
+    {image: {ref: photo}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 40%)),
+          stop(45%, rgb(0%, 0%, 0%, 55%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 20px, 32px],
+  children: [top, lower, arrow],
+
+  top = frame : onboarding.onboardingTop {
+    skip {
+      connections[0].target: homeEmpty.homeEmpty,
+      connections[0].label: "Passer"
+    }
+  }
+
+  lower = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 28px},
+    padding: [0px, 0px, 92px],
+    children: [content, dotsRow],
+
+    content = frame : onboarding.onboardingContent {
+      disc {
+        glyph {
+          contents: stepIcon
+        }
+      }
+
+      texts {
+        stepTitle {
+          contents: "Confirme après la date"
+        }
+
+        stepBody {
+          contents: "Le lendemain, dis si tu y étais ou non."
+        }
+      }
+    }
+
+    dotsRow = frame {
+      width: 100%,
+      height: .auto,
+      layout: {justify-content: .center},
+      children: dots,
+
+      dots = frame : onboarding.pageDots2 {}
+    }
+  }
+
+  arrow = frame : onboarding.swipeHint {
+    top: 398px,
+    right: 12px,
+    ignore-stack: .true,
+    connections[0].label: "Swipe",
+    connections[0].target: next.onboarding3
+  }
+}

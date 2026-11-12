@@ -1,0 +1,139 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-add-festival.jpg" as bgPhoto
+import "components/redone/screen-header.elyx" as headers
+import "components/redone/ui.elyx" as ui
+import "tokens/colors.elyx" as c
+import "icons/lucide/calendar.svg" as calendarIcon
+import "icons/lucide/tent.svg" as tentIcon
+import "icons/lucide/x.svg" as closeIcon
+
+// Ajout d'un festival, étape 1/3, titre manquant : l'erreur se lit sous le champ (icône + texte, filet rouge) et dit quoi faire.
+// « Suivant » n'est jamais grisé : on valide au clic, et la première erreur reçoit le focus.
+export addFestivalError = frame {
+  title: "Ajouter un festival, erreur de saisie",
+  caption: "État d'erreur : filet rouge + icône + phrase qui dit comment corriger, sous le champ concerné. Le bouton reste actif.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: .auto,
+  min-height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 78%)),
+          stop(40%, rgb(0%, 0%, 0%, 80%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 32px],
+  children: [top, actions],
+
+  top = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 20px},
+    children: [header, intro, card],
+
+    header = frame : headers.pageHeader {
+      padding-top: 8px,
+      padding-left: 8px,
+      padding-bottom: 0px,
+      padding-right: 8px,
+
+      backButton {
+        glyph {
+          contents: closeIcon
+        }
+      }
+
+      pageTitle {
+        contents: "Nouveau festival"
+      }
+    }
+
+    intro = frame : ui.stepHeader {
+      stepLabel {
+        contents: "Étape 1/3"
+      }
+
+      stepTrack {
+        stepFill {
+          width: 117px
+        }
+      }
+
+      stepTitle {
+        contents: "Quel festival ?"
+      }
+
+      stepHelp {
+        contents: "Le titre et les dates sont obligatoires ; le lieu peut venir plus tard."
+      }
+    }
+
+    card = frame : ui.glassCard {
+      overrides: [
+        insert(titleField, after = ui.glassCard.cardTitle),
+        insert(titleError, after = titleField),
+        insert(dates, after = titleError)
+      ],
+
+      cardTitle {
+        display: .none
+      }
+
+      titleField = frame : ui.fieldError {
+        fieldBox {
+          fieldGlyph {
+            contents: tentIcon
+          }
+
+          fieldValue {
+            contents: "Ex. Rock Werchter",
+            fill[0].color: c.colors.text-on-dark-muted
+          }
+        }
+
+        fieldLabel {
+          contents: "Titre"
+        }
+      }
+
+      titleError = frame : ui.fieldMessage {
+        messageText {
+          contents: "Ajoute un titre pour enregistrer le festival."
+        }
+      }
+
+      dates = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: calendarIcon
+          }
+
+          fieldValue {
+            contents: "17 – 20 juil. 2026"
+          }
+        }
+
+        fieldLabel {
+          contents: "Dates"
+        }
+      }
+    }
+  }
+
+  actions = frame : ui.stepActions {
+    back {
+      display: .none
+    }
+  }
+}

@@ -1,0 +1,98 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/hero-concert.jpg" as heroPhoto
+import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
+import "components/redone/profile.elyx" as profileParts
+import "components/redone/tab-bar.elyx" as nav
+import "screens/redone/add-type.elyx" as addType
+
+// Accueil d'un compte sans aucun event, une fois l'onboarding vu ou passé : un bloc centré (titre, phrase, CTA).
+export homeEmpty = frame {
+  title: "Accueil vide",
+  caption: "Arrivée après l'onboarding (terminé ou passé), qui ne revient pas. Titre, phrase et CTA « Ajouter mon 1er event » forment un seul bloc centré dans l'écran. Dès le premier event enregistré, le « + » rond et la barre d'onglets reviennent (voir Accueil).",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column},
+  fill: [
+    {image: {ref: heroPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 45%)),
+          stop(38%, rgb(0%, 0%, 0%, 55%)),
+          stop(75%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 0px],
+  children: [profile, centered],
+
+  // Les trois chiffres seraient à 0 : on les masque tant qu'il n'y a aucun event.
+  profile = frame : profileParts.profileHeader {
+    stats {
+      display: .none
+    }
+  }
+
+  // Un seul bloc (titre, description, bouton), centré verticalement dans tout l'écran. La lueur du bouton dépasse : pas de coupe.
+  centered = frame {
+    left: 0px,
+    top: 0px,
+    width: 100%,
+    height: 100%,
+    ignore-stack: .true,
+    layout: {direction: .column, justify-content: .center},
+    overflow: .visible,
+    padding: [0px, 20px],
+    children: block,
+
+    block = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 28px},
+      overflow: .visible,
+      children: [texts, addFirst],
+
+      texts = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 12px},
+        children: [title, empty],
+
+        title = text {
+          width: 100%,
+          fill: c.colors.text-on-dark,
+          contents: "Events à venir",
+          font-size: 36,
+          font-family: f.fonts.ui,
+          font-style: "Medium",
+          line-height: 1,
+          letter-spacing: -3%
+        }
+
+        empty = text {
+          width: 100%,
+          fill: c.colors.text-on-dark-muted,
+          contents: "Aucun event pour l'instant. Ajoute le prochain concert ou festival que tu prévois.",
+          font-size: 16,
+          font-family: f.fonts.ui,
+          font-style: "Regular",
+          line-height: 1.3
+        }
+      }
+
+      addFirst = frame : nav.addButtonFirst {
+        left: 0px,
+        top: 0px,
+        connections[0].label: "Ajouter",
+        connections[0].target: addType.addType
+      }
+    }
+  }
+}

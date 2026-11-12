@@ -1,0 +1,570 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+use "fonts/Wagon-Bold.otf"
+
+import "images/ticket-holo.png" as ticketHolo
+import "icons/lucide/chevron-right.svg" as chevronRight
+import "icons/lucide/check.svg" as checkIcon
+import "icons/lucide/x.svg" as crossIcon
+import "icons/lucide/ticket.svg" as ticketIcon
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+
+// Pastille d'information sur le billet : icône + texte (l'état n'est jamais porté par l'icône seule).
+export ticketPill = frame {
+  left: 0px,
+  top: 0px,
+  width: .auto,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 6px},
+  fill: c.colors.neutral-12,
+  corner-radius: l.lengths.radius-s,
+  padding: [4px, 8px],
+  children: [ticketGlyph, ticketLabel],
+
+  ticketGlyph = asset {
+    width: 16px,
+    height: 16px,
+    fill: c.colors.neutral-1,
+    contents: ticketIcon
+  }
+
+  ticketLabel = text {
+    fill: c.colors.neutral-1,
+    contents: "Billet acheté",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+// Prochain event : le billet vert, seul aplat vif de l'écran. Image holographique (logo répété, très discret),
+// ombre portée, corps à gauche (type, titre, lieu, billet) et talon à droite (jour, mois) séparés par une perforation.
+// Les coins et la perforation sont évidés dans l'image ; l'ombre vient d'un rectangle caché sous le billet.
+// Le titre n'est jamais coupé : le billet grandit. Au-delà de 15 caractères il passe à 26 px, au-delà de 26 à 20 px.
+// Le pointillé va d'encoche à encoche (5,26 % du haut et du bas), quelle que soit la hauteur.
+export nextTicket = frame {
+  left: 0px,
+  top: 60px,
+  width: 366px,
+  height: .auto,
+  min-height: 152px,
+  layout: {direction: .column},
+  overflow: .visible,
+  children: [ticketShadow, ticketBg, ticketInfo, ticketStub],
+
+  ticketShadow = frame {
+    left: 14px,
+    top: 8px,
+    width: 338px,
+    height: 136px,
+    ignore-stack: .true,
+    fill: c.colors.neutral-1,
+    shadow: {
+      drop-shadow: {
+        color: rgb(0%, 0%, 0%, 55%),
+        offset: point(0px, 10px),
+        blur-radius: 18px
+      }
+    },
+    corner-radius: 8px
+  }
+
+  ticketBg = asset {
+    left: 0px,
+    top: 0px,
+    width: 100%,
+    height: 100%,
+    ignore-stack: .true,
+    contents: ticketHolo
+  }
+
+  ticketInfo = frame {
+    width: 67%,
+    height: .auto,
+    min-height: 152px,
+    layout: {direction: .column, justify-content: .center, item-gap: 4px},
+    padding: [16px, 20px],
+    overflow: .visible,
+    children: [eventType, eventTitle, eventMeta, ticketState],
+
+    eventType = text {
+      fill: c.colors.neutral-1,
+      contents: "CONCERT",
+      font-size: 13,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    eventTitle = text {
+      width: 100%,
+      fill: c.colors.neutral-1,
+      contents: "TITRE",
+      font-size: 38,
+      font-family: f.fonts.ui,
+      font-style: "Medium",
+      line-height: 1.05,
+      letter-spacing: -2%
+    }
+
+    eventMeta = text {
+      width: 100%,
+      fill: c.colors.neutral-1,
+      contents: "Lieu, ville",
+      font-size: 13,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    // Même pastille que dans la liste, inversée : noir plein sur le vert
+    ticketState = frame : ticketPill {
+      fill[0].color: c.colors.neutral-1,
+
+      ticketLabel {
+        fill[0].color: c.colors.neutral-12
+      }
+
+      ticketGlyph {
+        fill[0].color: c.colors.neutral-12
+      }
+    }
+  }
+
+  ticketStub = frame {
+    right: 0px,
+    top: 5.26%,
+    bottom: 5.26%,
+    width: 33%,
+    ignore-stack: .true,
+    layout: {direction: .column, justify-content: .center, align-items: .center},
+    border: {
+      color: c.colors.neutral-1,
+      width: 2px,
+      dash: [5px, 4px],
+      sides: .left
+    },
+    children: [dateDay, dateMonth],
+
+    dateDay = text {
+      fill: c.colors.neutral-1,
+      contents: "14",
+      font-size: 74,
+      font-family: f.fonts.display,
+      font-style: "Bold",
+      line-height: 1
+    }
+
+    dateMonth = text {
+      fill: c.colors.neutral-1,
+      contents: "NOV",
+      font-size: 24,
+      font-family: f.fonts.display,
+      font-style: "Bold",
+      line-height: 1
+    }
+  }
+}
+
+// Titre long : 20 px, le billet s'étire, rien n'est tronqué.
+export nextTicketLong = frame : nextTicket {
+  left: 420px,
+  top: 60px,
+
+  ticketInfo {
+    eventTitle {
+      contents: "Nick Cave and the Bad Seeds, Wild God",
+      font-size: 20,
+      line-height: 1.15
+    }
+
+    eventMeta {
+      contents: "Ancienne Belgique, Bruxelles"
+    }
+  }
+}
+
+// Pastille « N events à confirmer » : discrète, alignée à gauche. Noir, filet et texte verts, chevron.
+export confirmPill = frame {
+  left: 0px,
+  top: 260px,
+  width: .auto,
+  height: l.lengths.tap,
+  layout: {align-items: .center, item-gap: 6px},
+  fill: c.colors.neutral-1,
+  border: {color: c.colors.brand, width: 1.5px},
+  corner-radius: 18px,
+  padding: [0px, 12px, 0px, 14px],
+  children: [pillLabel, pillChevron],
+
+  pillLabel = text {
+    fill: c.colors.brand,
+    contents: "2 events à confirmer",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  pillChevron = asset {
+    width: 16px,
+    height: 16px,
+    fill: c.colors.brand,
+    contents: chevronRight
+  }
+}
+
+// Event à venir suivant : ligne compacte en verre sombre sur la photo. Date à gauche, compte à rebours à droite, texte papier.
+export eventRow = frame {
+  left: 0px,
+  top: 1050px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 12px},
+  fill: c.colors.glass,
+  border: c.colors.glass-border,
+  corner-radius: l.lengths.radius-xl,
+  padding: 12px,
+  children: [dateBlock, info, countdown],
+
+  dateBlock = frame {
+    width: 60px,
+    height: 60px,
+    layout: {direction: .column, justify-content: .center, align-items: .center},
+    fill: c.colors.surface-dark,
+    corner-radius: l.lengths.radius-m,
+    children: [dateDay, dateMonth],
+
+    dateDay = text {
+      fill: c.colors.neutral-12,
+      contents: "12",
+      font-size: 24,
+      font-family: f.fonts.ui,
+      font-style: "Medium",
+      line-height: 1
+    }
+
+    dateMonth = text {
+      fill: c.colors.neutral-12,
+      contents: "DÉC",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Medium",
+      letter-spacing: 4%
+    }
+  }
+
+  info = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 2px},
+    children: [eventTitle, eventMeta, ticketState],
+
+    eventTitle = text {
+      width: 100%,
+      fill: c.colors.neutral-12,
+      contents: "Titre",
+      font-size: 18,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    eventMeta = text {
+      width: 100%,
+      fill: c.colors.neutral-12,
+      contents: "Lieu",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Regular"
+    }
+
+    ticketState = frame : ticketPill {
+      fill[0].color: c.colors.surface-dark,
+
+      ticketLabel {
+        fill[0].color: c.colors.neutral-12
+      }
+
+      ticketGlyph {
+        fill[0].color: c.colors.neutral-12
+      }
+    }
+  }
+
+  countdown = frame {
+    width: .auto,
+    height: .auto,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.neutral-12,
+    corner-radius: l.lengths.radius-s,
+    padding: [4px, 8px],
+    children: countdownLabel,
+
+    // Le jour même : « Aujourd'hui », jamais « J-0 ».
+    countdownLabel = text {
+      fill: c.colors.neutral-1,
+      contents: "J-32",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+  }
+}
+
+// États de la ligne d'event : survol (verre plus dense, bordure step 7), pressé (step 3), focus anneau extérieur.
+@variant
+export eventRowHover = frame : eventRow {
+  left: 500px,
+  top: 1050px,
+  border[0].color: c.colors.border,
+  fill[0].color: c.colors.glass-strong
+}
+
+@variant
+export eventRowPressed = frame : eventRow {
+  left: 500px,
+  top: 1250px,
+  border[0].color: c.colors.border,
+  fill[0].color: c.colors.surface-dark-raised
+}
+
+@variant
+export eventRowFocus = frame : eventRow {
+  left: 500px,
+  top: 1450px,
+  border[0].color: c.colors.focus-ring,
+  border[0].position: .outside,
+  border[0].width: l.lengths.focus-ring-width
+}
+
+// Event passé à confirmer : « Raté » (secondaire, contour encre) et « Vu » (principal, encre pleine).
+export confirmCard = frame {
+  left: 0px,
+  top: 320px,
+  width: 100%,
+  height: .auto,
+  layout: {direction: .column, item-gap: 12px},
+  fill: c.colors.surface-card,
+  corner-radius: l.lengths.radius-l,
+  padding: l.lengths.space-m,
+  children: [info, question, actions],
+
+  info = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 4px},
+    children: [eventTitle, eventMeta],
+
+    eventTitle = text {
+      width: 100%,
+      fill: c.colors.neutral-1,
+      contents: "Titre",
+      font-size: 18,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    eventMeta = text {
+      width: 100%,
+      fill: c.colors.neutral-1,
+      contents: "Concert | Date | Lieu",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Regular"
+    }
+  }
+
+  question = text {
+    width: 100%,
+    fill: c.colors.neutral-1,
+    contents: "Tu y étais ?",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Regular"
+  }
+
+  actions = frame {
+    width: 100%,
+    height: .auto,
+    layout: {item-gap: 12px},
+    children: [missedButton, seenButton],
+
+    missedButton = frame {
+      width: 100%,
+      height: l.lengths.tap,
+      layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+      border: c.colors.action-secondary,
+      corner-radius: l.lengths.radius-m,
+      children: [missedIcon, missedLabel],
+
+      missedIcon = asset {
+        width: 24px,
+        height: 24px,
+        fill: c.colors.neutral-1,
+        contents: crossIcon
+      }
+
+      missedLabel = text {
+        fill: c.colors.neutral-1,
+        contents: "Raté",
+        font-size: 16,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+    }
+
+    seenButton = frame {
+      width: 100%,
+      height: l.lengths.tap,
+      layout: {justify-content: .center, align-items: .center, item-gap: 8px},
+      fill: c.colors.action,
+      corner-radius: l.lengths.radius-m,
+      children: [seenIcon, seenLabel],
+
+      seenIcon = asset {
+        width: 24px,
+        height: 24px,
+        fill: c.colors.on-action,
+        contents: checkIcon
+      }
+
+      seenLabel = text {
+        fill: c.colors.on-action,
+        contents: "Vu",
+        font-size: 16,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+    }
+  }
+}
+
+// Event passé déjà confirmé : le statut est écrit (« Vu » ou « Raté »), jamais porté par l'icône seule.
+export historyCard = frame {
+  left: 0px,
+  top: 600px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: l.lengths.space-m},
+  fill: c.colors.surface-card,
+  corner-radius: l.lengths.radius-l,
+  padding: l.lengths.space-m,
+  children: [info, status],
+
+  info = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 4px},
+    children: [eventTitle, eventMeta],
+
+    eventTitle = text {
+      width: 100%,
+      fill: c.colors.neutral-1,
+      contents: "Titre",
+      font-size: 18,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    eventMeta = text {
+      width: 100%,
+      fill: c.colors.neutral-1,
+      contents: "Concert | Date | Lieu",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Regular"
+    }
+  }
+
+  status = frame {
+    width: .auto,
+    height: .auto,
+    layout: {justify-content: .center, align-items: .center, item-gap: 4px},
+    fill: c.colors.neutral-12,
+    corner-radius: l.lengths.radius-s,
+    padding: [6px, 10px],
+    children: [statusIcon, statusLabel],
+
+    statusIcon = asset {
+      width: 20px,
+      height: 20px,
+      fill: c.colors.neutral-1,
+      contents: checkIcon
+    }
+
+    statusLabel = text {
+      fill: c.colors.neutral-1,
+      contents: "Vu",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+  }
+}
+
+// Bandeau de l'accueil, tout en haut : c'est ce qui demande une réponse. Fond papier (information), mène à « À confirmer ».
+export confirmBanner = frame {
+  left: 0px,
+  top: 800px,
+  width: 100%,
+  height: 52px,
+  layout: {justify-content: .space-between, align-items: .center},
+  fill: c.colors.neutral-12,
+  corner-radius: l.lengths.radius-l,
+  padding: [0px, 16px],
+  children: [bannerLabel, bannerIcon],
+
+  bannerLabel = text {
+    fill: c.colors.neutral-1,
+    contents: "2 events à confirmer",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  bannerIcon = asset {
+    width: 24px,
+    height: 24px,
+    fill: c.colors.neutral-1,
+    contents: chevronRight
+  }
+}
+
+// Filtre par année de l'historique : actif = encre pleine, inactif = contour encre
+export yearChip = frame {
+  left: 0px,
+  top: 900px,
+  width: .auto,
+  height: 36px,
+  layout: {justify-content: .center, align-items: .center},
+  border: c.colors.action-secondary,
+  corner-radius: l.lengths.radius-m,
+  padding: [0px, 16px],
+  children: yearLabel,
+
+  yearLabel = text {
+    fill: c.colors.neutral-1,
+    contents: "2025",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+export yearChipActive = frame {
+  left: 0px,
+  top: 950px,
+  width: .auto,
+  height: 36px,
+  layout: {justify-content: .center, align-items: .center},
+  fill: c.colors.action-secondary,
+  corner-radius: l.lengths.radius-m,
+  padding: [0px, 16px],
+  children: yearLabelActive,
+
+  yearLabelActive = text {
+    fill: c.colors.neutral-12,
+    contents: "2026",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
