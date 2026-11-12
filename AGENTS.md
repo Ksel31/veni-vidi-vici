@@ -182,16 +182,16 @@ Ne pas faire : vrai backend, vrais comptes, envoi réel de fichiers (billets, ph
 
 ## Checklist de validation de la phase 1
 
-- [ ] Je me connecte et j'arrive sur l'accueil.
-- [ ] Je vois le bandeau « à confirmer » : il m'amène à la liste, puis à la fiche d'un event.
-- [ ] J'ajoute un concert à venir et je le retrouve dans les prévus.
-- [ ] J'ajoute un festival avec un line-up sur plusieurs jours.
-- [ ] J'ajoute un concert passé et j'arrive directement au compte rendu.
-- [ ] Sur un festival passé, je coche les jours faits puis les groupes vus.
-- [ ] Je mets un pouce sur l'event et sur un groupe, un avis, des accompagnants, une setlist.
-- [ ] Je modifie la date d'un event et son statut s'adapte.
-- [ ] Je retrouve tout dans l'historique, filtré par année.
-- [ ] Le tout est utilisable en vue mobile.
+- [x] Je me connecte et j'arrive sur l'accueil.
+- [x] Je vois le bandeau « à confirmer » : il m'amène à la liste, puis à la fiche d'un event.
+- [x] J'ajoute un concert à venir et je le retrouve dans les prévus.
+- [x] J'ajoute un festival avec un line-up sur plusieurs jours.
+- [x] J'ajoute un concert passé et j'arrive directement au compte rendu.
+- [x] Sur un festival passé, je coche les jours faits puis les groupes vus.
+- [x] Je mets un pouce sur l'event et sur un groupe, un avis, des accompagnants, une setlist.
+- [x] Je modifie la date d'un event et son statut s'adapte.
+- [x] Je retrouve tout dans l'historique, filtré par année.
+- [x] Le tout est utilisable en vue mobile.
 
 ---
 
