@@ -53,13 +53,6 @@
 			</div>
 		</div>
 	{:else}
-		{#if confirmList.length > 0}
-			<a class="confirm-pill" href="/to-confirm">
-				{confirmList.length === 1 ? '1 event à confirmer' : `${confirmList.length} events à confirmer`}
-				<Icon name="chevron-right" size={16} />
-			</a>
-		{/if}
-
 		{#if next}
 			<h1 class="section-title">{heading}</h1>
 			<NextTicket event={next} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
@@ -70,6 +63,13 @@
 				<h2 class="section-title">Events à venir</h2>
 			{:else}
 				<h1 class="section-title">Events à venir</h1>
+			{/if}
+
+			{#if confirmList.length > 0}
+				<a class="confirm-pill" href="/to-confirm">
+					{confirmList.length === 1 ? '1 event à confirmer' : `${confirmList.length} events à confirmer`}
+					<Icon name="chevron-right" size={16} />
+				</a>
 			{/if}
 
 			{#if upcoming.length === 0}

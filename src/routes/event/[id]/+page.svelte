@@ -280,7 +280,7 @@
 	<title>{title} — Veni Vidi Vici</title>
 </svelte:head>
 
-<section class="screen screen-detail">
+<section class="screen screen-detail" class:screen-upcoming={!past}>
 	<ScreenHeader title={header} />
 
 	{#if !event}
@@ -290,11 +290,14 @@
 			<h2 class="detail-heading">{untilHeading(daysUntil(event.startDate))}</h2>
 			<NextTicket {event} {performances} artists={$data.artists} venues={$data.venues} plain />
 		{:else}
-			<div class="name-line">
+			<div class="identity">
 				<h2 class="detail-heading">{title}</h2>
+				{#if event.type === 'festival' || event.status === 'attended'}
+					<p class="detail-meta">{eventSummary(event, venue)}</p>
+				{/if}
 				{#if event.status === 'planned'}
-					<a class="badge-link" href="/to-confirm">
-						<Icon name="chevron-right" size={16} />
+					<a class="status-badge status-pending" href="/to-confirm">
+						<Icon name="clock" size={16} />
 						À confirmer
 					</a>
 				{:else if event.status === 'attended'}
@@ -309,9 +312,6 @@
 					</span>
 				{/if}
 			</div>
-			{#if event.type === 'festival' || event.status === 'attended'}
-				<p class="detail-meta">{eventSummary(event, venue)}</p>
-			{/if}
 		{/if}
 
 		{#if !past || (event.type === 'concert' && event.status !== 'attended')}
@@ -346,13 +346,10 @@
 						</div>
 					</div>
 				{/if}
-				{#if event.ticketBought}
-					<p class="hint">Billet acheté</p>
-				{/if}
 				<div class="upload-box">
 					<Icon name="upload" size={26} />
 					<p>Ajouter le billet</p>
-					<p class="hint">PDF ou image. L'envoi n'est pas encore branché.</p>
+					<p class="upload-hint">PDF ou image.</p>
 				</div>
 			</div>
 		{/if}
@@ -393,11 +390,11 @@
 				<div class="choice-row">
 					<button class="btn btn-secondary" type="button" aria-pressed={event.status === 'missed'} onclick={markMissed}>
 						<Icon name="x" size={22} />
-						Raté
+						Non, raté
 					</button>
 					<button class="btn btn-primary" type="button" onclick={markAttended}>
 						<Icon name="check" size={22} />
-						Vu
+						Oui, j'y étais
 					</button>
 				</div>
 			</div>
@@ -573,7 +570,6 @@
 						<Icon name="plus" size={28} />
 					</div>
 				</div>
-				<p class="hint">L'envoi n'est pas encore branché.</p>
 			</div>
 
 			<div class="glass-card">
@@ -593,7 +589,7 @@
 				<div class="upload-box">
 					<Icon name="upload" size={26} />
 					<p>Ajouter le billet</p>
-					<p class="hint">PDF ou image. L'envoi n'est pas encore branché.</p>
+					<p class="upload-hint">PDF ou image.</p>
 				</div>
 			</div>
 

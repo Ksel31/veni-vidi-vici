@@ -9,6 +9,7 @@
 	import ArtistField from '#lib/components/ArtistField.svelte';
 	import DateRangeField from '#lib/components/DateRangeField.svelte';
 	import Icon from '#lib/components/Icon.svelte';
+	import TicketFields from '#lib/components/TicketFields.svelte';
 	import DeleteConfirm from '#lib/components/DeleteConfirm.svelte';
 
 	const eventId = $derived(page.params.id ?? '');
@@ -206,10 +207,10 @@
 	{#if !event}
 		<p class="empty-title">Cet event n'existe pas.</p>
 	{:else if event.type === 'concert'}
-		<p class="hint">* Obligatoire</p>
+		<p class="hint">La date est obligatoire.</p>
 		<div class="glass-card">
 			<p class="card-title">Quand et où</p>
-			<DateRangeField mode="single" label="Date *" inputId="concert-date" placeholder="Choisir la date" bind:start={startDate} />
+			<DateRangeField mode="single" label="Date" inputId="concert-date" placeholder="Choisir la date" bind:start={startDate} />
 			<VenueField venues={$data.venues} bind:name={venueName} bind:city={venueCity} bind:venueId />
 			<div class="field">
 				<label for="edit-title">Titre (optionnel)</label>
@@ -254,11 +255,11 @@
 		<p class="hint">Si la date repasse à aujourd'hui ou plus tard, l'event redevient prévu.</p>
 		{@render actions()}
 	{:else}
-		<p class="hint">* Obligatoire</p>
+		<p class="hint">Le titre et les dates sont obligatoires.</p>
 		<div class="glass-card">
 			<p class="card-title">Le festival</p>
 			<div class="field">
-				<label for="edit-festival-title">Titre *</label>
+				<label for="edit-festival-title">Titre</label>
 				<div class="field-box">
 					<Icon name="tent" size={20} />
 					<input id="edit-festival-title" bind:value={title} placeholder="Ex. Desertfest" autocomplete="off" />
@@ -290,7 +291,7 @@
 							{#if festivalDays.length === 0}
 								<p class="hint">Indique d'abord les dates.</p>
 							{:else}
-								<p class="day-label">{day ? 'Jour *' : 'Choisis un jour *'}</p>
+								<p class="day-label">{day ? 'Jour' : 'Choisis un jour'}</p>
 								<div class="day-chips" role="group" aria-label="Jour de {band.name}">
 									{#each festivalDays as option (option)}
 										<button class="chip" class:chip-on={day === option} type="button" aria-pressed={day === option} onclick={() => chooseDay(band.key, option)}>
@@ -320,27 +321,13 @@
 {#snippet ticket(/** @type {string} */ priceId)}
 	<div class="glass-card">
 		<p class="card-title">Billet</p>
-		<button class="check-row" type="button" aria-pressed={ticketBought} onclick={() => (ticketBought = !ticketBought)}>
-			<span class="check-box" class:check-on={ticketBought}>
-				{#if ticketBought}<Icon name="check" size={18} />{/if}
-			</span>
-			<span>
-				<span class="check-title">Billet acheté</span>
-				<span class="check-meta">Coche quand tu l'as en poche.</span>
-			</span>
-		</button>
-		<div class="field">
-			<label for={priceId}>Prix du billet</label>
-			<div class="field-box">
-				<Icon name="euro" size={20} />
-				<input id={priceId} inputmode="decimal" bind:value={priceText} placeholder="65,00" autocomplete="off" />
-			</div>
-		</div>
-		<div class="upload-box">
-			<Icon name="upload" size={26} />
-			<p>Ajouter le billet</p>
-			<p class="hint">PDF ou image. L'envoi n'est pas encore branché.</p>
-		</div>
+		<TicketFields
+			bind:bought={ticketBought}
+			bind:priceText
+			boughtHint="Coche quand tu l'as en poche."
+			pricePlaceholder="65,00"
+			{priceId}
+		/>
 	</div>
 {/snippet}
 
