@@ -134,12 +134,15 @@ export profileHeader = frame {
         font-style: "Medium"
       }
 
-      // Pour la démo seulement : à droite du pseudo, discret.
+      // Pour la démo seulement : à droite du pseudo. Puce en verre (et plus un simple texte) pour qu'on la reconnaisse comme un bouton.
       logout = frame {
         width: .auto,
         height: l.lengths.tap,
         layout: {align-items: .center},
-        padding: [0px, 0px, 0px, 4px],
+        fill: c.colors.glass-strong,
+        border: c.colors.glass-border,
+        corner-radius: l.lengths.radius-pill,
+        padding: [0px, 14px],
         children: logoutLabel,
 
         logoutLabel = text {

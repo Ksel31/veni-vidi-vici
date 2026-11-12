@@ -158,7 +158,7 @@ export eventConfirm = frame {
           }
 
           buttonLabel {
-            contents: "Raté"
+            contents: "Non, raté"
           }
         }
 
@@ -167,7 +167,7 @@ export eventConfirm = frame {
           connections[0].target: eventReport.eventReport,
 
           buttonLabel {
-            contents: "Vu"
+            contents: "Oui, j'y étais"
           }
         }
       }

@@ -110,8 +110,8 @@ export nextTicket = frame {
     eventMeta = text {
       width: 100%,
       fill: c.colors.neutral-1,
-      contents: "LIEU, VILLE",
-      font-size: 11,
+      contents: "Lieu, ville",
+      font-size: 13,
       font-family: f.fonts.ui,
       font-style: "Medium"
     }
@@ -178,7 +178,7 @@ export nextTicketLong = frame : nextTicket {
     }
 
     eventMeta {
-      contents: "ANCIENNE BELGIQUE, BRUXELLES"
+      contents: "Ancienne Belgique, Bruxelles"
     }
   }
 }

@@ -5,6 +5,7 @@ import "components/screen-header.elyx" as headers
 import "components/ui.elyx" as ui
 import "icons/lucide/plus.svg" as plusIcon
 import "icons/lucide/euro.svg" as euroIcon
+import "icons/lucide/x.svg" as closeIcon
 import "screens/event-upcoming.elyx" as eventUpcoming
 import "screens/event-report.elyx" as eventReport
 
@@ -12,11 +13,12 @@ import "screens/event-report.elyx" as eventReport
 // Date à venir → fiche de l'event ; date passée → présence pré-sélectionnée sur « Vu », direct au compte rendu.
 export addConcert3 = frame {
   title: "Ajouter un concert, étape 3/3",
-  caption: "Dernière étape : le bouton principal enregistre. Date à venir → fiche ; date passée → « Vu » d'office, compte rendu.",
+  caption: "Refonte : la consigne du fichier ne parle plus de ce qui est « branché » (vocabulaire de développeur). Dernière étape : le bouton principal enregistre.",
   left: 0px,
   top: 0px,
   width: 390px,
-  height: 844px,
+  height: .auto,
+  min-height: 844px,
   layout: {direction: .column, justify-content: .space-between},
   fill: [
     {image: {ref: bgPhoto}},
@@ -24,8 +26,8 @@ export addConcert3 = frame {
       linear-gradient: {
         angle: 180deg,
         stops: [
-          stop(0%, rgb(0%, 0%, 0%, 60%)),
-          stop(40%, rgb(0%, 0%, 0%, 72%)),
+          stop(0%, rgb(0%, 0%, 0%, 78%)),
+          stop(40%, rgb(0%, 0%, 0%, 80%)),
           stop(100%, rgb(0%, 0%, 0%, 92%))
         ]
       }
@@ -47,6 +49,12 @@ export addConcert3 = frame {
       padding-bottom: 0px,
       padding-right: 8px,
 
+      backButton {
+        glyph {
+          contents: closeIcon
+        }
+      }
+
       pageTitle {
         contents: "Nouveau concert"
       }
@@ -57,18 +65,18 @@ export addConcert3 = frame {
         contents: "Étape 3/3"
       }
 
+      stepTrack {
+        stepFill {
+          width: 350px
+        }
+      }
+
       stepTitle {
         contents: "Et le billet ?"
       }
 
       stepHelp {
         contents: "Tout est facultatif, tu pourras le compléter depuis la fiche."
-      }
-
-      stepTrack {
-        stepFill {
-          width: 350px
-        }
       }
     }
 
@@ -107,7 +115,7 @@ export addConcert3 = frame {
         }
 
         fieldLabel {
-          contents: "Prix du billet"
+          contents: "Prix du billet (optionnel)"
         }
       }
 
@@ -117,14 +125,14 @@ export addConcert3 = frame {
 
   actions = frame : ui.stepActions {
     next {
-      connections[0].target: eventUpcoming.eventUpcoming,
-      connections[1].target: eventReport.eventReport,
       connections[0].label: "Date à venir",
+      connections[0].target: eventUpcoming.eventUpcoming,
       connections[1].label: "Date passée : « Vu » d'office",
+      connections[1].target: eventReport.eventReport,
 
       buttonGlyph {
-        contents: plusIcon,
-        display: .visible
+        display: .visible,
+        contents: plusIcon
       }
 
       buttonLabel {

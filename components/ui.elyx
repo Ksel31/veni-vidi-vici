@@ -153,7 +153,7 @@ export field = frame {
       contents: "Valeur",
       font-size: 14,
       font-family: f.fonts.input,
-      font-style: "Light"
+      font-style: "Regular"
     }
   }
 }
@@ -716,7 +716,7 @@ export uploadBox = frame {
   uploadHint = text {
     width: 100%,
     fill: c.colors.text-on-dark-muted,
-    contents: "PDF ou image. L'envoi n'est pas encore branché.",
+    contents: "PDF ou image.",
     font-size: 14,
     font-family: f.fonts.input,
     font-style: "Regular",
@@ -874,7 +874,7 @@ export deleteDialog = frame {
       }
 
       buttonLabel {
-        contents: "Supprimer"
+        contents: "Supprimer l'event"
       }
     }
   }
@@ -1035,7 +1035,7 @@ export artistAddField = frame {
     contents: "Ajouter un groupe",
     font-size: 14,
     font-family: f.fonts.input,
-    font-style: "Light"
+    font-style: "Regular"
   }
 
   addArtist = frame {
@@ -1142,5 +1142,43 @@ export stepActions = frame {
     buttonLabel {
       contents: "Suivant"
     }
+  }
+}
+
+// Champ en erreur : même champ, filet rouge. Le message se pose juste dessous (voir `fieldMessage`) et dit comment corriger.
+@variant
+export fieldError = frame : field {
+  left: 3000px,
+  top: 0px,
+
+  fieldBox {
+    border[0].color: c.colors.danger-text
+  }
+}
+
+// Message d'erreur sous un champ : icône + texte, jamais la couleur seule.
+export fieldMessage = frame {
+  left: 3000px,
+  top: 200px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 6px},
+  children: [messageGlyph, messageText],
+
+  messageGlyph = asset {
+    width: 16px,
+    height: 16px,
+    fill: c.colors.danger-text,
+    contents: crossIcon
+  }
+
+  messageText = text {
+    width: 100%,
+    fill: c.colors.danger-text,
+    contents: "Message d'erreur",
+    font-size: 13,
+    font-family: f.fonts.ui,
+    font-style: "Regular",
+    line-height: 1.3
   }
 }

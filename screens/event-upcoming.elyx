@@ -75,7 +75,7 @@ export eventUpcoming = frame {
         }
 
         eventMeta {
-          contents: "ANCIENNE BELGIQUE, BRUXELLES"
+          contents: "Ancienne Belgique, Bruxelles"
         }
       }
     }

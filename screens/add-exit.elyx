@@ -1,10 +1,10 @@
 use "fonts/CabinetGrotesk-Variable.ttf"
 
 import "images/bg-add-concert.jpg" as bgPhoto
-import "components/redone/ui.elyx" as ui
+import "components/ui.elyx" as ui
 import "icons/lucide/x.svg" as closeIcon
 import "icons/lucide/chevron-right.svg" as continueIcon
-import "screens/redone/home.elyx" as home
+import "screens/home.elyx" as home
 
 // Quitter l'ajout : confirmation avant de perdre la saisie. Le choix sûr (« Continuer ») est le bouton principal.
 export addExit = frame {

@@ -3,16 +3,18 @@ use "fonts/CabinetGrotesk-Variable.ttf"
 import "images/bg-add-festival.jpg" as bgPhoto
 import "components/screen-header.elyx" as headers
 import "components/ui.elyx" as ui
+import "icons/lucide/x.svg" as closeIcon
 import "screens/add-festival-3.elyx" as step3
 
-// Ajout d'un festival, étape 2/3 : le line-up « à voir », un jour par groupe.
+// Ajout d'un festival, étape 2/3 : le line-up « à voir », un jour par groupe. Ici des groupes sont déjà ajoutés : « Suivant ».
 export addFestival2 = frame {
   title: "Ajouter un festival, étape 2/3",
-  caption: "Étape facultative. Chaque groupe ajouté doit avoir un jour avant l'enregistrement ; le jour choisi est une petite pilule.",
+  caption: "Refonte : même logique que les concerts (croix, dégradé dense, hauteur minimale). Avec des groupes ajoutés le bouton dit « Suivant » ; sans groupe il dirait « Passer ».",
   left: 0px,
   top: 0px,
   width: 390px,
-  height: 844px,
+  height: .auto,
+  min-height: 844px,
   layout: {direction: .column, justify-content: .space-between},
   fill: [
     {image: {ref: bgPhoto}},
@@ -20,8 +22,8 @@ export addFestival2 = frame {
       linear-gradient: {
         angle: 180deg,
         stops: [
-          stop(0%, rgb(0%, 0%, 0%, 60%)),
-          stop(40%, rgb(0%, 0%, 0%, 72%)),
+          stop(0%, rgb(0%, 0%, 0%, 78%)),
+          stop(40%, rgb(0%, 0%, 0%, 80%)),
           stop(100%, rgb(0%, 0%, 0%, 92%))
         ]
       }
@@ -43,20 +45,26 @@ export addFestival2 = frame {
       padding-bottom: 0px,
       padding-right: 8px,
 
+      backButton {
+        glyph {
+          contents: closeIcon
+        }
+      }
+
       pageTitle {
         contents: "Nouveau festival"
       }
     }
 
     intro = frame : ui.stepHeader {
+      stepLabel {
+        contents: "Étape 2/3"
+      }
+
       stepTrack {
         stepFill {
           width: 233px
         }
-      }
-
-      stepLabel {
-        contents: "Étape 2/3"
       }
 
       stepTitle {
@@ -147,8 +155,8 @@ export addFestival2 = frame {
 
   actions = frame : ui.stepActions {
     next {
-      connections[0].target: step3.addFestival3,
-      connections[0].label: "Suivant"
+      connections[0].label: "Suivant",
+      connections[0].target: step3.addFestival3
     }
   }
 }

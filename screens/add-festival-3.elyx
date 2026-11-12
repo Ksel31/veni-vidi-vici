@@ -5,6 +5,7 @@ import "components/screen-header.elyx" as headers
 import "components/ui.elyx" as ui
 import "icons/lucide/plus.svg" as plusIcon
 import "icons/lucide/euro.svg" as euroIcon
+import "icons/lucide/x.svg" as closeIcon
 import "screens/event-upcoming.elyx" as eventUpcoming
 
 // Ajout d'un festival, étape 3/3 : le billet (acheté, prix, fichier), tout facultatif. Dernière étape = enregistrement.
@@ -14,7 +15,8 @@ export addFestival3 = frame {
   left: 0px,
   top: 0px,
   width: 390px,
-  height: 844px,
+  height: .auto,
+  min-height: 844px,
   layout: {direction: .column, justify-content: .space-between},
   fill: [
     {image: {ref: bgPhoto}},
@@ -22,8 +24,8 @@ export addFestival3 = frame {
       linear-gradient: {
         angle: 180deg,
         stops: [
-          stop(0%, rgb(0%, 0%, 0%, 60%)),
-          stop(40%, rgb(0%, 0%, 0%, 72%)),
+          stop(0%, rgb(0%, 0%, 0%, 78%)),
+          stop(40%, rgb(0%, 0%, 0%, 80%)),
           stop(100%, rgb(0%, 0%, 0%, 92%))
         ]
       }
@@ -45,20 +47,26 @@ export addFestival3 = frame {
       padding-bottom: 0px,
       padding-right: 8px,
 
+      backButton {
+        glyph {
+          contents: closeIcon
+        }
+      }
+
       pageTitle {
         contents: "Nouveau festival"
       }
     }
 
     intro = frame : ui.stepHeader {
+      stepLabel {
+        contents: "Étape 3/3"
+      }
+
       stepTrack {
         stepFill {
           width: 350px
         }
-      }
-
-      stepLabel {
-        contents: "Étape 3/3"
       }
 
       stepTitle {
@@ -105,7 +113,7 @@ export addFestival3 = frame {
         }
 
         fieldLabel {
-          contents: "Prix du billet"
+          contents: "Prix du billet (optionnel)"
         }
       }
 
@@ -115,12 +123,12 @@ export addFestival3 = frame {
 
   actions = frame : ui.stepActions {
     next {
-      connections[0].target: eventUpcoming.eventUpcoming,
       connections[0].label: "Fiche du nouvel event",
+      connections[0].target: eventUpcoming.eventUpcoming,
 
       buttonGlyph {
-        contents: plusIcon,
-        display: .visible
+        display: .visible,
+        contents: plusIcon
       }
 
       buttonLabel {

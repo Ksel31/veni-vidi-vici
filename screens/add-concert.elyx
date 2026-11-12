@@ -7,16 +7,18 @@ import "icons/lucide/music.svg" as musicIcon
 import "icons/lucide/calendar.svg" as calendarIcon
 import "icons/lucide/map-pin.svg" as mapPinIcon
 import "icons/lucide/building-2.svg" as buildingIcon
+import "icons/lucide/x.svg" as closeIcon
 import "screens/add-concert-2.elyx" as step2
 
 // Ajout d'un concert, étape 1/3 : quand et où. Seule la date est obligatoire ; la ville d'abord, la salle ensuite.
 export addConcert = frame {
   title: "Ajouter un concert, étape 1/3",
-  caption: "Un concert se saisit en 3 étapes : quand et où, groupes, billet. La salle n'apparaît qu'une fois la ville remplie.",
+  caption: "Refonte : plus d'astérisques (« optionnel » écrit sur les champs facultatifs), croix « Fermer » à la place de la flèche, dégradé plus dense pour la lisibilité. L'écran grandit avec son contenu (hauteur minimale, pas fixe) et les actions restent ancrées en bas.",
   left: 0px,
   top: 0px,
   width: 390px,
-  height: 844px,
+  height: .auto,
+  min-height: 844px,
   layout: {direction: .column, justify-content: .space-between},
   fill: [
     {image: {ref: bgPhoto}},
@@ -24,8 +26,8 @@ export addConcert = frame {
       linear-gradient: {
         angle: 180deg,
         stops: [
-          stop(0%, rgb(0%, 0%, 0%, 60%)),
-          stop(40%, rgb(0%, 0%, 0%, 72%)),
+          stop(0%, rgb(0%, 0%, 0%, 78%)),
+          stop(40%, rgb(0%, 0%, 0%, 80%)),
           stop(100%, rgb(0%, 0%, 0%, 92%))
         ]
       }
@@ -47,20 +49,26 @@ export addConcert = frame {
       padding-bottom: 0px,
       padding-right: 8px,
 
+      backButton {
+        glyph {
+          contents: closeIcon
+        }
+      }
+
       pageTitle {
         contents: "Nouveau concert"
       }
     }
 
     intro = frame : ui.stepHeader {
+      stepLabel {
+        contents: "Étape 1/3"
+      }
+
       stepTrack {
         stepFill {
           width: 117px
         }
-      }
-
-      stepLabel {
-        contents: "Étape 1/3"
       }
 
       stepTitle {
@@ -68,7 +76,7 @@ export addConcert = frame {
       }
 
       stepHelp {
-        contents: "Seule la date est obligatoire. Le reste peut venir plus tard."
+        contents: "La date est obligatoire. Le reste peut venir plus tard."
       }
     }
 
@@ -96,7 +104,7 @@ export addConcert = frame {
         }
 
         fieldLabel {
-          contents: "Date *"
+          contents: "Date"
         }
       }
 
@@ -112,7 +120,7 @@ export addConcert = frame {
         }
 
         fieldLabel {
-          contents: "Ville"
+          contents: "Ville (optionnel)"
         }
       }
 
@@ -128,7 +136,7 @@ export addConcert = frame {
         }
 
         fieldLabel {
-          contents: "Lieu, salle"
+          contents: "Lieu, salle (optionnel)"
         }
       }
 
@@ -151,13 +159,13 @@ export addConcert = frame {
   }
 
   actions = frame : ui.stepActions {
-    next {
-      connections[0].target: step2.addConcert2,
-      connections[0].label: "Suivant"
-    }
-
     back {
       display: .none
+    }
+
+    next {
+      connections[0].label: "Suivant",
+      connections[0].target: step2.addConcert2
     }
   }
 }

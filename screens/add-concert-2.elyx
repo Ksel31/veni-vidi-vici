@@ -5,17 +5,19 @@ import "components/screen-header.elyx" as headers
 import "tokens/colors.elyx" as c
 import "tokens/fonts.elyx" as f
 import "components/ui.elyx" as ui
-import "icons/lucide/mic-vocal.svg" as micIcon
+import "icons/lucide/x.svg" as closeIcon
 import "screens/add-concert-3.elyx" as step3
+import "screens/add-exit.elyx" as exit
 
-// Ajout d'un concert, étape 2/3 : les groupes. Deux zones (tête d'affiche, première partie), chacune avec son champ d'ajout.
+// Ajout d'un concert, étape 2/3 : les groupes. Étape facultative, ici encore vide : le bouton dit « Passer ».
 export addConcert2 = frame {
   title: "Ajouter un concert, étape 2/3",
-  caption: "Les groupes s'ajoutent sous chaque rôle, au-dessus du champ. Étape facultative : on peut passer à la suivante sans groupe.",
+  caption: "Refonte : tant que rien n'est ajouté, le bouton dit « Passer » (il dit « Suivant » dès qu'un groupe est là). La croix ouvre une confirmation avant de perdre la saisie.",
   left: 0px,
   top: 0px,
   width: 390px,
-  height: 844px,
+  height: .auto,
+  min-height: 844px,
   layout: {direction: .column, justify-content: .space-between},
   fill: [
     {image: {ref: bgPhoto}},
@@ -23,8 +25,8 @@ export addConcert2 = frame {
       linear-gradient: {
         angle: 180deg,
         stops: [
-          stop(0%, rgb(0%, 0%, 0%, 60%)),
-          stop(40%, rgb(0%, 0%, 0%, 72%)),
+          stop(0%, rgb(0%, 0%, 0%, 78%)),
+          stop(40%, rgb(0%, 0%, 0%, 80%)),
           stop(100%, rgb(0%, 0%, 0%, 92%))
         ]
       }
@@ -46,6 +48,15 @@ export addConcert2 = frame {
       padding-bottom: 0px,
       padding-right: 8px,
 
+      backButton {
+        connections[0].label: "Fermer",
+        connections[0].target: exit.addExit,
+
+        glyph {
+          contents: closeIcon
+        }
+      }
+
       pageTitle {
         contents: "Nouveau concert"
       }
@@ -56,18 +67,18 @@ export addConcert2 = frame {
         contents: "Étape 2/3"
       }
 
+      stepTrack {
+        stepFill {
+          width: 233px
+        }
+      }
+
       stepTitle {
         contents: "Qui joue ?"
       }
 
       stepHelp {
         contents: "Ajoute la tête d'affiche et, si tu veux, les premières parties."
-      }
-
-      stepTrack {
-        stepFill {
-          width: 233px
-        }
       }
     }
 
@@ -86,7 +97,7 @@ export addConcert2 = frame {
         height: .auto,
         layout: {direction: .column, item-gap: 8px},
         overflow: .visible,
-        children: [zoneLabel, headliner, addHead],
+        children: [zoneLabel, addHead],
 
         zoneLabel = text {
           width: 100%,
@@ -97,21 +108,6 @@ export addConcert2 = frame {
           font-style: "Medium"
         }
 
-        headliner = frame : ui.lineupRow {
-          padding-top: 10px,
-          padding-left: 12px,
-          padding-bottom: 10px,
-          padding-right: 12px,
-
-          bandName {
-            contents: "Nick Cave"
-          }
-
-          dragHandle {
-            display: .visible
-          }
-        }
-
         addHead = frame : ui.artistAddField {}
       }
 
@@ -120,7 +116,7 @@ export addConcert2 = frame {
         height: .auto,
         layout: {direction: .column, item-gap: 8px},
         overflow: .visible,
-        children: [zoneLabel, support, addSupport],
+        children: [zoneLabel, addSupport],
 
         zoneLabel = text {
           width: 100%,
@@ -131,31 +127,6 @@ export addConcert2 = frame {
           font-style: "Medium"
         }
 
-        support = frame : ui.lineupRow {
-          padding-top: 10px,
-          padding-left: 12px,
-          padding-bottom: 10px,
-          padding-right: 12px,
-
-          bandRole {
-            fill[0].color: c.colors.glass-strong,
-            border[0].color: c.colors.border,
-
-            bandRoleGlyph {
-              fill[0].color: c.colors.text-on-dark,
-              contents: micIcon
-            }
-          }
-
-          bandName {
-            contents: "Cat Power"
-          }
-
-          dragHandle {
-            display: .visible
-          }
-        }
-
         addSupport = frame : ui.artistAddField {}
       }
     }
@@ -163,8 +134,12 @@ export addConcert2 = frame {
 
   actions = frame : ui.stepActions {
     next {
+      connections[0].label: "Passer",
       connections[0].target: step3.addConcert3,
-      connections[0].label: "Suivant"
+
+      buttonLabel {
+        contents: "Passer"
+      }
     }
   }
 }

@@ -65,7 +65,7 @@ export home = frame {
 
       ticketInfo {
         eventMeta {
-          contents: "ANCIENNE BELGIQUE, BRUXELLES"
+          contents: "Ancienne Belgique, Bruxelles"
         }
 
         eventTitle {

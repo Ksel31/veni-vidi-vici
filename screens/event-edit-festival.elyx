@@ -2,12 +2,11 @@ use "fonts/CabinetGrotesk-Variable.ttf"
 
 import "images/bg-event-edit.jpg" as bgPhoto
 import "components/screen-header.elyx" as headers
-import "tokens/colors.elyx" as c
 import "components/ui.elyx" as ui
 import "icons/lucide/check.svg" as checkIcon
-import "icons/lucide/plus.svg" as plusIcon
 import "icons/lucide/calendar.svg" as calendarIcon
 import "icons/lucide/map-pin.svg" as mapPinIcon
+import "icons/lucide/building-2.svg" as buildingIcon
 import "icons/lucide/euro.svg" as euroIcon
 import "icons/lucide/tent.svg" as tentIcon
 
@@ -57,7 +56,7 @@ export eventEditFestival = frame {
     children: [required, whenWhere, lineup, ticket, note, submit, remove],
 
     required = text : ui.hint {
-      contents: "* Obligatoire"
+      contents: "Le titre et les dates sont obligatoires."
     }
 
     whenWhere = frame : ui.glassCard {
@@ -84,7 +83,7 @@ export eventEditFestival = frame {
         }
 
         fieldLabel {
-          contents: "Titre *"
+          contents: "Titre"
         }
       }
 
@@ -100,7 +99,7 @@ export eventEditFestival = frame {
         }
 
         fieldLabel {
-          contents: "Dates *"
+          contents: "Dates"
         }
       }
 
@@ -116,14 +115,14 @@ export eventEditFestival = frame {
         }
 
         fieldLabel {
-          contents: "Ville"
+          contents: "Ville (optionnel)"
         }
       }
 
       roomField = frame : ui.fieldEmpty {
         fieldBox {
           fieldGlyph {
-            contents: mapPinIcon
+            contents: buildingIcon
           }
 
           fieldValue {
@@ -132,7 +131,7 @@ export eventEditFestival = frame {
         }
 
         fieldLabel {
-          contents: "Lieu, salle"
+          contents: "Lieu, salle (optionnel)"
         }
       }
     }
@@ -209,7 +208,7 @@ export eventEditFestival = frame {
         }
 
         fieldLabel {
-          contents: "Prix du billet"
+          contents: "Prix du billet (optionnel)"
         }
       }
 
