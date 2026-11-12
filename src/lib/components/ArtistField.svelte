@@ -1,6 +1,6 @@
 <script>
-	/** @type {{ artists: import('#lib/store.js').Artist[], taken: string[], placeholder: string, onAdd: (name: string) => void }} */
-	let { artists, taken, placeholder, onAdd } = $props();
+	/** @type {{ artists: import('#lib/store.js').Artist[], taken: string[], placeholder: string, inputId?: string, onAdd: (name: string) => void }} */
+	let { artists, taken, placeholder, inputId = 'artist-query', onAdd } = $props();
 
 	let query = $state('');
 	/** @type {HTMLInputElement | null} */
@@ -82,10 +82,10 @@
 </script>
 
 <form class="field" onsubmit={onSubmit}>
-	<label class="visually-hidden" for="artist-query">Ajouter un groupe</label>
+	<label class="visually-hidden" for={inputId}>Ajouter un groupe</label>
 	<div class="field-box">
 		<input
-			id="artist-query"
+			id={inputId}
 			bind:this={input}
 			bind:value={query}
 			{placeholder}

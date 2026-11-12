@@ -33,12 +33,12 @@
 		return addVenue({ name: venueName.trim(), city: venueCity.trim(), country: 'Belgique' });
 	}
 
-	/** @param {string} name */
-	function addBand(name) {
+	/** @param {string} name @param {'headliner' | 'support'} billing */
+	function addBand(name, billing) {
 		const trimmed = name.trim();
 		if (!trimmed) return;
 		if (bands.some((band) => band.name.toLowerCase() === trimmed.toLowerCase())) return;
-		bands = [...bands, { key: crypto.randomUUID(), name: trimmed, billing: 'headliner' }];
+		bands = [...bands, { key: crypto.randomUUID(), name: trimmed, billing }];
 	}
 
 	/** @param {string} key */
@@ -148,20 +148,27 @@
 			{#each headliners as band (band.key)}
 				{@render row(band)}
 			{/each}
+			<ArtistField
+				artists={$data.artists}
+				taken={bands.map((band) => band.name)}
+				placeholder="Ajouter un groupe"
+				inputId="artist-headliner"
+				onAdd={(name) => addBand(name, 'headliner')}
+			/>
 		</div>
 		<div class="zone" data-zone="support">
 			<p class="zone-label">Première partie</p>
 			{#each supports as band (band.key)}
 				{@render row(band)}
 			{/each}
+			<ArtistField
+				artists={$data.artists}
+				taken={bands.map((band) => band.name)}
+				placeholder="Ajouter un groupe"
+				inputId="artist-support"
+				onAdd={(name) => addBand(name, 'support')}
+			/>
 		</div>
-
-		<ArtistField
-			artists={$data.artists}
-			taken={bands.map((band) => band.name)}
-			placeholder="Ajouter un groupe"
-			onAdd={addBand}
-		/>
 	</div>
 
 	<div class="glass-card">
@@ -213,8 +220,15 @@
 			<span></span><span></span><span></span>
 		</button>
 		<span class="band-name">{band.name}</span>
-		<button class="role-pill" class:role-support={band.billing === 'support'} type="button" onclick={() => toggleBilling(band.key)}>
-			{band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}
+		<button
+			class="role-pill"
+			class:role-support={band.billing === 'support'}
+			type="button"
+			aria-label={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}
+			title={band.billing === 'headliner' ? "Tête d'affiche" : 'Première partie'}
+			onclick={() => toggleBilling(band.key)}
+		>
+			<Icon name={band.billing === 'headliner' ? 'crown' : 'mic-vocal'} size={18} />
 		</button>
 		<button class="icon-button band-remove" type="button" aria-label="Retirer {band.name}" onclick={() => removeBand(band.key)}>
 			<Icon name="x" size={20} />

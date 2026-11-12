@@ -1,7 +1,8 @@
 <script>
-	import { data, historyEvents } from '#lib/store.js';
+	import { data, deleteEvent, historyEvents } from '#lib/store.js';
 	import { dateParts, dayCount, eventTitle, findVenue, venueLine } from '#lib/present.js';
 	import Icon from '#lib/components/Icon.svelte';
+	import DeleteConfirm from '#lib/components/DeleteConfirm.svelte';
 	import TabBar from '#lib/components/TabBar.svelte';
 
 	const history = $derived(historyEvents($data));
@@ -10,6 +11,7 @@
 	);
 
 	let picked = $state('');
+	let deleteId = $state(/** @type {string | null} */ (null));
 	const year = $derived(years.includes(picked) ? picked : (years[0] ?? ''));
 	const visible = $derived(history.filter((event) => event.startDate.startsWith(year)));
 
@@ -61,21 +63,38 @@
 			{#each visible as event (event.id)}
 				{@const venue = findVenue($data.venues, event.venueId)}
 				{@const date = dateParts(event.startDate)}
-				<a class="history-row" href="/event/{event.id}">
-					<span class="date-block">
-						<span class="date-day">{String(date.day).padStart(2, '0')}</span>
-						<span class="date-month">{date.monthLabel}</span>
-					</span>
-					<span class="event-info">
-						<span class="event-row-title">{eventTitle(event, $data.performances, $data.artists)}</span>
-						<span class="event-row-meta">{meta(event, venue)}</span>
-					</span>
+				<article class="history-row">
+					<a class="history-link" href="/event/{event.id}">
+						<span class="date-block">
+							<span class="date-day">{String(date.day).padStart(2, '0')}</span>
+							<span class="date-month">{date.monthLabel}</span>
+						</span>
+						<span class="event-info">
+							<span class="event-row-title">{eventTitle(event, $data.performances, $data.artists)}</span>
+							<span class="event-row-meta">{meta(event, venue)}</span>
+						</span>
+					</a>
 					<span class="status-badge" class:status-missed={event.status === 'missed'}>
 						<Icon name={event.status === 'missed' ? 'x' : 'check'} size={16} />
 						{event.status === 'missed' ? 'Raté' : 'Vu'}
 					</span>
-				</a>
+					<button class="history-delete" type="button" aria-label="Supprimer l'event" onclick={() => (deleteId = event.id)}>
+						<Icon name="x" size={12} />
+					</button>
+				</article>
 			{/each}
+		</div>
+	{/if}
+	{#if deleteId}
+		<div class="modal-layer">
+			<DeleteConfirm
+				onCancel={() => (deleteId = null)}
+				onConfirm={() => {
+					const id = deleteId;
+					if (id) deleteEvent(id);
+					deleteId = null;
+				}}
+			/>
 		</div>
 	{/if}
 </section>

@@ -5,6 +5,7 @@
 	import favicon from '#lib/assets/favicon.svg';
 	import { data, restoreSession } from '#lib/store.js';
 	import { shellTone } from '#lib/shell.js';
+	import { dismissToast, toast } from '#lib/toast.js';
 	import '../app.css';
 
 	/** @type {{ children: import('svelte').Snippet }} */
@@ -50,5 +51,19 @@
 <div class="app-shell {background}">
 	{#if show}
 		{@render children()}
+	{/if}
+	{#if $toast}
+		<div class="toast" role="status">
+			<p>{$toast.text}</p>
+			<button
+				type="button"
+				onclick={() => {
+					$toast?.onUndo();
+					dismissToast();
+				}}
+			>
+				Annuler
+			</button>
+		</div>
 	{/if}
 </div>
