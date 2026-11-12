@@ -40,7 +40,7 @@ Exemple d'entrée :
 - [ ] **Empty state de l'accueil**
   - Description : quand il n'y a aucun event à venir, proposer un gros bouton « Ajouter mon premier concert », ou un petit onboarding.
   - Priorité : à définir
-  - Statut : à trier
+  - Statut : en cours
   - Source : Ruru
 
 ## 💡 Idées de fonctionnalités

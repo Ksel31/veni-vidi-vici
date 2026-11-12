@@ -2030,3 +2030,239 @@ button.field-box:active {
 	border-radius: var(--radius-m);
 	text-align: center;
 }
+
+/* Accueil vide : phrase + CTA pleine largeur, sans barre d'onglets (home-empty.elyx). */
+.empty-home {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding-top: 32px;
+}
+
+.empty-lead {
+	margin: 0;
+	color: var(--text-on-dark-muted);
+	font-size: 16px;
+	line-height: 1.3;
+}
+
+.profile-compact .who {
+	min-width: 0;
+	flex: 1;
+}
+
+.profile-compact .logout {
+	flex: none;
+}
+
+.dock-solo {
+	justify-content: stretch;
+}
+
+.add-first {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	width: 100%;
+	height: 64px;
+	border: 0;
+	border-radius: var(--radius-pill);
+	background: var(--cta);
+	color: var(--on-cta);
+	font-size: 18px;
+	font-weight: 500;
+	box-shadow: 0 0 28px rgb(66.6667% 100% 13.33% / 45%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.add-first:hover {
+		background: var(--cta-hover);
+	}
+}
+
+.add-first:active {
+	background: var(--cta-pressed);
+}
+
+/* Onboarding : trois écrans à swiper (onboarding.elyx). Le défilement est natif. */
+.onboarding {
+	position: relative;
+	z-index: 1;
+	height: 100dvh;
+	overflow: hidden;
+}
+
+.onboarding-track {
+	display: flex;
+	height: 100%;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: none;
+}
+
+.onboarding-track::-webkit-scrollbar {
+	display: none;
+}
+
+.onboarding-slide {
+	position: relative;
+	display: flex;
+	flex: 0 0 100%;
+	flex-direction: column;
+	justify-content: space-between;
+	min-width: 100%;
+	height: 100%;
+	padding:
+		max(24px, env(safe-area-inset-top, 0px))
+		max(20px, env(safe-area-inset-right, 0px))
+		max(32px, env(safe-area-inset-bottom, 0px))
+		max(20px, env(safe-area-inset-left, 0px));
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	background-color: var(--surface-dark);
+	background-image:
+		linear-gradient(180deg, rgb(0% 0% 0% / 40%) 0%, rgb(0% 0% 0% / 55%) 45%, rgb(0% 0% 0% / 92%) 100%),
+		var(--slide-photo);
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.onboarding-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.onboarding-logo {
+	width: 150px;
+	height: 53px;
+	object-fit: contain;
+	object-position: left center;
+}
+
+.onboarding-skip,
+.swipe-hint {
+	border: 0;
+	border-radius: var(--radius-pill);
+	background: transparent;
+	color: var(--text-on-dark);
+}
+
+.onboarding-skip {
+	min-height: var(--tap);
+	padding: 0 4px;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.onboarding-lower {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	padding-bottom: 92px;
+}
+
+.onboarding-lower-last {
+	padding-bottom: 0;
+}
+
+.onboarding-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.onboarding-disc {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 88px;
+	height: 88px;
+	border-radius: 44px;
+	background: var(--light);
+	color: var(--neutral-1);
+}
+
+.onboarding-texts {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.onboarding-eyebrow,
+.onboarding-texts p,
+.onboarding-texts h1 {
+	margin: 0;
+}
+
+.onboarding-eyebrow {
+	font-size: 18px;
+	font-weight: 500;
+}
+
+.onboarding-texts h1 {
+	font-size: 44px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: -0.03em;
+}
+
+.onboarding-texts p {
+	font-size: 18px;
+	line-height: 1.3;
+}
+
+.page-dots {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	height: 8px;
+}
+
+.page-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 4px;
+	background: var(--text-on-dark-muted);
+}
+
+.page-dot-on {
+	width: 24px;
+	background: var(--light);
+}
+
+.swipe-hint {
+	position: absolute;
+	top: calc(398 / 844 * 100%);
+	right: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	padding: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.onboarding-skip:hover,
+	.swipe-hint:hover {
+		background: var(--state-hover);
+	}
+}
+
+.onboarding-skip:active,
+.swipe-hint:active {
+	background: var(--state-pressed);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.onboarding-track {
+		scroll-behavior: auto;
+	}
+}

@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import favicon from '#lib/assets/favicon.svg';
-	import { data, restoreSession } from '#lib/store.js';
+	import { data, needsOnboarding, restoreSession } from '#lib/store.js';
 	import { shellTone } from '#lib/shell.js';
 	import { dismissToast, toast } from '#lib/toast.js';
 	import '../app.css';
@@ -39,8 +39,17 @@
 
 	$effect(() => {
 		if (!ready) return;
-		if (!loggedIn && path !== '/login') goto('/login');
-		if (loggedIn && path === '/login') goto('/');
+		const showOnboarding = needsOnboarding($data);
+		if (!loggedIn && path !== '/login') {
+			goto('/login');
+			return;
+		}
+		// Compte vide jamais onboardé : on reste sur /onboarding, y compris au rechargement.
+		if (loggedIn && showOnboarding && path !== '/onboarding') {
+			goto('/onboarding');
+			return;
+		}
+		if (loggedIn && !showOnboarding && path === '/login') goto('/');
 	});
 </script>
 

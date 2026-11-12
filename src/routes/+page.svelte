@@ -15,6 +15,7 @@
 	const seenEvents = $derived(historyEvents($data).filter((event) => event.status === 'attended').length);
 	const seenBands = $derived($data.performances.filter((performance) => performance.status === 'seen').length);
 	const heading = $derived(next ? untilHeading(daysUntil(next.startDate)) : '');
+	const isEmpty = $derived($data.events.length === 0);
 
 	function signOut() {
 		logout();
@@ -34,37 +35,53 @@
 			{seenEvents}
 			{seenBands}
 			onLogout={signOut}
+			hideStats={isEmpty}
 		/>
 	{/if}
 
-	{#if next}
-		<h1 class="section-title">{heading}</h1>
-		<NextTicket event={next} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
-	{/if}
-
-	<div class="upcoming-block">
-		{#if next}
-			<h2 class="section-title">Events à venir</h2>
-		{:else}
+	{#if isEmpty}
+		<div class="empty-home">
 			<h1 class="section-title">Events à venir</h1>
-		{/if}
-		{#if confirmList.length > 0}
-			<a class="confirm-pill" href="/to-confirm">
-				{confirmList.length === 1 ? '1 event à confirmer' : `${confirmList.length} events à confirmer`}
-				<Icon name="chevron-right" size={16} />
-			</a>
+			<p class="empty-lead">Aucun event pour l'instant. Ajoute le prochain concert ou festival que tu prévois.</p>
+		</div>
+	{:else}
+		{#if next}
+			<h1 class="section-title">{heading}</h1>
+			<NextTicket event={next} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
 		{/if}
 
-		{#if upcoming.length === 0}
-			<!-- L'accueil vide n'est pas dessiné dans les maquettes. -->
-			<p class="empty-title">Aucun event à venir.</p>
-			<p class="hint">Cet écran vide n'est pas encore dessiné.</p>
-		{:else}
-			{#each later as event (event.id)}
-				<EventRow {event} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
-			{/each}
-		{/if}
-	</div>
+		<div class="upcoming-block">
+			{#if next}
+				<h2 class="section-title">Events à venir</h2>
+			{:else}
+				<h1 class="section-title">Events à venir</h1>
+			{/if}
+			{#if confirmList.length > 0}
+				<a class="confirm-pill" href="/to-confirm">
+					{confirmList.length === 1 ? '1 event à confirmer' : `${confirmList.length} events à confirmer`}
+					<Icon name="chevron-right" size={16} />
+				</a>
+			{/if}
+
+			{#if upcoming.length === 0}
+				<p class="empty-title">Aucun event à venir.</p>
+			{:else}
+				{#each later as event (event.id)}
+					<EventRow {event} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
+				{/each}
+			{/if}
+		</div>
+	{/if}
 </section>
 
-<TabBar />
+{#if isEmpty}
+	<div class="dock dock-solo">
+		<div class="bottom-fade"></div>
+		<a class="add-first" href="/add">
+			<Icon name="plus" size={26} />
+			Ajouter mon 1er event
+		</a>
+	</div>
+{:else}
+	<TabBar />
+{/if}

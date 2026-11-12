@@ -67,6 +67,7 @@ const browser = typeof localStorage !== 'undefined';
  * @property {Artist[]} artists
  * @property {Event[]} events
  * @property {Performance[]} performances
+ * @property {boolean} onboardingSeen
  */
 
 /**
@@ -84,7 +85,7 @@ function storageKey(userId) {
 
 /** @returns {AppData} */
 function loggedOut() {
-	return { userId: null, venues: [], artists: [], events: [], performances: [] };
+	return { userId: null, venues: [], artists: [], events: [], performances: [], onboardingSeen: false };
 }
 
 /** @returns {string} AAAA-MM-JJ, calendrier local. */
@@ -154,7 +155,8 @@ function save(state) {
 		venues: state.venues,
 		artists: state.artists,
 		events: state.events,
-		performances: state.performances
+		performances: state.performances,
+		onboardingSeen: state.onboardingSeen === true
 	};
 	localStorage.setItem(storageKey(state.userId), JSON.stringify(payload));
 	localStorage.setItem(SESSION_KEY, state.userId);
@@ -176,7 +178,8 @@ function readUser(userId) {
 			venues: parsed.venues ?? [],
 			artists: parsed.artists ?? [],
 			events: parsed.events ?? [],
-			performances: parsed.performances ?? []
+			performances: parsed.performances ?? [],
+			onboardingSeen: parsed.onboardingSeen === true
 		};
 	} catch {
 		return null;
@@ -194,9 +197,28 @@ export function login(identifier) {
 	if (!userId) return;
 
 	const saved = readUser(userId);
+	const empty = { venues: [], artists: [], events: [], performances: [], onboardingSeen: false };
 	// Premier login `demo` seulement : ensuite on relit le localStorage.
-	const payload = saved ?? (userId === 'demo' ? createDemoData() : { venues: [], artists: [], events: [], performances: [] });
+	// Le compte démo ne passe jamais par l'onboarding.
+	const payload = saved ?? (userId === 'demo' ? { ...createDemoData(), onboardingSeen: true } : empty);
 	commit({ userId, ...payload });
+}
+
+/**
+ * L'onboarding s'affiche une fois, pour un compte sans event, jamais pour `demo`.
+ * @param {AppData} [state]
+ */
+export function needsOnboarding(state = get(data)) {
+	if (!state.userId || state.userId === 'demo') return false;
+	if (state.onboardingSeen) return false;
+	return state.events.length === 0;
+}
+
+/** « Passer » ou « Ajouter mon 1er event » : l'onboarding ne revient pas pour ce compte. */
+export function completeOnboarding() {
+	const state = get(data);
+	if (!state.userId || state.onboardingSeen) return;
+	commit({ ...state, onboardingSeen: true });
 }
 
 /** Après un rechargement, rouvre le dernier identifiant. */
