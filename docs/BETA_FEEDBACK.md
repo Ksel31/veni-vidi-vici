@@ -2,7 +2,7 @@
 
 Carnet de bord des retours de la bêta entre amis : bugs, améliorations et idées à trier plus tard. Rien ici n'est un engagement de développement.
 
-Démo : [veni-vidi-vici sur Vercel](https://veni-vidi-vici-git-cursor-final-pass-b6c3-ksel31.vercel.app). Connexion avec l'identifiant `demo` et n'importe quel mot de passe. Les données restent dans le navigateur de chacun.
+Démo : [veni-vidi-vici sur Vercel](https://veni-vidi-vici-ksel31.vercel.app). Connexion avec l'identifiant `demo` et n'importe quel mot de passe. Les données restent dans le navigateur de chacun.
 
 ## Légende
 
