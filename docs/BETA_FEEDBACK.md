@@ -28,7 +28,7 @@ Exemple d'entrée :
 
 - [ ] **Titre court**
   - Date : 12 nov. 2026
-  - Qui : Prénom
+  - Source : Ruru
   - Écran : Accueil
   - Description : ce qui se passe, et ce qu'on attendait.
   - Priorité : P2
@@ -41,7 +41,7 @@ Exemple d'entrée :
   - Description : quand il n'y a aucun event à venir, proposer un gros bouton « Ajouter mon premier concert », ou un petit onboarding.
   - Priorité : à définir
   - Statut : à trier
-  - Source : Ksel
+  - Source : Ruru
 
 ## 💡 Idées de fonctionnalités
 
@@ -49,19 +49,19 @@ Exemple d'entrée :
   - Description : proposer des playlists Spotify quelques jours avant le concert.
   - Priorité : à définir
   - Statut : à trier
-  - Source : Ksel
+  - Source : Ruru
 
 - [ ] **Partager un concert**
   - Description : envoyer un concert à ses potes via un ticket VVV (Veni Vidi Vici).
   - Priorité : à définir
   - Statut : à trier
-  - Source : Ksel
+  - Source : Ruru
 
 - [ ] **Mini réseau social**
   - Description : chacun peut s'inviter dans les concerts des autres. Il faudra ajouter une date dans l'agenda.
   - Priorité : à définir
   - Statut : à trier
-  - Source : Ksel
+  - Source : Ruru
 
 ## ✅ Fait
 
