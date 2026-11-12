@@ -374,6 +374,72 @@ export function setFestivalAttendance(eventId, daysAttended, seenIds) {
 	});
 }
 
+/**
+ * Enregistre la fiche modifiée. La date du jour ou future repasse l'event en `planned`
+ * et les passages en `to_see`. Un event déjà passé garde Vu ou Raté.
+ * Le pouce, l'avis et les setlists restent en mémoire.
+ * @param {string} eventId
+ * @param {Partial<Event>} changes
+ * @param {Array<{ performanceId: string | null, artistId: string, billing: Billing, day: string | null }>} bandList
+ */
+export function saveEditedEvent(eventId, changes, bandList) {
+	const state = get(data);
+	const current = state.events.find((event) => event.id === eventId);
+	if (!current || !state.userId) return;
+
+	const event = normalizeEvent({ ...current, ...changes, id: current.id });
+	if (event.type === 'festival') {
+		const end = event.endDate || event.startDate;
+		event.daysAttended = event.daysAttended.filter((day) => day >= event.startDate && day <= end);
+	}
+
+	const previous = new Map(
+		state.performances.filter((performance) => performance.eventId === eventId).map((performance) => [performance.id, performance])
+	);
+	const nextBands = bandList.flatMap((band) => {
+		if (!band.artistId) return [];
+		const old = band.performanceId ? previous.get(band.performanceId) : undefined;
+		return [{
+			id: old?.id ?? crypto.randomUUID(),
+			eventId,
+			artistId: band.artistId,
+			billing: band.billing,
+			day: band.day,
+			status: old?.status ?? statusForNewBand(event),
+			thumb: old?.thumb ?? null,
+			setlist: old?.setlist ?? ''
+		}];
+	});
+	const performances = applyPerformanceRules(event, [
+		...state.performances.filter((performance) => performance.eventId !== eventId),
+		...nextBands
+	]);
+	commit({
+		...state,
+		events: state.events.map((item) => (item.id === eventId ? event : item)),
+		performances
+	});
+}
+
+/** Un groupe ajouté pendant la modification suit le statut déjà connu. @param {Event} event */
+function statusForNewBand(event) {
+	if (!isPast(event) || event.status === 'planned') return 'to_see';
+	if (event.status === 'missed') return 'missed';
+	if (event.type === 'concert') return 'seen';
+	return 'to_see';
+}
+
+/** Efface l'event et ses passages. @param {string} eventId */
+export function deleteEvent(eventId) {
+	const state = get(data);
+	if (!state.userId) return;
+	commit({
+		...state,
+		events: state.events.filter((event) => event.id !== eventId),
+		performances: state.performances.filter((performance) => performance.eventId !== eventId)
+	});
+}
+
 /** Pouce ou setlist d'un passage. @param {string} id @param {Partial<Pick<Performance, 'thumb' | 'setlist'>>} changes */
 export function updatePerformance(id, changes) {
 	const state = get(data);
