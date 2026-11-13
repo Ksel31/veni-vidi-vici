@@ -19,7 +19,9 @@ Le brief complet (modèle de données, règles métier, routes, checklist de val
 - `local` (défaut) : dans le navigateur, avec le compte `demo`. C'est le mode de la démo en ligne.
 - `pocketbase` : sur un serveur [PocketBase](https://pocketbase.io) avec de vrais comptes (identifiant + mot de passe). Le schéma est dans [`pb_migrations/`](pb_migrations/README.md) (PocketBase 0.40.6).
 
-Les variables (`PUBLIC_STORE`, `PUBLIC_POCKETBASE_URL`) sont décrites dans [`.env.example`](.env.example). Pour essayer PocketBase en local : `pocketbase serve --migrationsDir=./pb_migrations`, puis dans `.env` `PUBLIC_STORE=pocketbase` et `PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090`, puis `npm run dev`.
+Les inscriptions sont fermées par défaut avec PocketBase : l'admin crée les comptes (réouverture : voir [`pb_migrations/README.md`](pb_migrations/README.md)).
+
+Les variables (`PUBLIC_STORE`, `PUBLIC_POCKETBASE_URL`, `PUBLIC_INSCRIPTIONS_OUVERTES`) sont décrites dans [`.env.example`](.env.example). Pour essayer PocketBase en local : `pocketbase serve --migrationsDir=./pb_migrations --hooksDir=./pb_hooks`, puis dans `.env` `PUBLIC_STORE=pocketbase` et `PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090`, puis `npm run dev`.
 
 
 ### Où se trouve quoi / Ajouter un champ

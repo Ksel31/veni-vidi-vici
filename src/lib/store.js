@@ -41,7 +41,7 @@ import { showInfoToast } from './toast.js';
  * @property {string | null} venueId
  * @property {EventStatus} status
  * @property {boolean} ticketBought
- * @property {number | null} ticketPrice
+ * @property {number | null} ticketPrice  en euros ; `0` = gratuit, `null` = non renseigné
  * @property {null} ticketFile
  * @property {string[]} photos
  * @property {string[]} daysAttended

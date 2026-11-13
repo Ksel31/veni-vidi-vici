@@ -98,9 +98,12 @@ export function eventSummary(event, venue) {
 	return `Concert, ${spokenDate(event.startDate)}, ${venueLine(venue) ?? 'Lieu à venir'}`;
 }
 
-/** @param {number | null} value */
+/** Libellé du prix : « Gratuit » pour 0, texte vide si le prix n'est pas renseigné (`null`).
+ * @param {number | null} value
+ */
 export function priceLabel(value) {
 	if (value == null) return '';
+	if (value === 0) return 'Gratuit';
 	const formatted = new Intl.NumberFormat('fr-FR', {
 		minimumFractionDigits: 2,
 		maximumFractionDigits: 2

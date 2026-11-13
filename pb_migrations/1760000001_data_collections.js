@@ -68,7 +68,9 @@ migrate(
 				new RelationField({ name: 'venue', collectionId: venues.id, maxSelect: 1 }),
 				new SelectField({ name: 'status', required: true, maxSelect: 1, values: ['planned', 'attended', 'missed'] }),
 				new BoolField({ name: 'ticketBought' }),
-				new NumberField({ name: 'ticketPrice', min: 0 }),
+				// Texte (« 49.5 », « 0 », ou vide) et non nombre : un champ nombre PocketBase range « vide » en 0,
+				// et l'appli doit distinguer « Gratuit » (0) de « prix non renseigné » (vide).
+				new TextField({ name: 'ticketPrice', max: 20, pattern: '^[0-9]+([.][0-9]+)?$' }),
 				// Phase 3 : l'appli n'envoie pas encore de fichiers.
 				new FileField({
 					name: 'ticketFile',

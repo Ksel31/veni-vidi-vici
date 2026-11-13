@@ -45,7 +45,7 @@ function fromArtist(artist) {
 	return { name: artist.name };
 }
 
-/** Les champs vides de PocketBase ('' ou 0) redeviennent `null`, comme dans l'appli.
+/** Les champs vides de PocketBase ('') redeviennent `null`, comme dans l'appli.
  * @param {import('pocketbase').RecordModel} record
  * @returns {import('../store.js').Event}
  */
@@ -59,8 +59,8 @@ function toEvent(record) {
 		venueId: record.venue || null,
 		status: record.status,
 		ticketBought: record.ticketBought === true,
-		// PocketBase ne distingue pas « pas de prix » de 0 : on lit 0 comme « pas de prix ».
-		ticketPrice: record.ticketPrice > 0 ? record.ticketPrice : null,
+		// Texte côté serveur : '' = prix non renseigné (null), '0' = gratuit (voir pb_migrations).
+		ticketPrice: record.ticketPrice ? Number(record.ticketPrice) : null, // '0' est un texte non vide : gratuit
 		// Phase 3 : les fichiers ne sont pas encore gérés.
 		ticketFile: null,
 		photos: [],
@@ -83,7 +83,7 @@ function fromEvent(event) {
 		venue: event.venueId ?? '',
 		status: event.status,
 		ticketBought: event.ticketBought,
-		ticketPrice: event.ticketPrice ?? 0,
+		ticketPrice: event.ticketPrice == null ? '' : String(event.ticketPrice),
 		daysAttended: event.daysAttended,
 		thumb: event.thumb ?? '',
 		comment: event.comment,
@@ -140,15 +140,17 @@ function toAccount(record) {
 
 /** Une erreur PocketBase devient un code que les écrans savent afficher.
  * @param {unknown} error
+ * @param {'signin' | 'signup'} [context]  à l'inscription, un refus sans détail de champ veut dire « inscriptions fermées »
  * @returns {import('./index.js').AuthError}
  */
-function toAuthError(error) {
+function toAuthError(error, context = 'signin') {
 	if (!(error instanceof ClientResponseError)) return 'unknown';
 	if (error.status === 0) return 'unreachable';
 	const fields = error.response?.data ?? {};
 	if (fields.username) return fields.username.code === 'validation_not_unique' ? 'username-taken' : 'unknown';
 	if (fields.password) return 'password-invalid';
 	if (fields.email) return 'email-invalid';
+	if (context === 'signup' && (error.status === 400 || error.status === 403)) return 'signups-closed';
 	if (error.status === 400 || error.status === 401 || error.status === 403) return 'invalid-credentials';
 	return 'unknown';
 }
@@ -290,7 +292,7 @@ export const pocketbaseBackend = {
 					passwordConfirm: input.password
 				});
 		} catch (error) {
-			return { ok: false, error: toAuthError(error) };
+			return { ok: false, error: toAuthError(error, 'signup') };
 		}
 		return pocketbaseBackend.signIn(input.username, input.password);
 	},
@@ -332,8 +334,9 @@ export const pocketbaseBackend = {
 			/** @type {Record<string, unknown> | FormData} */
 			let body = {};
 			if (changes.email !== undefined) {
-				// PocketBase invalide la session quand l'e-mail change. On vérifie donc le mot de passe
-				// d'abord, puis on se reconnecte juste après pour garder une session valide.
+				// PocketBase invalide la session dès que l'e-mail change. On redemande donc le mot de passe
+				// (preuve que c'est bien le titulaire), puis on se reconnecte juste après pour que
+				// l'utilisateur garde une session valide sans avoir à se reloguer.
 				await pb().collection('users').authWithPassword(current.username, changes.password ?? '');
 				body = { email: changes.email.trim() };
 			}
