@@ -1,0 +1,261 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-history.jpg" as bgPhoto
+import "components/screen-header.elyx" as headers
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+import "components/profile.elyx" as profileParts
+import "components/ui.elyx" as ui
+
+// Profil : avatar modifiable, prénom, @nom d'utilisateur, chiffres clés (préfigure « Vici »), compte, réglages, déconnexion.
+// On y arrive en touchant l'avatar de l'accueil.
+export profile = frame {
+  title: "Profil",
+  caption: "Accessible depuis l'avatar de l'accueil. Les quatre chiffres préfigurent les stats « Vici ». L'e-mail est facultatif : il sert à récupérer le mot de passe. « Se déconnecter » ne vit qu'ici.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column, item-gap: 12px},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 55%)),
+          stop(40%, rgb(0%, 0%, 0%, 68%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 32px],
+  children: [top, identity, statsCard, accountCard, settingsCard, logout],
+
+  top = frame : headers.pageHeader {
+    padding-top: 8px,
+    padding-left: 8px,
+    padding-bottom: 0px,
+    padding-right: 8px,
+
+    pageTitle {
+      contents: "Profil"
+    }
+  }
+
+  // Avatar + prénom + @nom d'utilisateur
+  identity = frame {
+    width: 100%,
+    height: .auto,
+    layout: {align-items: .center, item-gap: 16px},
+    overflow: .visible,
+    padding: [0px, 8px],
+    children: [avatar, names],
+
+    avatar = frame : profileParts.avatarLarge {}
+
+    names = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 4px},
+      children: [firstName, userName],
+
+      firstName = text {
+        width: 100%,
+        fill: c.colors.text-on-dark,
+        contents: "Axel",
+        font-size: 32,
+        font-family: f.fonts.ui,
+        font-style: "Medium",
+        line-height: 1,
+        letter-spacing: -3%
+      }
+
+      userName = text {
+        width: 100%,
+        fill: c.colors.text-on-dark-muted,
+        contents: "@axel",
+        font-size: 16,
+        font-family: f.fonts.ui,
+        font-style: "Regular"
+      }
+    }
+  }
+
+  // Quatre chiffres clés, séparés par un filet
+  statsCard = frame : ui.glassCard {
+    padding-top: 16px,
+    padding-left: 0px,
+    padding-bottom: 16px,
+    padding-right: 0px,
+    layout.direction: .row,
+    layout.item-gap: 0,
+    overrides: [
+      insert(statSeen, after = ui.glassCard.cardTitle),
+      insert(statBands, after = statSeen),
+      insert(statFestivals, after = statBands),
+      insert(statUpcoming, after = statFestivals)
+    ],
+
+    cardTitle {
+      display: .none
+    }
+
+    statSeen = frame : profileParts.statBlock {
+      width: 100%,
+      padding-top: 0px,
+      padding-left: 16px,
+      padding-bottom: 0px,
+      padding-right: 0px,
+
+      statValue {
+        contents: "12"
+      }
+
+      statLabel {
+        contents: "Events vus",
+        font-size: 13
+      }
+    }
+
+    statBands = frame : profileParts.statBlock {
+      width: 100%,
+      padding-top: 0px,
+      padding-left: 12px,
+      padding-bottom: 0px,
+      padding-right: 0px,
+      border[0].color: c.colors.divider,
+      border[0].sides: .left,
+
+      statValue {
+        contents: "31"
+      }
+
+      statLabel {
+        contents: "Groupes vus",
+        font-size: 13
+      }
+    }
+
+    statFestivals = frame : profileParts.statBlock {
+      width: 100%,
+      padding-top: 0px,
+      padding-left: 12px,
+      padding-bottom: 0px,
+      padding-right: 0px,
+      border[0].color: c.colors.divider,
+      border[0].sides: .left,
+
+      statValue {
+        contents: "3"
+      }
+
+      statLabel {
+        contents: "Festivals",
+        font-size: 13
+      }
+    }
+
+    statUpcoming = frame : profileParts.statBlock {
+      width: 100%,
+      padding-top: 0px,
+      padding-left: 12px,
+      padding-bottom: 0px,
+      padding-right: 0px,
+      border[0].color: c.colors.divider,
+      border[0].sides: .left,
+
+      statValue {
+        contents: "4"
+      }
+
+      statLabel {
+        contents: "À venir",
+        font-size: 13
+      }
+    }
+  }
+
+  accountCard = frame : ui.glassCard {
+    layout.direction: .column,
+    layout.item-gap: 0,
+    overrides: [
+      insert(rowFirstName, after = ui.glassCard.cardTitle),
+      insert(rowPassword, after = rowFirstName),
+      insert(rowEmail, after = rowPassword)
+    ],
+
+    cardTitle {
+      contents: "Compte"
+    }
+
+    rowFirstName = frame : profileParts.settingRow {
+      rowLabel {
+        contents: "Prénom"
+      }
+
+      rowValue {
+        contents: "Axel"
+      }
+    }
+
+    rowPassword = frame : profileParts.settingRow {
+      rowLabel {
+        contents: "Mot de passe"
+      }
+
+      rowValue {
+        contents: "Modifier"
+      }
+    }
+
+    rowEmail = frame : profileParts.settingRow {
+      rowLabel {
+        contents: "E-mail"
+      }
+
+      rowValue {
+        contents: "Ajouter"
+      }
+    }
+  }
+
+  settingsCard = frame : ui.glassCard {
+    overrides: [insert(rowAbout, after = ui.glassCard.cardTitle)],
+
+    cardTitle {
+      contents: "Réglages"
+    }
+
+    rowAbout = frame : profileParts.settingRow {
+      rowLabel {
+        contents: "À propos"
+      }
+
+      rowValue {
+        contents: "Version 0.1"
+      }
+    }
+  }
+
+  // Discret : pas de fond ni de filet, simple texte grisé (zone tactile 44 px). Pas un appel à l'action.
+  logout = frame : ui.secondaryButton {
+    height: l.lengths.tap,
+    border[0]: .nil,
+    fill[0]: .nil,
+
+    buttonLabel {
+      fill[0].color: c.colors.text-on-dark-muted,
+      contents: "Se déconnecter",
+      font-size: 14,
+      font-style: "Regular"
+    }
+
+    buttonGlyph {
+      display: .none
+    }
+  }
+}

@@ -1,6 +1,8 @@
 use "fonts/CabinetGrotesk-Variable.ttf"
 
 import "icons/lucide/search.svg" as searchIcon
+import "icons/lucide/chevron-right.svg" as chevronIcon
+import "icons/lucide/pencil.svg" as pencilIcon
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
@@ -86,7 +88,7 @@ export searchButtonDisabled = frame : searchButton {
   }
 }
 
-// Profil en tête de l'accueil : avatar + prénom + recherche, puis trois chiffres clés séparés par un filet.
+// Profil en tête de l'accueil : avatar seul (ni prénom ni pseudo ; il ouvre le profil) + recherche, puis trois chiffres clés séparés par un filet.
 export profileHeader = frame {
   left: 0px,
   top: 200px,
@@ -106,7 +108,7 @@ export profileHeader = frame {
       width: .auto,
       height: .auto,
       layout: {align-items: .center, item-gap: 12px},
-      children: [avatar, userName, logout],
+      children: avatar,
 
       avatar = frame {
         width: 52px,
@@ -126,33 +128,6 @@ export profileHeader = frame {
         }
       }
 
-      userName = text {
-        fill: c.colors.text-on-dark,
-        contents: "Axel",
-        font-size: 26,
-        font-family: f.fonts.ui,
-        font-style: "Medium"
-      }
-
-      // Pour la démo seulement : à droite du pseudo. Puce en verre (et plus un simple texte) pour qu'on la reconnaisse comme un bouton.
-      logout = frame {
-        width: .auto,
-        height: l.lengths.tap,
-        layout: {align-items: .center},
-        fill: c.colors.glass-strong,
-        border: c.colors.glass-border,
-        corner-radius: l.lengths.radius-pill,
-        padding: [0px, 14px],
-        children: logoutLabel,
-
-        logoutLabel = text {
-          fill: c.colors.text-on-dark-muted,
-          contents: "Se déconnecter",
-          font-size: 14,
-          font-family: f.fonts.ui,
-          font-style: "Regular"
-        }
-      }
     }
 
     search = frame : searchButton {}
@@ -206,6 +181,83 @@ export profileHeader = frame {
       statValue {
         contents: "31"
       }
+    }
+  }
+}
+
+// Ligne de réglage du profil : libellé, valeur grisée et chevron. Filet en haut ; masquer-le (border) sur la 1re ligne d'une carte.
+export settingRow = frame {
+  left: 0px,
+  top: 300px,
+  width: 100%,
+  height: 48px,
+  layout: {align-items: .center, item-gap: 8px},
+  border[0].color: c.colors.divider,
+  border[0].sides: .top,
+  children: [rowLabel, rowValue, rowChevron],
+
+  rowLabel = text {
+    width: 100%,
+    fill: c.colors.text-on-dark,
+    contents: "Réglage",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Regular"
+  }
+
+  rowValue = text {
+    fill: c.colors.text-on-dark-muted,
+    contents: "Valeur",
+    font-size: 14,
+    font-family: f.fonts.ui,
+    font-style: "Regular"
+  }
+
+  rowChevron = asset {
+    width: 20px,
+    height: 20px,
+    fill: c.colors.text-on-dark-muted,
+    contents: chevronIcon
+  }
+}
+
+// Grand avatar du profil : initiale + pastille crayon (modifiable).
+export avatarLarge = frame {
+  left: 0px,
+  top: 400px,
+  width: 88px,
+  height: 88px,
+  layout: {justify-content: .center, align-items: .center},
+  fill: c.colors.neutral-12,
+  corner-radius: 44px,
+  overflow: .visible,
+  children: [avatarInitial, editBadge],
+
+  avatarInitial = text {
+    fill: c.colors.neutral-1,
+    contents: "A",
+    font-size: 40,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+
+  editBadge = frame {
+    right: -4px,
+    bottom: -4px,
+    width: 32px,
+    height: 32px,
+    ignore-stack: .true,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.neutral-1,
+    border: {color: c.colors.text-on-dark, width: 2px},
+    corner-radius: 16px,
+    children: editGlyph,
+
+    editGlyph = asset {
+      width: 16px,
+      height: 16px,
+      fill: c.colors.text-on-dark,
+      contents: pencilIcon
     }
   }
 }

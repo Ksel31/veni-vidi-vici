@@ -6,6 +6,7 @@ import "tokens/fonts.elyx" as f
 import "components/profile.elyx" as profileParts
 import "components/tab-bar.elyx" as nav
 import "screens/add-type.elyx" as addType
+import "screens/profile-empty.elyx" as profileEmpty
 
 // Accueil d'un compte sans aucun event, une fois l'onboarding vu ou passé : un bloc centré (titre, phrase, CTA).
 export homeEmpty = frame {
@@ -35,6 +36,15 @@ export homeEmpty = frame {
 
   // Les trois chiffres seraient à 0 : on les masque tant qu'il n'y a aucun event.
   profile = frame : profileParts.profileHeader {
+    identity {
+      who {
+        avatar {
+          connections[0].label: "Profil",
+          connections[0].target: profileEmpty.profileEmpty
+        }
+      }
+    }
+
     stats {
       display: .none
     }

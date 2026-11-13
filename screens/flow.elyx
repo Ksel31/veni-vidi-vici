@@ -17,13 +17,16 @@ import "screens/add-festival.elyx" as addFestival
 import "screens/add-festival-2.elyx" as addFestival2
 import "screens/add-festival-3.elyx" as addFestival3
 import "screens/add-festival-error.elyx" as addFestivalError
+import "screens/profile.elyx" as profileScreen
 import "screens/onboarding-1.elyx" as onboarding1
 import "screens/home-empty.elyx" as homeEmpty
+import "screens/profile-empty.elyx" as profileEmpty
 import "screens/onboarding-2.elyx" as onboarding2
 import "screens/onboarding-3.elyx" as onboarding3
 import "screens/add-concert-calendar.elyx" as addConcertCalendar
 import "screens/add-festival-calendar.elyx" as addFestivalCalendar
 import "screens/home-first-event.elyx" as homeFirstEvent
+import "screens/signup.elyx" as signup
 
 file {
   draw-connections: .true
@@ -32,13 +35,19 @@ file {
 // Parcours complet de l'app : connexion, accueil, puis trois branches (à confirmer, historique, ajout) qui convergent
 // vers la fiche de l'event. Colonnes = étapes, lignes = branches. Chaque flèche vient d'un `connections` posé sur le bouton.
 flowLogin = frame : login.login {
-  left: 0px,
-  top: 1200px
+  left: -1100px,
+  top: 971px
 }
 
 flowHome = frame : home.home {
-  left: 700px,
-  top: 1200px,
+  left: -1100px,
+  top: 2204px,
+  overrides: [
+    remove(home.home.addButton),
+    remove(home.home.tabs),
+    remove(home.home.bottomFade),
+    remove(home.home.upcoming)
+  ],
 
   nextBlock {
     ticket {
@@ -52,34 +61,37 @@ flowHome = frame : home.home {
 }
 
 flowToConfirm = frame : toConfirm.toConfirm {
-  left: 1400px,
-  top: 1200px
+  left: -400px,
+  top: 2204px
 }
 
 flowHistory = frame : history.history {
-  left: 700px,
-  top: 2400px
+  left: -1100px,
+  top: 3404px
 }
 
 flowAddType = frame : addType.addType {
-  left: 700px,
-  top: 3700px
+  left: -1100px,
+  top: 4704px
 }
 
 flowEventConfirm = frame : eventConfirm.eventConfirm {
-  left: 2100px,
-  top: 1200px,
-  overrides: [remove(eventConfirm.eventConfirm.header)]
+  left: 300px,
+  top: 2204px,
+  overrides: [
+    remove(eventConfirm.eventConfirm.body),
+    remove(eventConfirm.eventConfirm.header)
+  ]
 }
 
 flowEventFestival = frame : eventFestival.eventFestival {
-  left: 2100px,
-  top: 2400px
+  left: 300px,
+  top: 3404px
 }
 
 flowAddConcert = frame : addConcert.addConcert {
-  left: 1400px,
-  top: 3700px,
+  left: -400px,
+  top: 4704px,
 
   top {
     card {
@@ -93,18 +105,19 @@ flowAddConcert = frame : addConcert.addConcert {
 }
 
 flowAddConcertCalendar = frame : addConcertCalendar.addConcertCalendar {
-  left: 1400px,
-  top: 4800px
+  left: -400px,
+  top: 5804px,
+  overrides: [remove(addConcertCalendar.addConcertCalendar.scrim)]
 }
 
 flowAddConcert2 = frame : addConcert2.addConcert2 {
-  left: 2100px,
-  top: 3700px
+  left: 300px,
+  top: 4704px
 }
 
 flowAddConcert3 = frame : addConcert3.addConcert3 {
-  left: 2800px,
-  top: 3700px,
+  left: 1000px,
+  top: 4704px,
 
   actions {
     next {
@@ -115,8 +128,8 @@ flowAddConcert3 = frame : addConcert3.addConcert3 {
 }
 
 flowAddFestival = frame : addFestival.addFestival {
-  left: 1431px,
-  top: 5779px,
+  left: -369px,
+  top: 6783px,
 
   top {
     card {
@@ -130,18 +143,18 @@ flowAddFestival = frame : addFestival.addFestival {
 }
 
 flowAddFestivalCalendar = frame : addFestivalCalendar.addFestivalCalendar {
-  left: 700px,
-  top: 5900px
+  left: -1100px,
+  top: 6904px
 }
 
 flowAddFestival2 = frame : addFestival2.addFestival2 {
-  left: 2100px,
-  top: 5900px
+  left: 300px,
+  top: 6904px
 }
 
 flowAddFestival3 = frame : addFestival3.addFestival3 {
-  left: 2800px,
-  top: 5900px,
+  left: 1000px,
+  top: 6904px,
 
   actions {
     next {
@@ -154,8 +167,9 @@ flowAddFestival3 = frame : addFestival3.addFestival3 {
 }
 
 flowEventReport = frame : eventReport.eventReport {
-  left: 2800px,
-  top: 1200px
+  left: 1000px,
+  top: 2204px,
+  overrides: [remove(eventReport.eventReport.body)]
 }
 
 flowEventUpcoming = frame : eventUpcoming.eventUpcoming {
@@ -218,7 +232,11 @@ flowOnboarding3 = frame : onboarding3.onboarding3 {
   lower {
     choices {
       concertChoice {
-        connections[0].route: [{x: -142px, near: -116px}]
+        connections[0].label-position: 0.357,
+        connections[0].route: [
+          {x: 1223px, near: -1396px},
+          {y: -1344px, near: -37px}
+        ]
       }
     }
   }
@@ -232,13 +250,23 @@ flowHomeEmpty = frame : homeEmpty.homeEmpty {
 // Fin de l'onboarding : une fois le 1er event ajouté (concert ou festival à venir), retour direct à l'accueil avec le toast « Event ajouté ».
 flowHomeFirstEvent = frame : homeFirstEvent.homeFirstEvent {
   left: 2800px,
-  top: 0px
+  top: 0px,
+
+  profile {
+    identity {
+      who {
+        avatar {
+          connections[0].route: [{y: -1889px, near: 2058px}]
+        }
+      }
+    }
+  }
 }
 
 // Confirmation « Quitter l'ajout ? » (depuis la croix de l'étape 2 du concert) et état d'erreur du festival (titre manquant).
 flowAddExit = frame : addExit.addExit {
-  left: 2100px,
-  top: 4800px,
+  left: 300px,
+  top: 5804px,
 
   panel {
     dialogActions {
@@ -257,6 +285,50 @@ flowAddExit = frame : addExit.addExit {
 }
 
 flowAddFestivalError = frame : addFestivalError.addFestivalError {
-  left: 1400px,
-  top: 7100px
+  left: -400px,
+  top: 8104px,
+  overrides: [remove(addFestivalError.addFestivalError.top)]
+}
+
+// Inscription (depuis « Créer un compte » de la connexion) et profil (depuis l'avatar de l'accueil).
+// Retour : flèche vers l'accueil ; « Se déconnecter » ramène à la connexion.
+flowSignup = frame : signup.signup {
+  left: -1800px,
+  top: 971px,
+
+  top {
+    backButton {
+      connections[0].target: login.login,
+      connections[0].label: "Retour"
+    }
+  }
+
+  form {
+    submit {
+      connections[0].target: home.home,
+      connections[0].label: "Créer mon compte"
+    }
+  }
+}
+
+flowProfile = frame : profileScreen.profile {
+  left: -1900px,
+  top: 2204px,
+
+  top {
+    backButton {
+      connections[0].target: home.home,
+      connections[0].label: "Retour"
+    }
+  }
+
+  logout {
+    connections[0].target: login.login,
+    connections[0].label: "Se déconnecter"
+  }
+}
+
+flowProfileEmpty = frame : profileEmpty.profileEmpty {
+  left: -1900px,
+  top: 3404px
 }

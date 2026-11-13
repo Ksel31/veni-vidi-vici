@@ -3,6 +3,7 @@ use "fonts/CabinetGrotesk-Variable.ttf"
 import "images/bg-login.jpg" as bgPhoto
 import "components/screen-header.elyx" as headers
 import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
 import "components/ui.elyx" as ui
 import "icons/lucide/chevron-right.svg" as arrowIcon
@@ -49,7 +50,7 @@ export login = frame {
     height: .auto,
     layout: {direction: .column, item-gap: 20px},
     padding: [0px, 8px],
-    children: [intro, fields, submit, note],
+    children: [intro, fields, submit, createAccount, note],
 
     intro = frame {
       width: 100%,
@@ -134,6 +135,22 @@ export login = frame {
 
       buttonLabel {
         contents: "Se connecter"
+      }
+    }
+
+    // Lien vers l'inscription, zone tactile 44 px
+    createAccount = frame {
+      width: 100%,
+      height: l.lengths.tap,
+      layout: {justify-content: .center, align-items: .center},
+      children: createLabel,
+
+      createLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "Créer un compte",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
       }
     }
 

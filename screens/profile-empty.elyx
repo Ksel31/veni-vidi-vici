@@ -1,0 +1,70 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "components/tab-bar.elyx" as nav
+import "components/ui.elyx" as ui
+import "screens/profile.elyx" as profileScreen
+import "screens/add-type.elyx" as addType
+
+// Profil d'un compte sans aucun event : mêmes en-tête, compte et réglages ; les chiffres (tous à 0) sont masqués
+// et remplacés par un message d'encouragement et un bouton vers l'ajout d'un premier concert.
+export profileEmpty = frame : profileScreen.profile {
+  title: "Profil vide",
+  caption: "Même écran que le profil, pour un nouveau compte : stats masquées, message d'encouragement et bouton vers l'ajout d'un premier concert.",
+  layout.direction: .column,
+  layout.item-gap: 12px,
+  overrides: [insert(encourage, after = profileScreen.profile.identity)],
+
+  statsCard {
+    display: .none
+  }
+
+  accountCard {
+    rowFirstName {
+      rowValue {
+        contents: "Camille"
+      }
+    }
+  }
+
+  identity {
+    avatar {
+      avatarInitial {
+        contents: "C"
+      }
+    }
+
+    names {
+      firstName {
+        contents: "Camille"
+      }
+
+      userName {
+        contents: "@camille"
+      }
+    }
+  }
+
+  encourage = frame : ui.glassCard {
+    overrides: [
+      insert(encourageText, after = ui.glassCard.cardTitle),
+      insert(addFirst, after = encourageText)
+    ],
+
+    cardTitle {
+      contents: "Pas encore d'event"
+    }
+
+    encourageText = text : ui.hint {
+      contents: "Tes chiffres apparaîtront ici dès ton premier event. Ajoute le prochain concert que tu prévois."
+    }
+
+    addFirst = frame : nav.addButtonFirst {
+      connections[0].label: "Ajouter",
+      connections[0].target: addType.addType,
+
+      addLabel {
+        contents: "Ajouter mon 1er concert"
+      }
+    }
+  }
+}

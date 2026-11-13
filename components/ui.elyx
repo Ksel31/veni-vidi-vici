@@ -903,7 +903,7 @@ export deleteDialog = frame {
       }
 
       buttonLabel {
-        contents: "Supprimer l'event"
+        contents: "Supprimer"
       }
     }
   }

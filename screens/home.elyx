@@ -11,6 +11,7 @@ import "screens/event-upcoming.elyx" as eventUpcoming
 import "screens/to-confirm.elyx" as toConfirm
 import "screens/history.elyx" as history
 import "screens/add-type.elyx" as addType
+import "screens/profile.elyx" as profileScreen
 
 // Accueil : photo de concert plein écran sous un voile sombre, profil et chiffres clés, billet vert pour le prochain event,
 // cartes en verre sombre pour la suite. Tout est assemblé à partir des composants du design system.
@@ -47,7 +48,16 @@ export home = frame {
     addButton
   ],
 
-  profile = frame : profileParts.profileHeader {}
+  profile = frame : profileParts.profileHeader {
+    identity {
+      who {
+        avatar {
+          connections[0].target: profileScreen.profile,
+          connections[0].label: "Profil"
+        }
+      }
+    }
+  }
 
   // Prochain event : titre de section + billet
   nextBlock = frame {

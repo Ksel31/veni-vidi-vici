@@ -1,0 +1,191 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-login.jpg" as bgPhoto
+import "components/screen-header.elyx" as headers
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "tokens/fonts.elyx" as f
+import "components/ui.elyx" as ui
+import "icons/lucide/chevron-right.svg" as arrowIcon
+import "icons/lucide/user.svg" as userIcon
+import "icons/lucide/lock.svg" as lockIcon
+import "icons/lucide/mail.svg" as mailIcon
+
+// Inscription : nom d'utilisateur obligatoire, prénom et e-mail facultatifs, mot de passe + confirmation.
+export signup = frame {
+  title: "Inscription",
+  caption: "Seul le nom d'utilisateur et le mot de passe sont obligatoires. L'e-mail est facultatif : il sert uniquement à récupérer le mot de passe.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 55%)),
+          stop(45%, rgb(0%, 0%, 0%, 68%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 32px],
+  children: [top, form],
+
+  top = frame : headers.pageHeader {
+    padding-top: 8px,
+    padding-left: 8px,
+    padding-bottom: 0px,
+    padding-right: 8px,
+
+    pageTitle {
+      contents: "Créer un compte"
+    }
+  }
+
+  form = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 16px},
+    padding: [0px, 8px],
+    children: [fields, submit, loginLink],
+
+    fields = frame : ui.glassCard {
+      overrides: [
+        insert(usernameField, after = ui.glassCard.cardTitle),
+        insert(firstNameField, after = usernameField),
+        insert(emailBlock, after = firstNameField),
+        insert(passwordField, after = emailBlock),
+        insert(confirmField, after = passwordField)
+      ],
+
+      cardTitle {
+        display: .none
+      }
+
+      usernameField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: userIcon
+          }
+
+          fieldValue {
+            contents: "axel"
+          }
+        }
+
+        fieldLabel {
+          contents: "Nom d'utilisateur"
+        }
+      }
+
+      firstNameField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: userIcon
+          }
+
+          fieldValue {
+            contents: "Axel"
+          }
+        }
+
+        fieldLabel {
+          contents: "Prénom (facultatif)"
+        }
+      }
+
+      // E-mail + son aide, collés l'un à l'autre
+      emailBlock = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 6px},
+        children: [emailField, emailHint],
+
+        emailField = frame : ui.fieldEmpty {
+          fieldBox {
+            fieldGlyph {
+              contents: mailIcon
+            }
+
+            fieldValue {
+              contents: "nom@exemple.com"
+            }
+          }
+
+          fieldLabel {
+            contents: "E-mail (facultatif)"
+          }
+        }
+
+        emailHint = text : ui.hint {
+          contents: "Pour récupérer ton mot de passe",
+          font-size: 13
+        }
+      }
+
+      passwordField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: lockIcon
+          }
+
+          fieldValue {
+            contents: "••••••••"
+          }
+        }
+
+        fieldLabel {
+          contents: "Mot de passe"
+        }
+      }
+
+      confirmField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: lockIcon
+          }
+
+          fieldValue {
+            contents: "••••••••"
+          }
+        }
+
+        fieldLabel {
+          contents: "Confirmer le mot de passe"
+        }
+      }
+    }
+
+    submit = frame : ui.primaryButton {
+      buttonGlyph {
+        contents: arrowIcon
+      }
+
+      buttonLabel {
+        contents: "Créer mon compte"
+      }
+    }
+
+    // Lien vers la connexion, zone tactile 44 px
+    loginLink = frame {
+      width: 100%,
+      height: l.lengths.tap,
+      layout: {justify-content: .center, align-items: .center},
+      children: loginLabel,
+
+      loginLabel = text {
+        fill: c.colors.text-on-dark,
+        contents: "Déjà un compte ? Se connecter",
+        font-size: 14,
+        font-family: f.fonts.ui,
+        font-style: "Medium"
+      }
+    }
+  }
+}
