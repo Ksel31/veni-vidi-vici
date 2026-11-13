@@ -1,6 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { data, addArtist, addEvent, addVenue } from '#lib/store.js';
+	import { showInfoToast } from '#lib/toast.js';
 	import { dayChipLabel, daysFrom, daysUntil } from '#lib/present.js';
 	import AddStep from '#lib/components/AddStep.svelte';
 	import ExitConfirm from '#lib/components/ExitConfirm.svelte';
@@ -110,6 +111,7 @@
 		const id = venueForSave();
 		if (venueName.trim() && !id) return;
 		const past = daysUntil(endDate) < 0;
+		const isFirstEvent = $data.events.length === 0;
 		const eventId = addEvent(
 			{
 				type: 'festival',
@@ -127,7 +129,14 @@
 				return [{ artistId, billing: null, day: band.day, status: 'to_see' }];
 			})
 		);
-		if (eventId) goto(`/event/${eventId}`);
+		if (!eventId) return;
+		// Tout premier event à venir : retour à l'accueil avec le toast « Event ajouté » (screens/home-first-event.elyx).
+		if (isFirstEvent && !past) {
+			showInfoToast('Event ajouté');
+			goto('/');
+		} else {
+			goto(`/event/${eventId}`);
+		}
 	}
 </script>
 

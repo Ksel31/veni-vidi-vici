@@ -2638,3 +2638,60 @@ button.field-box:active {
 		linear-gradient(180deg, rgb(0% 0% 0% / 78%) 0%, rgb(0% 0% 0% / 92%) 100%),
 		url("/images/bg-add-festival.jpg");
 }
+
+/* Carte pliable (ui.elyx : foldCard) : flèche en haut à droite, zone tactile de 44 px à 4 px des bords. */
+.fold-card {
+	position: relative;
+}
+
+.fold-toggle {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--tap);
+	height: var(--tap);
+	padding: 0;
+	border: 0;
+	border-radius: 22px;
+	background: transparent;
+	color: var(--text-on-dark);
+}
+
+.fold-body {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.fold-body[hidden] {
+	display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.fold-toggle:hover {
+		background: var(--state-hover);
+	}
+}
+
+.fold-toggle:active {
+	background: var(--state-pressed);
+}
+
+/* Sur l'accueil, le toast se pose au-dessus de la barre d'onglets (bas : 112 px, home.elyx : addedToast). */
+.toast-above-dock {
+	bottom: calc(112px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Prochain event : pastille « à confirmer » (décalée de 6 px), titre, billet. 14 px entre chaque (home.elyx : nextBlock). */
+.next-block {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.next-block > .confirm-pill {
+	margin-inline: 6px;
+}

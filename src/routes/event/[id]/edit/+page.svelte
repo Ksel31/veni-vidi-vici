@@ -8,6 +8,7 @@
 	import VenueField from '#lib/components/VenueField.svelte';
 	import ArtistField from '#lib/components/ArtistField.svelte';
 	import DateRangeField from '#lib/components/DateRangeField.svelte';
+	import FoldCard from '#lib/components/FoldCard.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 	import TicketFields from '#lib/components/TicketFields.svelte';
 	import DeleteConfirm from '#lib/components/DeleteConfirm.svelte';
@@ -208,8 +209,7 @@
 		<p class="empty-title">Cet event n'existe pas.</p>
 	{:else if event.type === 'concert'}
 		<p class="hint">La date est obligatoire.</p>
-		<div class="glass-card">
-			<p class="card-title">Quand et où</p>
+		<FoldCard title="Quand et où">
 			<DateRangeField mode="single" label="Date" inputId="concert-date" placeholder="Choisir la date" bind:start={startDate} />
 			<VenueField venues={$data.venues} bind:name={venueName} bind:city={venueCity} bind:venueId />
 			<div class="field">
@@ -219,10 +219,9 @@
 					<input id="edit-title" bind:value={title} placeholder="Ex. tournée Wild God" autocomplete="off" />
 				</div>
 			</div>
-		</div>
+		</FoldCard>
 
-		<div class="glass-card">
-			<p class="card-title">Groupes</p>
+		<FoldCard title="Groupes">
 			<div class="zone" data-zone="headliner">
 				<p class="zone-label">Tête d'affiche</p>
 				{#each headliners as band (band.key)}
@@ -249,15 +248,14 @@
 					onAdd={(name) => addBand(name, 'support')}
 				/>
 			</div>
-		</div>
+		</FoldCard>
 
 		{@render ticket('edit-price')}
 		<p class="hint">Si la date repasse à aujourd'hui ou plus tard, l'event redevient prévu.</p>
 		{@render actions()}
 	{:else}
 		<p class="hint">Le titre et les dates sont obligatoires.</p>
-		<div class="glass-card">
-			<p class="card-title">Le festival</p>
+		<FoldCard title="Le festival">
 			<div class="field">
 				<label for="edit-festival-title">Titre</label>
 				<div class="field-box">
@@ -267,10 +265,9 @@
 			</div>
 			<DateRangeField bind:start={startDate} bind:end={endDate} />
 			<VenueField venues={$data.venues} bind:name={venueName} bind:city={venueCity} bind:venueId />
-		</div>
+		</FoldCard>
 
-		<div class="glass-card">
-			<p class="card-title">Line-up à voir</p>
+		<FoldCard title="Line-up à voir">
 			{#each bands as band (band.key)}
 				{@const day = chosenDay(band)}
 				{@const choosing = !day || band.picking}
@@ -310,7 +307,7 @@
 				placeholder="Ajouter un groupe et son jour"
 				onAdd={addBand}
 			/>
-		</div>
+		</FoldCard>
 
 		{@render ticket('edit-festival-price')}
 		<p class="hint">Si la date repasse à aujourd'hui ou plus tard, l'event redevient prévu.</p>
@@ -319,8 +316,7 @@
 </section>
 
 {#snippet ticket(/** @type {string} */ priceId)}
-	<div class="glass-card">
-		<p class="card-title">Billet</p>
+	<FoldCard title="Billet">
 		<TicketFields
 			bind:bought={ticketBought}
 			bind:priceText
@@ -328,7 +324,7 @@
 			pricePlaceholder="65,00"
 			{priceId}
 		/>
-	</div>
+	</FoldCard>
 {/snippet}
 
 {#snippet actions()}
