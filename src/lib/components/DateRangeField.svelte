@@ -39,8 +39,8 @@
 	const rangeText = $derived(formatRange(start, end));
 	const draftText = $derived(formatRange(draftStart, draftEnd));
 	const cells = $derived(monthCells(viewYear, viewMonth));
-	// « Valider » attend une date (concert) ou un début et une fin (festival).
-	const canValidate = $derived(mode === 'single' ? Boolean(draftStart) : Boolean(draftStart && draftEnd));
+	// « Valider » attend une date. Un festival d'un seul jour : un toucher suffit (la fin = le début).
+	const canValidate = $derived(Boolean(draftStart));
 
 	/** @param {string} iso */
 	function formatDay(iso) {
@@ -103,7 +103,7 @@
 	function validate() {
 		if (!canValidate) return;
 		start = draftStart;
-		end = mode === 'single' ? '' : draftEnd;
+		end = mode === 'single' ? '' : draftEnd || draftStart;
 		closeCalendar();
 	}
 

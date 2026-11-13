@@ -96,3 +96,11 @@ Rien pour l'instant.
   - Statut : fait
   - Source : Ruru
   - Fait le 12 nov. 2026 (PR #15)
+
+- [x] **Festival d'un seul jour impossible (obligé de choisir plusieurs jours)**
+  - Date : 13 nov. 2026
+  - Description : retour bêta après le déploiement Docker sur le Pinas. Le calendrier exigeait deux touchers, donc un festival d'un jour était impossible. Un toucher suffit maintenant (début = fin), « 1 jour » s'écrit au singulier et les stats comptent 1 jour.
+  - Priorité : P2
+  - Statut : fait
+  - Source : Axel
+  - Fait le 13 nov. 2026

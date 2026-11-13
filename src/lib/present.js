@@ -40,6 +40,11 @@ export function dayCount(start, end) {
 	return daysUntil(end) - daysUntil(start) + 1;
 }
 
+/** « 1 jour » au singulier, « 3 jours » au pluriel. @param {number} count */
+export function dayCountLabel(count) {
+	return `${count} ${count > 1 ? 'jours' : 'jour'}`;
+}
+
 const WEEKDAYS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 const WEEKDAYS_LONG = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
 const MONTHS_LONG = [

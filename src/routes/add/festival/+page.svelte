@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { data, addArtist, addEvent, addVenue } from '#lib/store.js';
 	import { showInfoToast } from '#lib/toast.js';
+	import { festivalDatesValid } from '#lib/rules.js';
 	import { dayChipLabel, daysFrom, daysUntil } from '#lib/present.js';
 	import AddStep from '#lib/components/AddStep.svelte';
 	import ExitConfirm from '#lib/components/ExitConfirm.svelte';
@@ -32,7 +33,7 @@
 
 	const festivalDays = $derived(daysFrom(startDate, endDate));
 	const titleEmpty = $derived(!title.trim());
-	const datesInvalid = $derived(!(startDate && endDate && endDate >= startDate));
+	const datesInvalid = $derived(!festivalDatesValid(startDate, endDate));
 	// Les erreurs ne s'affichent qu'après un « Suivant » refusé.
 	const titleMissing = $derived(triedNext && titleEmpty);
 	const datesMissing = $derived(triedNext && datesInvalid);

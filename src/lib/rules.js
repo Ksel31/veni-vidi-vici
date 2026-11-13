@@ -17,6 +17,13 @@ export function effectiveDate(event) {
 	return event.endDate || event.startDate;
 }
 
+/** Dates d'un festival valides : début et fin remplis, fin le même jour ou après (festival d'un jour permis).
+ * @param {string} start @param {string} end
+ */
+export function festivalDatesValid(start, end) {
+	return Boolean(start && end && end >= start);
+}
+
 /**
  * Passé = strictement avant aujourd'hui.
  * Le jour même reste « à venir » (pas encore à confirmer).
