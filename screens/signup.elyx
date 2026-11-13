@@ -8,6 +8,7 @@ import "tokens/fonts.elyx" as f
 import "components/ui.elyx" as ui
 import "icons/lucide/chevron-right.svg" as arrowIcon
 import "icons/lucide/user.svg" as userIcon
+import "icons/lucide/at-sign.svg" as atIcon
 import "icons/lucide/lock.svg" as lockIcon
 import "icons/lucide/mail.svg" as mailIcon
 
@@ -57,30 +58,46 @@ export signup = frame {
 
     fields = frame : ui.glassCard {
       overrides: [
-        insert(usernameField, after = ui.glassCard.cardTitle),
-        insert(firstNameField, after = usernameField),
+        insert(usernameBlock, after = ui.glassCard.cardTitle),
+        insert(firstNameField, after = usernameBlock),
         insert(emailBlock, after = firstNameField),
         insert(passwordField, after = emailBlock),
-        insert(confirmField, after = passwordField)
+        insert(confirmBlock, after = passwordField)
       ],
 
       cardTitle {
         display: .none
       }
 
-      usernameField = frame : ui.field {
-        fieldBox {
-          fieldGlyph {
-            contents: userIcon
+      // Nom d'utilisateur + son message d'erreur (masqué par défaut, voir signup-error)
+      usernameBlock = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 6px},
+        children: [usernameField, usernameError],
+
+        usernameField = frame : ui.field {
+          fieldBox {
+            fieldGlyph {
+              contents: atIcon
+            }
+
+            fieldValue {
+              contents: "axel"
+            }
           }
 
-          fieldValue {
-            contents: "axel"
+          fieldLabel {
+            contents: "Nom d'utilisateur"
           }
         }
 
-        fieldLabel {
-          contents: "Nom d'utilisateur"
+        usernameError = frame : ui.fieldMessage {
+          display: .none,
+
+          messageText {
+            contents: "Ce nom d'utilisateur est déjà pris."
+          }
         }
       }
 
@@ -145,19 +162,35 @@ export signup = frame {
         }
       }
 
-      confirmField = frame : ui.field {
-        fieldBox {
-          fieldGlyph {
-            contents: lockIcon
+      // Confirmation + son message d'erreur (masqué par défaut, voir signup-error)
+      confirmBlock = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .column, item-gap: 6px},
+        children: [confirmField, confirmError],
+
+        confirmField = frame : ui.field {
+          fieldBox {
+            fieldGlyph {
+              contents: lockIcon
+            }
+
+            fieldValue {
+              contents: "••••••••"
+            }
           }
 
-          fieldValue {
-            contents: "••••••••"
+          fieldLabel {
+            contents: "Confirmer le mot de passe"
           }
         }
 
-        fieldLabel {
-          contents: "Confirmer le mot de passe"
+        confirmError = frame : ui.fieldMessage {
+          display: .none,
+
+          messageText {
+            contents: "Les mots de passe ne sont pas identiques."
+          }
         }
       }
     }

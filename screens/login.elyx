@@ -10,6 +10,7 @@ import "icons/lucide/chevron-right.svg" as arrowIcon
 import "screens/home.elyx" as home
 import "screens/onboarding-1.elyx" as onboarding1
 import "icons/lucide/user.svg" as userIcon
+import "icons/lucide/at-sign.svg" as atIcon
 import "icons/lucide/lock.svg" as lockIcon
 
 // Connexion factice : n'importe quel identifiant fonctionne. Le logo en haut, le formulaire à portée du pouce, en bas.
@@ -93,7 +94,7 @@ export login = frame {
       loginField = frame : ui.field {
         fieldBox {
           fieldGlyph {
-            contents: userIcon
+            contents: atIcon
           }
 
           fieldValue {

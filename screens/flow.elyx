@@ -27,6 +27,7 @@ import "screens/add-concert-calendar.elyx" as addConcertCalendar
 import "screens/add-festival-calendar.elyx" as addFestivalCalendar
 import "screens/home-first-event.elyx" as homeFirstEvent
 import "screens/signup.elyx" as signup
+import "screens/signup-error.elyx" as signupError
 
 file {
   draw-connections: .true
@@ -331,4 +332,10 @@ flowProfile = frame : profileScreen.profile {
 flowProfileEmpty = frame : profileEmpty.profileEmpty {
   left: -1900px,
   top: 3404px
+}
+
+// Erreurs de saisie de l'inscription (nom déjà pris, mots de passe différents).
+flowSignupError = frame : signupError.signupError {
+  left: -2500px,
+  top: 971px
 }
