@@ -1,6 +1,7 @@
 import { get, writable } from 'svelte/store';
 import { account } from './accounts.js';
 import { getBackend } from './backend/index.js';
+import { applyPerformanceRules, isPast, normalizeEvent } from './rules.js';
 import { showInfoToast } from './toast.js';
 
 // Où les données vivent (navigateur ou PocketBase) ne regarde pas ce fichier :
@@ -86,64 +87,6 @@ function newId() {
 /** @returns {AppData} */
 function loggedOut() {
 	return { userId: null, venues: [], artists: [], events: [], performances: [], onboardingSeen: false };
-}
-
-/** @returns {string} AAAA-MM-JJ, calendrier local. */
-function todayIso() {
-	const now = new Date();
-	const month = String(now.getMonth() + 1).padStart(2, '0');
-	const day = String(now.getDate()).padStart(2, '0');
-	return `${now.getFullYear()}-${month}-${day}`;
-}
-
-/** Festival : la date de fin. Sinon le jour de début.
- * @param {Pick<Event, 'startDate' | 'endDate'>} event
- */
-function effectiveDate(event) {
-	return event.endDate || event.startDate;
-}
-
-/**
- * Passé = strictement avant aujourd'hui.
- * Le jour même reste « à venir » (pas encore à confirmer).
- * @param {Pick<Event, 'startDate' | 'endDate'>} event
- * @param {string} [today]
- */
-function isPast(event, today = todayIso()) {
-	return effectiveDate(event) < today;
-}
-
-/**
- * Aujourd'hui ou plus tard : l'event redevient `planned`.
- * @param {Event} event
- * @returns {Event}
- */
-function normalizeEvent(event) {
-	if (!isPast(event) && event.status !== 'planned') {
-		return { ...event, status: 'planned' };
-	}
-	return event;
-}
-
-/**
- * Aujourd'hui ou plus tard : les passages de cet event repassent en `to_see`.
- * Festival entier marqué « Raté » (date passée) : tous ses passages passent en `missed`.
- * @param {Event} event
- * @param {Performance[]} performances
- * @returns {Performance[]}
- */
-function applyPerformanceRules(event, performances) {
-	if (!isPast(event)) {
-		return performances.map((performance) => {
-			if (performance.eventId !== event.id || performance.status === 'to_see') return performance;
-			return { ...performance, status: 'to_see' };
-		});
-	}
-	if (event.type !== 'festival' || event.status !== 'missed') return performances;
-	return performances.map((performance) => {
-		if (performance.eventId !== event.id || performance.status === 'missed') return performance;
-		return { ...performance, status: 'missed' };
-	});
 }
 
 export const data = writable(loggedOut());
@@ -512,29 +455,5 @@ export function updatePerformance(id, changes) {
 	commit({ ...state, performances });
 }
 
-/** Events `planned` dont la date n'est pas passée, du plus proche au plus lointain.
- * @param {AppData} state
- */
-export function upcomingEvents(state) {
-	return state.events
-		.filter((event) => event.status === 'planned' && !isPast(event))
-		.sort((a, b) => a.startDate.localeCompare(b.startDate));
-}
-
-/** `planned` et date passée. Ce n'est pas un statut enregistré.
- * @param {AppData} state
- */
-export function toConfirmEvents(state) {
-	return state.events
-		.filter((event) => event.status === 'planned' && isPast(event))
-		.sort((a, b) => a.startDate.localeCompare(b.startDate));
-}
-
-/** Vus et ratés, du plus récent au plus ancien (date de fin, sinon de début).
- * @param {AppData} state
- */
-export function historyEvents(state) {
-	return state.events
-		.filter((event) => event.status === 'attended' || event.status === 'missed')
-		.sort((a, b) => effectiveDate(b).localeCompare(effectiveDate(a)));
-}
+// Les listes d'events vivent dans rules.js (sans Svelte, pour pouvoir être testées) ; les écrans les prennent ici.
+export { historyEvents, toConfirmEvents, upcomingEvents } from './rules.js';
