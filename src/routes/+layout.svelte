@@ -62,17 +62,19 @@
 		{@render children()}
 	{/if}
 	{#if $toast}
-		<div class="toast" role="status">
+		<div class="toast" class:toast-above-dock={path === '/'} role="status">
 			<p>{$toast.text}</p>
-			<button
-				type="button"
-				onclick={() => {
-					$toast?.onUndo();
-					dismissToast();
-				}}
-			>
-				Annuler
-			</button>
+			{#if $toast.onUndo}
+				<button
+					type="button"
+					onclick={() => {
+						$toast?.onUndo?.();
+						dismissToast();
+					}}
+				>
+					Annuler
+				</button>
+			{/if}
 		</div>
 	{/if}
 </div>
