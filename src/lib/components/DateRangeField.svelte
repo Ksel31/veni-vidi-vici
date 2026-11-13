@@ -1,7 +1,8 @@
 <script>
 	import Icon from './Icon.svelte';
+	import { portal } from '#lib/portal.js';
 	import { dateParts } from '#lib/present.js';
-	import { todayIso } from '#lib/rules.js';
+	import { choisirDate, todayIso } from '#lib/rules.js';
 
 	/** @type {{ start?: string, end?: string, mode?: 'single' | 'range', label?: string, inputId?: string, placeholder?: string, invalid?: boolean, describedBy?: string }} */
 	let {
@@ -130,21 +131,11 @@
 		}
 	}
 
-	/** Premier toucher = début, second = fin (une date seule pour un concert). @param {string} iso */
+	/** Règles de sélection dans `choisirDate` (rules.js). @param {string} iso */
 	function pick(iso) {
-		if (mode === 'single') {
-			draftStart = iso;
-			return;
-		}
-		if (!draftStart || draftEnd) {
-			draftStart = iso;
-			draftEnd = '';
-		} else if (iso < draftStart) {
-			draftEnd = draftStart;
-			draftStart = iso;
-		} else {
-			draftEnd = iso;
-		}
+		const choix = choisirDate({ debut: draftStart, fin: draftEnd }, iso, mode);
+		draftStart = choix.debut;
+		draftEnd = choix.fin;
 	}
 
 	/** @param {string} iso */
@@ -176,9 +167,9 @@
 	</button>
 </div>
 
-<!-- Calendrier flottant (components/ui.elyx : calendarDialog) : posé au-dessus du formulaire, sur un voile noir. -->
+<!-- Calendrier flottant (components/ui.elyx : calendarDialog) : posé à la racine de la page (`portal`), au-dessus de toutes les cartes, sur un voile noir. -->
 {#if open}
-	<div class="calendar-layer">
+	<div class="calendar-layer" use:portal>
 		<button class="calendar-scrim" type="button" tabindex="-1" aria-label="Fermer le calendrier" onclick={closeCalendar}></button>
 		<div class="calendar" role="dialog" aria-modal="true" aria-label={fieldLabel} tabindex="-1" bind:this={panel}>
 			<div class="cal-top">

@@ -111,3 +111,24 @@ Rien pour l'instant.
   - Statut : fait
   - Source : Axel
   - Fait le 13 nov. 2026
+
+- [x] **Bouton + du line-up toujours sans effet (2e correctif)**
+  - Date : 13 nov. 2026
+  - Description : retour bêta sur le déploiement Docker / PocketBase du Pinas (HTTP simple, navigation privée, image à jour avec `newId`). Le + à droite d'un groupe dans « Line-up à voir » ne faisait toujours rien. Cause : au toucher du +, le champ perdait le focus, le clavier mobile se fermait, la page se décalait, et un test de position au relâchement du doigt échouait sans rien dire. Le + garde maintenant le focus du champ et ajoute au clic normal. Même composant pour le concert (ajout et modification).
+  - Statut : fait
+  - Source : Axel
+  - Fait le 13 nov. 2026
+
+- [x] **Calendrier des dates affiché derrière les cartes**
+  - Date : 13 nov. 2026
+  - Description : retour bêta (Docker / PocketBase, Pinas). Le calendrier s'ouvrait derrière la carte « Line-up à voir ». Cause : les cartes en verre (`backdrop-filter`, `isolation`) forment chacune leur propre empilement, et le calendrier, posé dans l'une d'elles, restait piégé dedans. Il est maintenant déplacé à la racine de la page, donc toujours au-dessus.
+  - Statut : fait
+  - Source : Axel
+  - Fait le 13 nov. 2026
+
+- [x] **Calendrier : toucher deux fois la même date pour un seul jour**
+  - Date : 13 nov. 2026
+  - Description : retour bêta (Docker / PocketBase, Pinas). Il fallait toucher deux fois la même date pour choisir un seul jour. Maintenant : un toucher = un jour (début = fin), un second toucher sur une autre date forme la plage (dans n'importe quel ordre), un toucher après une plage complète recommence.
+  - Statut : fait
+  - Source : Axel
+  - Fait le 13 nov. 2026
