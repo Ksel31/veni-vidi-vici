@@ -30,12 +30,12 @@
 			<p>Tes concerts et festivals, à venir et déjà vécus.</p>
 			<!-- Démo uniquement : à retirer en phase 2, avec .login-demo-hint. -->
 			<p class="login-demo-hint">
-				Pour tester : tape <strong>demo</strong> dans Identifiant pour un compte déjà rempli, ou ton prénom dans Identifiant pour partir de zéro. Le mot de passe peut rester vide.
+				Pour tester : tape <strong>demo</strong> dans Identifiant pour un compte déjà rempli, ou un autre identifiant pour partir de zéro. Le mot de passe peut rester vide.
 			</p>
 		</div>
 
 		<div class="glass-card">
-			<TextField id="login-id" label="Identifiant" icon="user" bind:value={identifier} />
+			<TextField id="login-id" label="Identifiant" icon="at-sign" bind:value={identifier} />
 			<TextField id="login-password" label="Mot de passe" icon="lock" type="password" bind:value={password} />
 		</div>
 
@@ -43,6 +43,7 @@
 			<Icon name="chevron-right" size={22} />
 			Se connecter
 		</button>
+		<a class="text-link" href="/signup">Créer un compte</a>
 		<p class="login-note">Phase 1 : prototype, aucun compte réel.</p>
 	</form>
 </section>

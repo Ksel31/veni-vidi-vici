@@ -1,18 +1,18 @@
 <script>
 	import Icon from './Icon.svelte';
+	import Avatar from './Avatar.svelte';
 
-	/** @type {{ name: string, upcoming: number, seenEvents: number, seenBands: number, onLogout: () => void, hideStats?: boolean }} */
-	let { name, upcoming, seenEvents, seenBands, onLogout, hideStats = false } = $props();
-
-	const initial = $derived(name.trim().charAt(0).toUpperCase() || '?');
+	/** @type {{ initial: string, avatar: string | null, upcoming: number, seenEvents: number, seenBands: number, hideStats?: boolean }} */
+	let { initial, avatar, upcoming, seenEvents, seenBands, hideStats = false } = $props();
 </script>
 
 <header class="profile" class:profile-compact={hideStats}>
 	<div class="profile-row">
 		<div class="who">
-			<span class="avatar" aria-hidden="true">{initial}</span>
-			<span class="profile-name">{name}</span>
-			<button class="logout" type="button" onclick={onLogout}>Se déconnecter</button>
+			<!-- Ni prénom ni pseudo ici : l'avatar (ou l'initiale) ouvre le profil. -->
+			<a class="avatar-link" href="/profile" aria-label="Profil">
+				<Avatar {initial} {avatar} size={52} />
+			</a>
 		</div>
 		<!-- La loupe est sur la maquette. Aucun écran de recherche pour cette étape : le bouton ne mène nulle part. -->
 		<button class="search-button" type="button" aria-label="Recherche">

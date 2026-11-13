@@ -12,7 +12,7 @@ Application personnelle auto-hébergée pour suivre ses concerts et festivals : 
 
 - **Veni** : les events prévus
 - **Vidi** : l'historique (events vus)
-- **Vici** : les stats (phase ultérieure)
+- **Vici** : les stats, un pilier de l'appli (dashboard et export en phase 3)
 
 Le propriétaire du projet est designer UI/UX avec des bases en code, pas développeur. Il doit pouvoir lire et comprendre le code.
 
@@ -179,6 +179,9 @@ Ne pas faire : vrai backend, vrais comptes, envoi réel de fichiers (billets, ph
 - **Phase 2** — PocketBase (backend en un exécutable : base SQLite, comptes, stockage de fichiers). Remplacer le store local par l'API PocketBase, vrais comptes.
   - Comptes : connexion par nom d'utilisateur + mot de passe (identity field `username` dans PocketBase). L'e-mail est facultatif, ajoutable dans les réglages du profil, et ne sert qu'à la réinitialisation du mot de passe ou aux notifs. Sans e-mail, c'est l'admin de l'instance qui réinitialise (appli self-hosted, comme Jellyfin ou Mealie).
 - **Phase 3** — Envoi et stockage réels des billets et des photos (pièces jointes d'un event, champs déjà dessinés en phase 1), import de setlist depuis setlist.fm, stats (« Vici »), export de sauvegarde.
+  - Stats : un vrai dashboard concerts/festivals (le bloc stats du profil en est l'aperçu) et un export de ses stats en .csv, lisible dans Excel. Tout se calcule avec les champs existants.
+    - Dashboard v1 : chiffres clés (events vus, groupes différents, festivals, jours de festival, lieux différents) ; ton année (events par mois avec sélecteur d'année, répartition concerts/festivals) ; groupes les plus vus et revus plusieurs fois ; salles et villes les plus fréquentées ; accompagnants les plus fréquents ; ressenti (pouces hauts contre bas, meilleurs events de l'année).
+    - Plus tard ou dans un écran de détail : assiduité (vus contre ratés) et groupes ratés, tête d'affiche contre première partie, encarts souvenirs (premier et dernier event, « il y a un an »), dépenses par an et prix moyen d'un billet (`ticketPrice`), morceaux les plus entendus en live (après setlist.fm).
 - **Phase 4** — Design final, Docker pour le Pinas (accès local + Tailscale), APK Android (enveloppe Capacitor) avec billets disponibles hors ligne.
 
 ---

@@ -14,16 +14,18 @@
 	let ready = $state(false);
 	const path = $derived(page.url.pathname);
 	const loggedIn = $derived(Boolean($data.userId));
-	const show = $derived(ready && ((path === '/login' && !loggedIn) || (path !== '/login' && loggedIn)));
+	// Connexion et inscription : les deux seuls écrans sans compte ouvert.
+	const onPublicPage = $derived(path === '/login' || path === '/signup');
+	const show = $derived(ready && ((onPublicPage && !loggedIn) || (!onPublicPage && loggedIn)));
 
 	const background = $derived($shellTone || backgroundFor(path));
 
 	/** @param {string} current */
 	function backgroundFor(current) {
-		if (current === '/login') return 'bg-login';
+		if (current === '/login' || current === '/signup') return 'bg-login';
 		if (current === '/') return 'bg-home';
 		if (current === '/to-confirm') return 'bg-confirm';
-		if (current === '/history') return 'bg-history';
+		if (current === '/history' || current === '/profile') return 'bg-history';
 		if (current === '/add') return 'bg-add-type';
 		if (current.startsWith('/add/concert')) return 'bg-add-concert';
 		if (current.startsWith('/add/festival')) return 'bg-add-festival';
@@ -40,7 +42,7 @@
 	$effect(() => {
 		if (!ready) return;
 		const showOnboarding = needsOnboarding($data);
-		if (!loggedIn && path !== '/login') {
+		if (!loggedIn && !onPublicPage) {
 			goto('/login');
 			return;
 		}
@@ -49,7 +51,7 @@
 			goto('/onboarding');
 			return;
 		}
-		if (loggedIn && !showOnboarding && path === '/login') goto('/');
+		if (loggedIn && !showOnboarding && onPublicPage) goto('/');
 	});
 </script>
 
