@@ -14,7 +14,7 @@ import "icons/lucide/thumbs-down.svg" as thumbsDownIcon
 // On y arrive depuis le bouton « Voir mes statistiques » du profil.
 export stats = frame {
   title: "Statistiques",
-  caption: "Vici : le bilan des events vus. Depuis le profil. Chaque bloc (sauf les chiffres clés) se replie avec la flèche en haut à droite, comme sur le compte rendu. Filtre par année (puces) ; le lime marque le plus haut (pic de l'histogramme, tête de chaque classement), le reste est olive. Le lime n'est jamais seul : chaque chiffre est écrit en texte, et seule la barre la plus haute porte sa valeur.",
+  caption: "Vici : le bilan des events vus. Depuis le profil. Chaque bloc (sauf les chiffres clés) se replie avec la flèche en haut à droite, comme sur le compte rendu. Filtre par année (puces à faire défiler à l'horizontale quand les années s'accumulent) ; le lime marque le plus haut (pic de l'histogramme, tête de chaque classement), le reste est olive. Le lime n'est jamais seul : chaque chiffre est écrit en texte, et seule la barre la plus haute porte sa valeur.",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -73,8 +73,9 @@ export stats = frame {
     width: 100%,
     height: .auto,
     layout: {item-gap: 8px},
+    overflow: .scroll,
     padding: [8px, 6px, 4px],
-    children: [yearAll, year2026, year2025, year2024],
+    children: [yearAll, year2026, year2025, year2024, year2023, year2022],
 
     yearAll = frame : ui.chipOn {
       chipLabel {
@@ -97,6 +98,18 @@ export stats = frame {
     year2024 = frame : ui.chip {
       chipLabel {
         contents: "2024"
+      }
+    }
+
+    year2023 = frame : ui.chip {
+      chipLabel {
+        contents: "2023"
+      }
+    }
+
+    year2022 = frame : ui.chip {
+      chipLabel {
+        contents: "2022"
       }
     }
   }
@@ -238,7 +251,7 @@ export stats = frame {
     }
 
     monthsHint = text : ui.hint {
-      contents: "Pic en juillet : 3 events vus."
+      contents: "Toutes années cumulées. Pic en juillet : 3 events vus."
     }
 
     monthsChart = frame {
@@ -254,7 +267,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "J"
+          contents: "jan"
         }
       }
 
@@ -264,7 +277,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "F"
+          contents: "fév"
         }
       }
 
@@ -274,7 +287,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "M"
+          contents: "mar"
         }
       }
 
@@ -284,7 +297,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "A"
+          contents: "avr"
         }
       }
 
@@ -294,7 +307,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "M"
+          contents: "mai"
         }
       }
 
@@ -304,7 +317,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "J"
+          contents: "juin"
         }
       }
 
@@ -314,7 +327,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "J"
+          contents: "juil"
         }
       }
 
@@ -324,7 +337,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "A"
+          contents: "août"
         }
       }
 
@@ -334,7 +347,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "S"
+          contents: "sep"
         }
       }
 
@@ -344,7 +357,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "O"
+          contents: "oct"
         }
       }
 
@@ -354,7 +367,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "N"
+          contents: "nov"
         }
       }
 
@@ -364,7 +377,7 @@ export stats = frame {
         }
 
         barLabel {
-          contents: "D"
+          contents: "déc"
         }
       }
     }
@@ -383,7 +396,7 @@ export stats = frame {
     }
 
     bandsHint = text : ui.hint {
-      contents: "Ceux que tu as vus au moins 2 fois."
+      contents: "Groupes vus au moins 2 fois."
     }
 
     band1 = frame : parts.rankRowTop {
@@ -545,7 +558,7 @@ export stats = frame {
     }
 
     companionsHint = text : ui.hint {
-      contents: "Les personnes qui t'ont le plus accompagné."
+      contents: "Accompagnants les plus fréquents."
     }
 
     companion1 = frame : parts.rankRowTop {
@@ -644,7 +657,7 @@ export stats = frame {
           }
 
           thumbLabel {
-            contents: "J'ai aimé"
+            contents: "Aimés"
           }
         }
       }
@@ -660,7 +673,7 @@ export stats = frame {
           }
 
           thumbLabel {
-            contents: "Pas aimé"
+            contents: "Pas aimés"
           }
         }
       }
@@ -684,13 +697,13 @@ export stats = frame {
     }
 
     feelingHint = text : ui.hint {
-      contents: "9 events sur 11 ont reçu un pouce vers le haut."
+      contents: "9 events aimés sur 11 notés."
     }
 
     bestTitle = text {
       width: 100%,
       fill: c.colors.text-on-dark,
-      contents: "Les mieux notés",
+      contents: "Derniers events aimés",
       font-size: 16,
       font-family: f.fonts.ui,
       font-style: "Medium"
@@ -707,11 +720,11 @@ export stats = frame {
         }
 
         rankName {
-          contents: "Messa"
+          contents: "Amenra"
         }
 
         rankCount {
-          contents: "19 mars"
+          contents: "Concert, 22 oct."
         }
       }
     }
@@ -731,7 +744,7 @@ export stats = frame {
         }
 
         rankCount {
-          contents: "16 juil."
+          contents: "Festival, 16 juil."
         }
       }
     }
@@ -747,11 +760,11 @@ export stats = frame {
         }
 
         rankName {
-          contents: "Amenra"
+          contents: "Messa"
         }
 
         rankCount {
-          contents: "22 oct."
+          contents: "Concert, 19 mars"
         }
       }
     }
