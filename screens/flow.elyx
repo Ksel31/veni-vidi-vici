@@ -36,8 +36,8 @@ file {
 // Parcours complet de l'app : connexion, accueil, puis trois branches (à confirmer, historique, ajout) qui convergent
 // vers la fiche de l'event. Colonnes = étapes, lignes = branches. Chaque flèche vient d'un `connections` posé sur le bouton.
 flowLogin = frame : login.login {
-  left: -1100px,
-  top: 971px
+  left: -1295px,
+  top: 435px
 }
 
 flowHome = frame : home.home {
@@ -297,17 +297,19 @@ flowSignup = frame : signup.signup {
   left: -1800px,
   top: 971px,
 
+  form {
+    submit {
+      connections[0].target: onboarding1.onboarding1,
+      connections[0].label: "Créer mon compte",
+      connections[0].label-position: 0.418,
+      connections[0].route: [{x: -52px, near: -140px}]
+    }
+  }
+
   top {
     backButton {
       connections[0].target: login.login,
       connections[0].label: "Retour"
-    }
-  }
-
-  form {
-    submit {
-      connections[0].target: home.home,
-      connections[0].label: "Créer mon compte"
     }
   }
 }
