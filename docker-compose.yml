@@ -1,0 +1,41 @@
+# Veni Vidi Vici : l'appli + PocketBase. Usage personnel (voir docs/deploiement-portainer.md).
+# Tout se règle par variables d'environnement (fichier .env ou variables de la stack Portainer),
+# les valeurs sont décrites dans .env.example. Aucune adresse n'est écrite ici.
+
+services:
+  pocketbase:
+    build:
+      context: .
+      dockerfile: docker/pocketbase.Dockerfile
+    restart: unless-stopped
+    ports:
+      # Le NAVIGATEUR parle directement à PocketBase : ce port doit être joignable depuis tes appareils.
+      - "${POCKETBASE_PORT:-8090}:8090"
+    volumes:
+      # Volume nommé : les données survivent aux mises à jour et aux recréations du conteneur.
+      - pb_data:/pb/pb_data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8090/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      pocketbase:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      PUBLIC_STORE: pocketbase
+      # Adresse de PocketBase telle que le navigateur la voit. À renseigner : aucune valeur par défaut.
+      PUBLIC_POCKETBASE_URL: ${PUBLIC_POCKETBASE_URL:?Renseigne PUBLIC_POCKETBASE_URL (adresse de PocketBase vue depuis ton navigateur)}
+      PORT: "3000"
+
+volumes:
+  pb_data:

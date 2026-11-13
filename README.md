@@ -21,6 +21,8 @@ Le brief complet (modèle de données, règles métier, routes, checklist de val
 
 Les variables (`PUBLIC_STORE`, `PUBLIC_POCKETBASE_URL`) sont décrites dans [`.env.example`](.env.example). Pour essayer PocketBase en local : `pocketbase serve --migrationsDir=./pb_migrations`, puis dans `.env` `PUBLIC_STORE=pocketbase` et `PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090`, puis `npm run dev`.
 
+Pour faire tourner l'appli sur ton propre serveur (Docker, Portainer) : [`docs/deploiement-portainer.md`](docs/deploiement-portainer.md).
+
 ## Les maquettes
 
 Les écrans sont dans `screens/`, un fichier par écran, et assemblés dans `screens/flow.elyx` avec les flèches de navigation. Des PNG prêts à regarder sont dans [`exports/`](exports/).
