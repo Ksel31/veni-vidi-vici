@@ -23,6 +23,8 @@ Les inscriptions sont fermées par défaut avec PocketBase : l'admin crée les c
 
 Les variables (`PUBLIC_STORE`, `PUBLIC_POCKETBASE_URL`, `PUBLIC_INSCRIPTIONS_OUVERTES`) sont décrites dans [`.env.example`](.env.example). Pour essayer PocketBase en local : `pocketbase serve --migrationsDir=./pb_migrations --hooksDir=./pb_hooks`, puis dans `.env` `PUBLIC_STORE=pocketbase` et `PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090`, puis `npm run dev`.
 
+Pour faire tourner l'appli sur ton propre serveur (Docker, Portainer) : [`docs/deploiement-portainer.md`](docs/deploiement-portainer.md).
+
 
 ### Où se trouve quoi / Ajouter un champ
 

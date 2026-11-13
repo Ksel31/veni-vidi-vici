@@ -1,0 +1,24 @@
+# Rien de tout ça n'est utile pour construire l'image (contexte plus léger, pas de secret copié).
+.git
+node_modules
+.svelte-kit
+build
+.env
+.env.*
+!.env.example
+pb_data
+pocketbase
+pocketbase.exe
+
+# Maquettes et références de design : pas nécessaires à l'appli.
+design
+exports
+screens
+tokens
+components
+logos
+docs
+*.elyx
+elyx.json
+elyx.lock
+skills-lock.json

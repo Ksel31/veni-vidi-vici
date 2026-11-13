@@ -1,7 +1,18 @@
-import adapter from '@sveltejs/adapter-auto';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { readFileSync } from 'node:fs';
+
+// Choix de l'adapter SvelteKit par variable d'environnement, au build :
+// - par défaut (`ADAPTER` absent ou `auto`) : adapter-auto, ce que Vercel détecte pour la démo en ligne ;
+// - `ADAPTER=node` : adapter-node, un serveur Node autonome (utilisé par le Dockerfile).
+const adapterName = process.env.ADAPTER || 'auto';
+if (adapterName !== 'auto' && adapterName !== 'node') {
+	throw new Error(`ADAPTER doit valoir "auto" ou "node" (reçu : "${adapterName}").`);
+}
+const adapter =
+	adapterName === 'node'
+		? (await import('@sveltejs/adapter-node')).default
+		: (await import('@sveltejs/adapter-auto')).default;
 
 // La version affichée dans Profil > À propos vient de package.json, lue au build.
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
