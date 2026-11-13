@@ -43,12 +43,6 @@ flowLogin = frame : login.login {
 flowHome = frame : home.home {
   left: -1100px,
   top: 2204px,
-  overrides: [
-    remove(home.home.addButton),
-    remove(home.home.tabs),
-    remove(home.home.bottomFade),
-    remove(home.home.upcoming)
-  ],
 
   nextBlock {
     ticket {
@@ -78,11 +72,7 @@ flowAddType = frame : addType.addType {
 
 flowEventConfirm = frame : eventConfirm.eventConfirm {
   left: 300px,
-  top: 2204px,
-  overrides: [
-    remove(eventConfirm.eventConfirm.body),
-    remove(eventConfirm.eventConfirm.header)
-  ]
+  top: 2204px
 }
 
 flowEventFestival = frame : eventFestival.eventFestival {
@@ -107,8 +97,7 @@ flowAddConcert = frame : addConcert.addConcert {
 
 flowAddConcertCalendar = frame : addConcertCalendar.addConcertCalendar {
   left: -400px,
-  top: 5804px,
-  overrides: [remove(addConcertCalendar.addConcertCalendar.scrim)]
+  top: 5804px
 }
 
 flowAddConcert2 = frame : addConcert2.addConcert2 {
@@ -169,8 +158,7 @@ flowAddFestival3 = frame : addFestival3.addFestival3 {
 
 flowEventReport = frame : eventReport.eventReport {
   left: 1000px,
-  top: 2204px,
-  overrides: [remove(eventReport.eventReport.body)]
+  top: 2204px
 }
 
 flowEventUpcoming = frame : eventUpcoming.eventUpcoming {
@@ -287,8 +275,7 @@ flowAddExit = frame : addExit.addExit {
 
 flowAddFestivalError = frame : addFestivalError.addFestivalError {
   left: -400px,
-  top: 8104px,
-  overrides: [remove(addFestivalError.addFestivalError.top)]
+  top: 8104px
 }
 
 // Inscription (depuis « Créer un compte » de la connexion) et profil (depuis l'avatar de l'accueil).

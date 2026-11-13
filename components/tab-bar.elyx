@@ -81,7 +81,18 @@ export tabBar = frame {
   height: 64px,
   layout: {align-items: .center, item-gap: 8px},
   fill: c.colors.glass-strong,
-  border: c.colors.glass-border,
+  border: {
+    linear-gradient: {
+      from: [17.1389%, 10.85%],
+      to: [55.06%, 100%],
+      stops: [stop(75.79%, c.colors.glass-edge-dark), stop(8.98%, c.colors.glass-edge-light)]
+    }
+  },
+  filter: {
+    type: .background-blur,
+    start: {position: point(50%, 59.9264%), radius: 0px},
+    end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+  },
   corner-radius: 32px,
   padding: 8px,
   children: [tabHome, tabHistory],

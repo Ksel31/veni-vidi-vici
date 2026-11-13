@@ -29,7 +29,21 @@ export glassCard = frame {
   height: .auto,
   layout: {direction: .column, item-gap: 14px},
   fill: c.colors.glass,
-  border: c.colors.glass-border,
+  border: {
+    linear-gradient: {
+      from: point(17.1389%, 10.85%),
+      to: point(55.06%, 100%),
+      stops: [
+        stop(75.79%, c.colors.glass-edge-dark),
+        stop(8.98%, c.colors.glass-edge-light)
+      ]
+    }
+  },
+  filter: {
+    type: .background-blur,
+    start: {position: point(50%, 59.9264%), radius: 0px},
+    end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+  },
   corner-radius: l.lengths.radius-xl,
   overflow: .visible,
   padding: l.lengths.space-m,
@@ -378,7 +392,21 @@ export pastRow = frame {
   height: .auto,
   layout: {align-items: .center, item-gap: 12px},
   fill: c.colors.glass,
-  border: c.colors.glass-border,
+  border: {
+    linear-gradient: {
+      from: point(17.1389%, 10.85%),
+      to: point(55.06%, 100%),
+      stops: [
+        stop(75.79%, c.colors.glass-edge-dark),
+        stop(8.98%, c.colors.glass-edge-light)
+      ]
+    }
+  },
+  filter: {
+    type: .background-blur,
+    start: {position: point(50%, 59.9264%), radius: 0px},
+    end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+  },
   corner-radius: l.lengths.radius-xl,
   overflow: .visible,
   padding: 12px,
@@ -459,7 +487,21 @@ export pendingCard = frame {
   height: .auto,
   layout: {direction: .column, item-gap: 14px},
   fill: c.colors.glass,
-  border: c.colors.glass-border,
+  border: {
+    linear-gradient: {
+      from: point(17.1389%, 10.85%),
+      to: point(55.06%, 100%),
+      stops: [
+        stop(75.79%, c.colors.glass-edge-dark),
+        stop(8.98%, c.colors.glass-edge-light)
+      ]
+    }
+  },
+  filter: {
+    type: .background-blur,
+    start: {position: point(50%, 59.9264%), radius: 0px},
+    end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+  },
   corner-radius: l.lengths.radius-xl,
   padding: l.lengths.space-m,
   children: [head, actions],
@@ -509,7 +551,21 @@ export typeCard = frame {
   height: .auto,
   layout: {align-items: .center, item-gap: 16px},
   fill: c.colors.glass,
-  border: c.colors.glass-border,
+  border: {
+    linear-gradient: {
+      from: point(17.1389%, 10.85%),
+      to: point(55.06%, 100%),
+      stops: [
+        stop(75.79%, c.colors.glass-edge-dark),
+        stop(8.98%, c.colors.glass-edge-light)
+      ]
+    }
+  },
+  filter: {
+    type: .background-blur,
+    start: {position: point(50%, 59.9264%), radius: 0px},
+    end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+  },
   corner-radius: l.lengths.radius-xl,
   padding: 20px,
   children: [typeDisc, typeTexts, typeChevron],
@@ -860,8 +916,22 @@ export deleteDialog = frame {
   width: 358px,
   height: .auto,
   layout: {direction: .column, item-gap: 14px},
-  fill: c.colors.surface-dark-raised,
-  border: c.colors.glass-border,
+  fill: c.colors.glass-strong,
+  border: {
+    linear-gradient: {
+      from: point(17.1389%, 10.85%),
+      to: point(55.06%, 100%),
+      stops: [
+        stop(75.79%, c.colors.glass-edge-dark),
+        stop(8.98%, c.colors.glass-edge-light)
+      ]
+    }
+  },
+  filter: {
+    type: .background-blur,
+    start: {position: point(50%, 59.9264%), radius: 0px},
+    end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+  },
   corner-radius: l.lengths.radius-xl,
   padding: l.lengths.space-m,
   children: [dialogTitle, dialogHint, dialogActions],
@@ -1281,14 +1351,28 @@ export calendarDialog = frame {
   width: 336px,
   height: .auto,
   layout: {direction: .column, item-gap: 4px},
-  fill: c.colors.surface-dark,
-  border: c.colors.glass-border,
+  fill: c.colors.glass-strong,
+  border: {
+    linear-gradient: {
+      from: point(17.1389%, 10.85%),
+      to: point(55.06%, 100%),
+      stops: [
+        stop(75.79%, c.colors.glass-edge-dark),
+        stop(8.98%, c.colors.glass-edge-light)
+      ]
+    }
+  },
   shadow: {
     drop-shadow: {
       color: rgb(0%, 0%, 0%, 65.098%),
       offset: point(0px, 12px),
       blur-radius: 32px
     }
+  },
+  filter: {
+    type: .background-blur,
+    start: {position: point(50%, 59.9264%), radius: 0px},
+    end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
   },
   corner-radius: l.lengths.radius-xl,
   padding: 14px,

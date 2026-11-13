@@ -84,8 +84,8 @@ export nextTicket = frame {
     height: .auto,
     min-height: 152px,
     layout: {direction: .column, justify-content: .center, item-gap: 4px},
-    padding: [16px, 20px],
     overflow: .visible,
+    padding: [16px, 20px],
     children: [eventType, eventTitle, eventMeta, ticketState],
 
     eventType = text {
@@ -131,8 +131,8 @@ export nextTicket = frame {
   }
 
   ticketStub = frame {
-    right: 0px,
     top: 5.26%,
+    right: 0px,
     bottom: 5.26%,
     width: 33%,
     ignore-stack: .true,
@@ -220,7 +220,18 @@ export eventRow = frame {
   height: .auto,
   layout: {align-items: .center, item-gap: 12px},
   fill: c.colors.glass,
-  border: c.colors.glass-border,
+  border: {
+    linear-gradient: {
+      from: [17.1389%, 10.85%],
+      to: [55.06%, 100%],
+      stops: [stop(75.79%, c.colors.glass-edge-dark), stop(8.98%, c.colors.glass-edge-light)]
+    }
+  },
+  filter: {
+    type: .background-blur,
+    start: {position: point(50%, 59.9264%), radius: 0px},
+    end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+  },
   corner-radius: l.lengths.radius-xl,
   padding: 12px,
   children: [dateBlock, info, countdown],

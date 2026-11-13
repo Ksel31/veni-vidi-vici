@@ -180,8 +180,12 @@ export profile = frame {
   }
 
   accountCard = frame : ui.glassCard {
-    layout.direction: .column,
-    layout.item-gap: 0,
+    left: 12px,
+    top: 280px,
+    width: 366px,
+    height: 198px,
+    layout.direction: .nil,
+    layout.item-gap: .nil,
     overrides: [
       insert(rowFirstName, after = ui.glassCard.cardTitle),
       insert(rowPassword, after = rowFirstName),
@@ -189,36 +193,52 @@ export profile = frame {
     ],
 
     cardTitle {
+      left: 16px,
+      top: 16px,
+      width: 334px,
+      height: 22px,
       contents: "Compte"
     }
 
     rowFirstName = frame : profileParts.settingRow {
-      rowLabel {
-        contents: "Prénom"
-      }
+      left: 16px,
+      top: 38px,
+      width: 334px,
 
       rowValue {
         contents: "Axel"
       }
+
+      rowLabel {
+        contents: "Prénom"
+      }
     }
 
     rowPassword = frame : profileParts.settingRow {
-      rowLabel {
-        contents: "Mot de passe"
-      }
+      left: 16px,
+      top: 86px,
+      width: 334px,
 
       rowValue {
         contents: "Modifier"
       }
+
+      rowLabel {
+        contents: "Mot de passe"
+      }
     }
 
     rowEmail = frame : profileParts.settingRow {
-      rowLabel {
-        contents: "E-mail"
-      }
+      left: 16px,
+      top: 134px,
+      width: 334px,
 
       rowValue {
         contents: "Ajouter"
+      }
+
+      rowLabel {
+        contents: "E-mail"
       }
     }
   }

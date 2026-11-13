@@ -3348,7 +3348,21 @@ export styleGuide = frame {
         height: .auto,
         layout: {direction: .column, item-gap: 4px},
         fill: c.colors.glass,
-        border: c.colors.glass-border,
+        border: {
+          linear-gradient: {
+            from: point(17.1389%, 10.85%),
+            to: point(55.06%, 100%),
+            stops: [
+              stop(75.79%, c.colors.glass-edge-dark),
+              stop(8.98%, c.colors.glass-edge-light)
+            ]
+          }
+        },
+        filter: {
+          type: .background-blur,
+          start: {position: point(50%, 59.9264%), radius: 0px},
+          end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+        },
         corner-radius: l.lengths.radius-xl,
         padding: 16px,
         children: [eff0Title, eff0Text],
@@ -3364,7 +3378,7 @@ export styleGuide = frame {
         eff0Text = text {
           width: 100%,
           fill: c.colors.text-on-dark,
-          contents: "Cartes et barre d'onglets : noir 55 à 80 % avec un filet blanc à 14 %. La photo reste visible derrière.",
+          contents: "Cartes, lignes d'event, barre d'onglets, modales et calendrier : noir 55 % (80 % pour modales et calendrier), flou d'arrière-plan progressif (18 px en haut, 0 vers 60 % de la hauteur) pour la lisibilité du texte, et contour dégradé de 1 px (gris clair en haut à gauche, presque noir en bas). La photo reste visible derrière.",
           font-size: 14,
           font-family: f.fonts.ui,
           font-style: "Regular"
@@ -3376,7 +3390,21 @@ export styleGuide = frame {
         height: .auto,
         layout: {direction: .column, item-gap: 4px},
         fill: c.colors.glass,
-        border: c.colors.glass-border,
+        border: {
+          linear-gradient: {
+            from: point(17.1389%, 10.85%),
+            to: point(55.06%, 100%),
+            stops: [
+              stop(75.79%, c.colors.glass-edge-dark),
+              stop(8.98%, c.colors.glass-edge-light)
+            ]
+          }
+        },
+        filter: {
+          type: .background-blur,
+          start: {position: point(50%, 59.9264%), radius: 0px},
+          end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+        },
         corner-radius: l.lengths.radius-xl,
         padding: 16px,
         children: [eff1Title, eff1Text],
@@ -3404,7 +3432,21 @@ export styleGuide = frame {
         height: .auto,
         layout: {direction: .column, item-gap: 4px},
         fill: c.colors.glass,
-        border: c.colors.glass-border,
+        border: {
+          linear-gradient: {
+            from: point(17.1389%, 10.85%),
+            to: point(55.06%, 100%),
+            stops: [
+              stop(75.79%, c.colors.glass-edge-dark),
+              stop(8.98%, c.colors.glass-edge-light)
+            ]
+          }
+        },
+        filter: {
+          type: .background-blur,
+          start: {position: point(50%, 59.9264%), radius: 0px},
+          end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+        },
         corner-radius: l.lengths.radius-xl,
         padding: 16px,
         children: [eff2Title, eff2Text],
@@ -3432,7 +3474,21 @@ export styleGuide = frame {
         height: .auto,
         layout: {direction: .column, item-gap: 4px},
         fill: c.colors.glass,
-        border: c.colors.glass-border,
+        border: {
+          linear-gradient: {
+            from: point(17.1389%, 10.85%),
+            to: point(55.06%, 100%),
+            stops: [
+              stop(75.79%, c.colors.glass-edge-dark),
+              stop(8.98%, c.colors.glass-edge-light)
+            ]
+          }
+        },
+        filter: {
+          type: .background-blur,
+          start: {position: point(50%, 59.9264%), radius: 0px},
+          end: {position: point(50%, 5.71%), radius: l.lengths.glass-blur}
+        },
         corner-radius: l.lengths.radius-xl,
         padding: 16px,
         children: [eff3Title, eff3Text],
@@ -3465,7 +3521,7 @@ export styleGuide = frame {
       {
         image: {
           ref: componentsPhoto,
-          sizing: {scale: 0.4986, offset: [0px, -566.4984px]}
+          sizing: {scale: 1.0358, offset: [0px, -1176.8472px]}
         }
       },
       {

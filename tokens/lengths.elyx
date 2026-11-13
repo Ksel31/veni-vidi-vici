@@ -10,6 +10,8 @@ export lengths = tokens {
   radius-xl: 24,
   radius-pill: 32,
   line-width: 1,
+  // Rayon maximal du flou d'arrière-plan du verre (progressif : plein en haut, nul vers 60 % de la hauteur)
+  glass-blur: 18,
   focus-ring-width: 2,
   tap: 44
 }
