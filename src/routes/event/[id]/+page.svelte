@@ -6,7 +6,6 @@
 		dayHeading,
 		daysFrom,
 		daysUntil,
-		eventIsPast,
 		eventSummary,
 		eventTitle,
 		findVenue,
@@ -17,6 +16,7 @@
 		venueLine,
 		weekdayName
 	} from '#lib/present.js';
+	import { isPast } from '#lib/rules.js';
 	import { shellTone } from '#lib/shell.js';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import NextTicket from '#lib/components/NextTicket.svelte';
@@ -28,7 +28,7 @@
 	const event = $derived($data.events.find((item) => item.id === eventId) ?? null);
 	const performances = $derived($data.performances.filter((item) => item.eventId === eventId));
 	const venue = $derived(event ? findVenue($data.venues, event.venueId) : null);
-	const past = $derived(event ? eventIsPast(event) : false);
+	const past = $derived(event ? isPast(event) : false);
 	const title = $derived(event ? eventTitle(event, $data.performances, $data.artists) : 'Event');
 	const place = $derived(venueLine(venue) ?? 'Lieu à venir');
 	const festivalDays = $derived(event ? daysFrom(event.startDate, event.endDate || event.startDate) : []);

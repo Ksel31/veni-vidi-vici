@@ -1,6 +1,7 @@
 <script>
 	import Icon from './Icon.svelte';
 	import { dateParts } from '#lib/present.js';
+	import { todayIso } from '#lib/rules.js';
 
 	/** @type {{ start?: string, end?: string, mode?: 'single' | 'range', label?: string, inputId?: string, placeholder?: string, invalid?: boolean, describedBy?: string }} */
 	let {
@@ -33,7 +34,7 @@
 	const today = new Date();
 	let viewYear = $state(today.getFullYear());
 	let viewMonth = $state(today.getMonth() + 1);
-	const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+	const todayKey = todayIso();
 
 	const rangeText = $derived(formatRange(start, end));
 	const draftText = $derived(formatRange(draftStart, draftEnd));
@@ -149,7 +150,7 @@
 	/** @param {string} iso */
 	function dayClass(iso) {
 		const classes = [];
-		if (iso === todayIso) classes.push('cal-day-today');
+		if (iso === todayKey) classes.push('cal-day-today');
 		if (draftStart && (iso === draftStart || iso === draftEnd)) classes.push('cal-day-on');
 		else if (draftStart && draftEnd && iso > draftStart && iso < draftEnd) classes.push('cal-day-in');
 		return classes.join(' ');

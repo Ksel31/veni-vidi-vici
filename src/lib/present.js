@@ -53,13 +53,6 @@ function calendarDate(iso) {
 	return new Date(year, month - 1, day);
 }
 
-/** Passé = la date de fin (ou de début) est avant aujourd'hui. Le jour même reste à venir.
- * @param {Pick<import('./store.js').Event, 'startDate' | 'endDate'>} event
- */
-export function eventIsPast(event) {
-	return daysUntil(event.endDate || event.startDate) < 0;
-}
-
 /** « Sam 14 novembre 2026 ». @param {string} iso */
 export function spokenDate(iso) {
 	const { year, month, day } = dateParts(iso);
