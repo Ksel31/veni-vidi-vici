@@ -1,12 +1,13 @@
 # Veni Vidi Vici : l'appli + PocketBase. Usage personnel (voir docs/deploiement-portainer.md).
-# Tout se règle par variables d'environnement (fichier .env ou variables de la stack Portainer),
-# les valeurs sont décrites dans .env.example. Aucune adresse n'est écrite ici.
+# Les images sont publiées sur GHCR à chaque push sur main (.github/workflows/publish-images.yml).
+# Sur le Pinas on les tire, on ne construit rien. Mise à jour : pull + redéployer la stack, rien d'autre.
+# Tout se règle par variables d'environnement (voir .env.example). Aucune adresse n'est écrite ici.
 
 services:
   pocketbase:
-    build:
-      context: .
-      dockerfile: docker/pocketbase.Dockerfile
+    # Version de PocketBase épinglée dans l'image (0.40.6, voir docker/pocketbase.Dockerfile).
+    # Le tag `latest` avance à chaque push sur main (migrations comprises).
+    image: ghcr.io/ksel31/veni-vidi-vici-pocketbase:latest
     restart: unless-stopped
     ports:
       # Le NAVIGATEUR parle directement à PocketBase : ce port doit être joignable depuis tes appareils.
@@ -22,9 +23,7 @@ services:
       start_period: 10s
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/ksel31/veni-vidi-vici:latest
     restart: unless-stopped
     depends_on:
       pocketbase:
