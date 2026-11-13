@@ -1,4 +1,5 @@
 <script>
+	import { newId } from '#lib/ids.js';
 	import { goto } from '$app/navigation';
 	import { data, addArtist, addEvent, addVenue } from '#lib/store.js';
 	import { showInfoToast } from '#lib/toast.js';
@@ -55,7 +56,7 @@
 		const trimmed = name.trim();
 		if (!trimmed) return;
 		if (bands.some((band) => band.name.toLowerCase() === trimmed.toLowerCase())) return;
-		bands = [...bands, { key: crypto.randomUUID(), name: trimmed, day: null, picking: false }];
+		bands = [...bands, { key: newId(), name: trimmed, day: null, picking: false }];
 	}
 
 	/** @param {{ day: string | null }} band */

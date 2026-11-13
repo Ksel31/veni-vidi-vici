@@ -104,3 +104,10 @@ Rien pour l'instant.
   - Statut : fait
   - Source : Axel
   - Fait le 13 nov. 2026
+
+- [x] **Bouton + du line-up qui ne fait rien**
+  - Date : 13 nov. 2026
+  - Description : retour bêta sur la version Docker / PocketBase du Pinas. Dans « Line-up à voir », le bouton + à droite d'un groupe (ex. « Skeptical Minds ») ne faisait rien. Cause : `crypto.randomUUID` n'existe pas quand l'appli est servie en HTTP simple (hors HTTPS ou localhost), l'erreur était avalée en silence. Les identifiants passent maintenant par `newId` (`getRandomValues`), et une erreur d'ajout affiche un message. Même correction pour le concert (ajout et modification).
+  - Statut : fait
+  - Source : Axel
+  - Fait le 13 nov. 2026

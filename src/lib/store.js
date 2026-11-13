@@ -2,6 +2,7 @@ import { get, writable } from 'svelte/store';
 import { account } from './accounts.js';
 import { getBackend } from './backend/index.js';
 import { applyPerformanceRules, isPast, normalizeEvent } from './rules.js';
+import { newId } from './ids.js';
 import { showInfoToast } from './toast.js';
 
 // Où les données vivent (navigateur ou PocketBase) ne regarde pas ce fichier :
@@ -77,12 +78,6 @@ import { showInfoToast } from './toast.js';
 /**
  * @typedef {UserData & { userId: string | null }} AppData
  */
-
-/** Identifiant d'une ligne : 15 caractères a-z0-9, le format que PocketBase accepte pour un id. */
-function newId() {
-	const letters = 'abcdefghijklmnopqrstuvwxyz0123456789';
-	return Array.from(crypto.getRandomValues(new Uint8Array(15)), (byte) => letters[byte % letters.length]).join('');
-}
 
 /** @returns {AppData} */
 function loggedOut() {

@@ -1,4 +1,5 @@
 <script>
+	import { newId } from '#lib/ids.js';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { data, addArtist, addVenue, deleteEvent, saveEditedEvent } from '#lib/store.js';
@@ -93,7 +94,7 @@
 		if (!trimmed) return;
 		if (bands.some((band) => band.name.toLowerCase() === trimmed.toLowerCase())) return;
 		bands = [...bands, {
-			key: crypto.randomUUID(),
+			key: newId(),
 			performanceId: null,
 			name: trimmed,
 			billing,
