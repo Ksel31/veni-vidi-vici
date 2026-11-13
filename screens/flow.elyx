@@ -26,6 +26,7 @@ import "screens/onboarding-3.elyx" as onboarding3
 import "screens/add-concert-calendar.elyx" as addConcertCalendar
 import "screens/add-festival-calendar.elyx" as addFestivalCalendar
 import "screens/home-first-event.elyx" as homeFirstEvent
+import "screens/stats.elyx" as stats
 import "screens/signup.elyx" as signup
 import "screens/signup-error.elyx" as signupError
 
@@ -312,9 +313,27 @@ flowProfile = frame : profileScreen.profile {
     }
   }
 
+  statsButton {
+    connections[0].target: stats.stats,
+    connections[0].label: "Voir mes statistiques"
+  }
+
   logout {
     connections[0].target: login.login,
     connections[0].label: "Se déconnecter"
+  }
+}
+
+// Statistiques (Vici), depuis le profil. Retour : flèche vers le profil.
+flowStats = frame : stats.stats {
+  left: -2600px,
+  top: 2204px,
+
+  top {
+    backButton {
+      connections[0].target: profileScreen.profile,
+      connections[0].label: "Retour"
+    }
   }
 }
 

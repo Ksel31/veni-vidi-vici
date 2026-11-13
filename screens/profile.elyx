@@ -7,6 +7,7 @@ import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
 import "components/profile.elyx" as profileParts
 import "components/ui.elyx" as ui
+import "icons/lucide/chart-column.svg" as chartIcon
 
 // Profil : avatar modifiable, prénom, @nom d'utilisateur, chiffres clés (préfigure « Vici »), compte, réglages, déconnexion.
 // On y arrive en touchant l'avatar de l'accueil.
@@ -33,7 +34,15 @@ export profile = frame {
   ],
   corner-radius: 48px,
   padding: [24px, 12px, 32px],
-  children: [top, identity, statsCard, accountCard, settingsCard, logout],
+  children: [
+    top,
+    identity,
+    statsCard,
+    statsButton,
+    accountCard,
+    settingsCard,
+    logout
+  ],
 
   top = frame : headers.pageHeader {
     padding-top: 8px,
@@ -176,6 +185,17 @@ export profile = frame {
         contents: "À venir",
         font-size: 13
       }
+    }
+  }
+
+  // Ouvre l'écran Statistiques (Vici)
+  statsButton = frame : ui.secondaryButton {
+    buttonGlyph {
+      contents: chartIcon
+    }
+
+    buttonLabel {
+      contents: "Voir mes statistiques"
     }
   }
 

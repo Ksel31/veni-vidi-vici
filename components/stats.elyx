@@ -1,0 +1,184 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "icons/lucide/thumbs-up.svg" as thumbsUpIcon
+import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
+
+// Colonne d'un histogramme (un mois) : barre fine posée sur la ligne de base, initiale dessous.
+// La valeur au-dessus est masquée ; on ne l'affiche que sur la colonne la plus haute (pas de chiffre sur chaque barre).
+// La hauteur de la barre se règle par colonne (32 px par event).
+export barColumn = frame {
+  left: 0px,
+  top: 0px,
+  width: 100%,
+  height: .auto,
+  layout: {direction: .column, align-items: .center, item-gap: 6px},
+  children: [barValue, bar, barLabel],
+
+  barValue = text {
+    display: .none,
+    fill: c.colors.text-on-dark,
+    contents: "3",
+    font-size: 13,
+    font-family: f.fonts.ui,
+    font-style: "Medium",
+    line-height: 1
+  }
+
+  bar = frame {
+    width: 12px,
+    height: 32px,
+    fill: c.colors.neutral-9,
+    corner-radius: 4px
+  }
+
+  barLabel = text {
+    fill: c.colors.text-on-dark-muted,
+    contents: "J",
+    font-size: 12,
+    font-family: f.fonts.ui,
+    font-style: "Regular",
+    line-height: 1
+  }
+}
+
+// Colonne la plus haute : barre lime + valeur visible (le lime marque « le plus haut », la valeur reste écrite)
+@variant
+export barColumnPeak = frame : barColumn {
+  left: 100px,
+  top: 0px,
+
+  bar {
+    fill[0].color: c.colors.cta
+  }
+
+  barLabel {
+    fill[0].color: c.colors.text-on-dark
+  }
+
+  barValue {
+    fill[0].color: c.colors.text-accent,
+    display: .visible
+  }
+}
+
+// Ligne de classement (groupes, salles) : rang, nom, nombre, puis filet de proportion dessous.
+// La largeur de `rankFill` se règle par ligne (100 % = le premier du classement).
+export rankRow = frame {
+  left: 200px,
+  top: 0px,
+  width: 100%,
+  height: .auto,
+  layout: {direction: .column, item-gap: 8px},
+  children: [rankTop, rankTrack],
+
+  rankTop = frame {
+    width: 100%,
+    height: .auto,
+    layout: {align-items: .center, item-gap: 12px},
+    children: [rankIndex, rankName, rankCount],
+
+    rankIndex = text {
+      width: 16px,
+      fill: c.colors.text-on-dark-muted,
+      contents: "1",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    rankName = text {
+      width: 100%,
+      fill: c.colors.text-on-dark,
+      contents: "Nom",
+      font-size: 16,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    rankCount = text {
+      fill: c.colors.text-on-dark,
+      contents: "3 fois",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Regular"
+    }
+  }
+
+  rankTrack = frame {
+    width: 100%,
+    height: 4px,
+    fill: c.colors.glass-strong,
+    corner-radius: 2px,
+    children: rankFill,
+
+    rankFill = frame {
+      left: 0px,
+      top: 0px,
+      width: 100%,
+      height: 4px,
+      fill: c.colors.neutral-9,
+      corner-radius: 2px
+    }
+  }
+}
+
+// Tête du classement : filet lime et nombre en lime clair (lime-11, lisible sur le verre)
+@variant
+export rankRowTop = frame : rankRow {
+  left: 600px,
+  top: 0px,
+
+  rankTop {
+    rankCount {
+      fill[0].color: c.colors.text-accent
+    }
+  }
+
+  rankTrack {
+    rankFill {
+      fill[0].color: c.colors.cta
+    }
+  }
+}
+
+// Avis global : pouce, chiffre en grand, libellé. Base = pouce vers le haut ; le pouce vers le bas se règle par l'icône.
+export thumbStat = frame {
+  left: 800px,
+  top: 0px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 12px},
+  children: [thumbGlyph, thumbTexts],
+
+  thumbGlyph = asset {
+    width: 24px,
+    height: 24px,
+    fill: c.colors.text-on-dark,
+    contents: thumbsUpIcon
+  }
+
+  thumbTexts = frame {
+    width: .auto,
+    height: .auto,
+    layout: {direction: .column, item-gap: 2px},
+    children: [thumbValue, thumbLabel],
+
+    thumbValue = text {
+      fill: c.colors.text-on-dark,
+      contents: "0",
+      font-size: 26,
+      font-family: f.fonts.ui,
+      font-style: "Medium",
+      line-height: 1
+    }
+
+    thumbLabel = text {
+      fill: c.colors.text-on-dark,
+      contents: "J'ai aimé",
+      font-size: 13,
+      font-family: f.fonts.ui,
+      font-style: "Regular"
+    }
+  }
+}

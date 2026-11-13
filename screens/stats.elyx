@@ -1,0 +1,759 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-history.jpg" as bgPhoto
+import "components/screen-header.elyx" as headers
+import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
+import "components/profile.elyx" as profileParts
+import "components/stats.elyx" as parts
+import "components/ui.elyx" as ui
+import "icons/lucide/download.svg" as downloadIcon
+import "icons/lucide/thumbs-down.svg" as thumbsDownIcon
+
+// Statistiques (« Vici ») : ce qu'on a vu, quand, qui et où. Lecture seule, filtrée par année comme l'historique.
+// On y arrive depuis le bouton « Voir mes statistiques » du profil.
+export stats = frame {
+  title: "Statistiques",
+  caption: "Vici : le bilan des events vus. Depuis le profil. Chaque bloc (sauf les chiffres clés) se replie avec la flèche en haut à droite, comme sur le compte rendu. Filtre par année (puces) ; le lime marque le plus haut (pic de l'histogramme, tête de chaque classement), le reste est olive. Le lime n'est jamais seul : chaque chiffre est écrit en texte, et seule la barre la plus haute porte sa valeur.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: .auto,
+  layout: {direction: .column, item-gap: 12px},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 72%)),
+          stop(40%, rgb(0%, 0%, 0%, 82%)),
+          stop(100%, rgb(0%, 0%, 0%, 95%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 32px],
+  children: [
+    top,
+    years,
+    summaryCard,
+    monthsCard,
+    bandsCard,
+    venuesCard,
+    companionsCard,
+    feelingCard,
+    exportButton
+  ],
+
+  // Télécharge un fichier CSV des stats de l'année choisie (ou de tout). Secondaire : ce n'est pas l'action principale de l'écran.
+  exportButton = frame : ui.secondaryButton {
+    buttonGlyph {
+      contents: downloadIcon
+    }
+
+    buttonLabel {
+      contents: "Exporter en CSV"
+    }
+  }
+
+  top = frame : headers.pageHeader {
+    padding-top: 8px,
+    padding-left: 8px,
+    padding-bottom: 0px,
+    padding-right: 8px,
+
+    pageTitle {
+      contents: "Statistiques"
+    }
+  }
+
+  years = frame {
+    width: 100%,
+    height: .auto,
+    layout: {item-gap: 8px},
+    padding: [8px, 6px, 4px],
+    children: [yearAll, year2026, year2025, year2024],
+
+    yearAll = frame : ui.chipOn {
+      chipLabel {
+        contents: "Tout"
+      }
+    }
+
+    year2026 = frame : ui.chip {
+      chipLabel {
+        contents: "2026"
+      }
+    }
+
+    year2025 = frame : ui.chip {
+      chipLabel {
+        contents: "2025"
+      }
+    }
+
+    year2024 = frame : ui.chip {
+      chipLabel {
+        contents: "2024"
+      }
+    }
+  }
+
+  // Chiffres clés : on y retrouve ceux du profil, avec le détail concerts / festivals
+  summaryCard = frame : ui.glassCard {
+    overrides: [
+      insert(summaryNumbers, after = ui.glassCard.cardTitle),
+      insert(summaryNote, after = summaryNumbers)
+    ],
+
+    cardTitle {
+      contents: "Vu en tout"
+    }
+
+    summaryNumbers = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .column, item-gap: 16px},
+      children: [numbersTop, numbersBottom],
+
+      numbersTop = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .row},
+        children: [seen, concerts, festivals],
+
+        seen = frame : profileParts.statBlock {
+          statLabel {
+            width: 100%,
+            contents: "Events vus",
+            font-size: 13
+          }
+
+          statValue {
+            contents: "12"
+          }
+        }
+
+        concerts = frame : profileParts.statBlock {
+          padding-left: 12px,
+          border[0].color: c.colors.divider,
+          border[0].sides: .left,
+
+          statLabel {
+            width: 100%,
+            contents: "Concerts",
+            font-size: 13
+          }
+
+          statValue {
+            contents: "9"
+          }
+        }
+
+        festivals = frame : profileParts.statBlock {
+          padding-left: 12px,
+          border[0].color: c.colors.divider,
+          border[0].sides: .left,
+
+          statLabel {
+            width: 100%,
+            contents: "Festivals",
+            font-size: 13
+          }
+
+          statValue {
+            contents: "3"
+          }
+        }
+      }
+
+      numbersBottom = frame {
+        width: 100%,
+        height: .auto,
+        layout: {direction: .row},
+        children: [festivalDays, bands, venues],
+
+        festivalDays = frame : profileParts.statBlock {
+          statLabel {
+            width: 100%,
+            contents: "Jours de festival",
+            font-size: 13
+          }
+
+          statValue {
+            contents: "7"
+          }
+        }
+
+        bands = frame : profileParts.statBlock {
+          padding-left: 12px,
+          border[0].color: c.colors.divider,
+          border[0].sides: .left,
+
+          statLabel {
+            width: 100%,
+            contents: "Groupes vus",
+            font-size: 13
+          }
+
+          statValue {
+            contents: "31"
+          }
+        }
+
+        venues = frame : profileParts.statBlock {
+          padding-left: 12px,
+          border[0].color: c.colors.divider,
+          border[0].sides: .left,
+
+          statLabel {
+            width: 100%,
+            contents: "Lieux différents",
+            font-size: 13
+          }
+
+          statValue {
+            contents: "8"
+          }
+        }
+      }
+    }
+
+    summaryNote = text : ui.hint {
+      contents: "Il y a aussi 2 events ratés et 4 à venir."
+    }
+  }
+
+  // Histogramme : un event = 32 px de haut, ligne de base commune, pic en clair
+  monthsCard = frame : ui.foldCard {
+    overrides: [
+      insert(monthsHint, after = ui.glassCard.cardTitle),
+      insert(monthsChart, after = monthsHint)
+    ],
+
+    cardTitle {
+      contents: "Events par mois"
+    }
+
+    monthsHint = text : ui.hint {
+      contents: "Pic en juillet : 3 events vus."
+    }
+
+    monthsChart = frame {
+      width: 100%,
+      height: .auto,
+      layout: {align-items: .end, item-gap: 4px},
+      padding: [8px, 0px, 0px],
+      children: [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12],
+
+      m1 = frame : parts.barColumn {
+        bar {
+          height: 32px
+        }
+
+        barLabel {
+          contents: "J"
+        }
+      }
+
+      m2 = frame : parts.barColumn {
+        bar {
+          height: 4px
+        }
+
+        barLabel {
+          contents: "F"
+        }
+      }
+
+      m3 = frame : parts.barColumn {
+        bar {
+          height: 64px
+        }
+
+        barLabel {
+          contents: "M"
+        }
+      }
+
+      m4 = frame : parts.barColumn {
+        bar {
+          height: 32px
+        }
+
+        barLabel {
+          contents: "A"
+        }
+      }
+
+      m5 = frame : parts.barColumn {
+        bar {
+          height: 32px
+        }
+
+        barLabel {
+          contents: "M"
+        }
+      }
+
+      m6 = frame : parts.barColumn {
+        bar {
+          height: 32px
+        }
+
+        barLabel {
+          contents: "J"
+        }
+      }
+
+      m7 = frame : parts.barColumnPeak {
+        bar {
+          height: 96px
+        }
+
+        barLabel {
+          contents: "J"
+        }
+      }
+
+      m8 = frame : parts.barColumn {
+        bar {
+          height: 32px
+        }
+
+        barLabel {
+          contents: "A"
+        }
+      }
+
+      m9 = frame : parts.barColumn {
+        bar {
+          height: 4px
+        }
+
+        barLabel {
+          contents: "S"
+        }
+      }
+
+      m10 = frame : parts.barColumn {
+        bar {
+          height: 64px
+        }
+
+        barLabel {
+          contents: "O"
+        }
+      }
+
+      m11 = frame : parts.barColumn {
+        bar {
+          height: 4px
+        }
+
+        barLabel {
+          contents: "N"
+        }
+      }
+
+      m12 = frame : parts.barColumn {
+        bar {
+          height: 4px
+        }
+
+        barLabel {
+          contents: "D"
+        }
+      }
+    }
+  }
+
+  bandsCard = frame : ui.foldCard {
+    overrides: [
+      insert(bandsHint, after = ui.glassCard.cardTitle),
+      insert(band1, after = bandsHint),
+      insert(band2, after = band1),
+      insert(band3, after = band2)
+    ],
+
+    cardTitle {
+      contents: "Groupes les plus vus"
+    }
+
+    bandsHint = text : ui.hint {
+      contents: "Ceux que tu as vus au moins 2 fois."
+    }
+
+    band1 = frame : parts.rankRowTop {
+      rankTrack {
+        rankFill {
+          width: 100%
+        }
+      }
+
+      rankTop {
+        rankIndex {
+          contents: "1"
+        }
+
+        rankName {
+          contents: "Messa"
+        }
+
+        rankCount {
+          contents: "3 fois"
+        }
+      }
+    }
+
+    band2 = frame : parts.rankRow {
+      rankTrack {
+        rankFill {
+          width: 66%
+        }
+      }
+
+      rankTop {
+        rankIndex {
+          contents: "2"
+        }
+
+        rankName {
+          contents: "Amenra"
+        }
+
+        rankCount {
+          contents: "2 fois"
+        }
+      }
+    }
+
+    band3 = frame : parts.rankRow {
+      rankTrack {
+        rankFill {
+          width: 66%
+        }
+      }
+
+      rankTop {
+        rankIndex {
+          contents: "3"
+        }
+
+        rankName {
+          contents: "Alcest"
+        }
+
+        rankCount {
+          contents: "2 fois"
+        }
+      }
+    }
+  }
+
+  venuesCard = frame : ui.foldCard {
+    overrides: [
+      insert(venue1, after = ui.glassCard.cardTitle),
+      insert(venue2, after = venue1),
+      insert(venue3, after = venue2)
+    ],
+
+    cardTitle {
+      contents: "Lieux les plus fréquentés"
+    }
+
+    venue1 = frame : parts.rankRowTop {
+      rankTrack {
+        rankFill {
+          width: 100%
+        }
+      }
+
+      rankTop {
+        rankIndex {
+          contents: "1"
+        }
+
+        rankName {
+          contents: "Ancienne Belgique, Bruxelles"
+        }
+
+        rankCount {
+          contents: "4 events"
+        }
+      }
+    }
+
+    venue2 = frame : parts.rankRow {
+      rankTrack {
+        rankFill {
+          width: 75%
+        }
+      }
+
+      rankTop {
+        rankIndex {
+          contents: "2"
+        }
+
+        rankName {
+          contents: "Botanique, Bruxelles"
+        }
+
+        rankCount {
+          contents: "3 events"
+        }
+      }
+    }
+
+    venue3 = frame : parts.rankRow {
+      rankTrack {
+        rankFill {
+          width: 50%
+        }
+      }
+
+      rankTop {
+        rankIndex {
+          contents: "3"
+        }
+
+        rankName {
+          contents: "Trix, Anvers"
+        }
+
+        rankCount {
+          contents: "2 events"
+        }
+      }
+    }
+  }
+
+  // Avec qui : les prénoms saisis dans les comptes rendus, du plus fréquent au moins fréquent
+  companionsCard = frame : ui.foldCard {
+    overrides: [
+      insert(companionsHint, after = ui.glassCard.cardTitle),
+      insert(companion1, after = companionsHint),
+      insert(companion2, after = companion1),
+      insert(companion3, after = companion2)
+    ],
+
+    cardTitle {
+      contents: "Avec qui"
+    }
+
+    companionsHint = text : ui.hint {
+      contents: "Les personnes qui t'ont le plus accompagné."
+    }
+
+    companion1 = frame : parts.rankRowTop {
+      rankTrack {
+        rankFill {
+          width: 100%
+        }
+      }
+
+      rankTop {
+        rankIndex {
+          contents: "1"
+        }
+
+        rankName {
+          contents: "Léa"
+        }
+
+        rankCount {
+          contents: "5 events"
+        }
+      }
+    }
+
+    companion2 = frame : parts.rankRow {
+      rankTrack {
+        rankFill {
+          width: 60%
+        }
+      }
+
+      rankTop {
+        rankIndex {
+          contents: "2"
+        }
+
+        rankName {
+          contents: "Tom"
+        }
+
+        rankCount {
+          contents: "3 events"
+        }
+      }
+    }
+
+    companion3 = frame : parts.rankRow {
+      rankTrack {
+        rankFill {
+          width: 40%
+        }
+      }
+
+      rankTop {
+        rankIndex {
+          contents: "3"
+        }
+
+        rankName {
+          contents: "Sarah"
+        }
+
+        rankCount {
+          contents: "2 events"
+        }
+      }
+    }
+  }
+
+  // Ressenti : pouces hauts contre bas. La barre montre la part de chaque ; les chiffres et libellés disent la même chose.
+  feelingCard = frame : ui.foldCard {
+    overrides: [
+      insert(feelingNumbers, after = ui.glassCard.cardTitle),
+      insert(feelingBar, after = feelingNumbers),
+      insert(feelingHint, after = feelingBar),
+      insert(bestTitle, after = feelingHint),
+      insert(best1, after = bestTitle),
+      insert(best2, after = best1),
+      insert(best3, after = best2)
+    ],
+
+    cardTitle {
+      contents: "Ressenti"
+    }
+
+    feelingNumbers = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .row},
+      children: [liked, disliked],
+
+      liked = frame : parts.thumbStat {
+        thumbTexts {
+          thumbValue {
+            contents: "9"
+          }
+
+          thumbLabel {
+            contents: "J'ai aimé"
+          }
+        }
+      }
+
+      disliked = frame : parts.thumbStat {
+        thumbGlyph {
+          contents: thumbsDownIcon
+        }
+
+        thumbTexts {
+          thumbValue {
+            contents: "2"
+          }
+
+          thumbLabel {
+            contents: "Pas aimé"
+          }
+        }
+      }
+    }
+
+    feelingBar = frame {
+      width: 100%,
+      height: 6px,
+      fill: c.colors.neutral-9,
+      corner-radius: 3px,
+      children: feelingBarLiked,
+
+      feelingBarLiked = frame {
+        left: 0px,
+        top: 0px,
+        width: 82%,
+        height: 6px,
+        fill: c.colors.cta,
+        corner-radius: 3px
+      }
+    }
+
+    feelingHint = text : ui.hint {
+      contents: "9 events sur 11 ont reçu un pouce vers le haut."
+    }
+
+    bestTitle = text {
+      width: 100%,
+      fill: c.colors.text-on-dark,
+      contents: "Les mieux notés",
+      font-size: 16,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    best1 = frame : parts.rankRow {
+      rankTrack {
+        display: .none
+      }
+
+      rankTop {
+        rankIndex {
+          display: .none
+        }
+
+        rankName {
+          contents: "Messa"
+        }
+
+        rankCount {
+          contents: "19 mars"
+        }
+      }
+    }
+
+    best2 = frame : parts.rankRow {
+      rankTrack {
+        display: .none
+      }
+
+      rankTop {
+        rankIndex {
+          display: .none
+        }
+
+        rankName {
+          contents: "Dour Festival"
+        }
+
+        rankCount {
+          contents: "16 juil."
+        }
+      }
+    }
+
+    best3 = frame : parts.rankRow {
+      rankTrack {
+        display: .none
+      }
+
+      rankTop {
+        rankIndex {
+          display: .none
+        }
+
+        rankName {
+          contents: "Amenra"
+        }
+
+        rankCount {
+          contents: "22 oct."
+        }
+      }
+    }
+  }
+}

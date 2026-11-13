@@ -79,7 +79,7 @@ export colors = tokens {
   glass-strong: rgb(7%, 7%, 7%, 80%),
   glass-border: rgb(100%, 100%, 100%, 14%),
   // Contour dégradé du verre : clair en haut à gauche, presque noir en bas à droite
-  glass-edge-light: rgb(62%, 62%, 62%),
+  glass-edge-light: rgb(40%, 40%, 40%),
   glass-edge-dark: rgb(14.7%, 15.3%, 14.7%),
   divider: rgb(100%, 100%, 100%, 25%),
   // Rôles
