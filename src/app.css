@@ -1434,8 +1434,70 @@ textarea,
 	color: var(--text-on-dark-muted);
 }
 
+/* Calendrier flottant (ui.elyx : calendarDialog). Un voile noir à 60 %, et la fenêtre posée au-dessus du formulaire. */
+.calendar-layer {
+	position: fixed;
+	z-index: 5;
+	inset: 0;
+}
+
+.calendar-scrim {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	padding: 0;
+	border: 0;
+	background: rgb(0% 0% 0% / 60%);
+	cursor: default;
+}
+
 .calendar {
-	padding: var(--space-s) 0 0;
+	position: absolute;
+	top: 150px;
+	right: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	width: min(336px, calc(100% - 16px));
+	max-height: calc(100dvh - 166px);
+	margin-inline: auto;
+	overflow-y: auto;
+	/* Elyx compte le filet dans le rembourrage : 14 px depuis le bord, filet compris. */
+	padding: calc(14px - var(--line-width));
+	border: var(--line-width) solid var(--glass-border);
+	border-radius: var(--radius-xl);
+	background: var(--surface-dark);
+	box-shadow: 0 12px 32px rgb(0% 0% 0% / 65.098%);
+}
+
+.calendar:focus-visible {
+	outline: none;
+}
+
+.cal-top {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 4px 4px 8px;
+}
+
+.cal-top p {
+	margin: 0;
+	font-weight: var(--weight-medium);
+}
+
+.cal-top-label {
+	color: var(--text-on-dark-muted);
+	font-size: 13px;
+}
+
+.cal-top-range {
+	font-size: 22px;
+}
+
+.cal-footer {
+	padding-top: 12px;
 }
 
 .cal-nav {
@@ -1464,6 +1526,7 @@ textarea,
 .cal-heads,
 .cal-grid {
 	display: grid;
+	row-gap: 4px;
 	grid-template-columns: repeat(7, var(--tap));
 	justify-content: space-between;
 }
@@ -1485,6 +1548,7 @@ textarea,
 	background: transparent;
 	color: var(--text-on-dark);
 	font-size: 16px;
+	font-weight: var(--weight-medium);
 }
 
 .cal-empty {

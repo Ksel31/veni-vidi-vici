@@ -22,13 +22,24 @@
 	const HEADS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
 	let open = $state(false);
+	// Brouillon : le choix ne touche le formulaire qu'au clic sur « Valider ».
+	let draftStart = $state('');
+	let draftEnd = $state('');
+	/** @type {HTMLButtonElement | undefined} */
+	let fieldButton = $state();
+	/** @type {HTMLElement | undefined} */
+	let panel = $state();
+
 	const today = new Date();
 	let viewYear = $state(today.getFullYear());
 	let viewMonth = $state(today.getMonth() + 1);
 	const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
 	const rangeText = $derived(formatRange(start, end));
+	const draftText = $derived(formatRange(draftStart, draftEnd));
 	const cells = $derived(monthCells(viewYear, viewMonth));
+	// « Valider » attend une date (concert) ou un début et une fin (festival).
+	const canValidate = $derived(mode === 'single' ? Boolean(draftStart) : Boolean(draftStart && draftEnd));
 
 	/** @param {string} iso */
 	function formatDay(iso) {
@@ -68,15 +79,36 @@
 		return list;
 	}
 
-	function toggle() {
-		open = !open;
-		if (!open) return;
+	function openCalendar() {
+		draftStart = start;
+		draftEnd = end;
 		const focus = start || end;
 		if (focus) {
 			const parts = dateParts(focus);
 			viewYear = parts.year;
 			viewMonth = parts.month;
 		}
+		open = true;
+		// Le focus entre dans la fenêtre une fois affichée
+		queueMicrotask(() => panel?.focus());
+	}
+
+	/** Ferme sans rien changer (voile, Échap) et rend le focus au champ. */
+	function closeCalendar() {
+		open = false;
+		fieldButton?.focus();
+	}
+
+	function validate() {
+		if (!canValidate) return;
+		start = draftStart;
+		end = mode === 'single' ? '' : draftEnd;
+		closeCalendar();
+	}
+
+	/** @param {KeyboardEvent} event */
+	function onKeydown(event) {
+		if (open && event.key === 'Escape') closeCalendar();
 	}
 
 	function previousMonth() {
@@ -97,46 +129,61 @@
 		}
 	}
 
-	/** @param {string} iso */
+	/** Premier toucher = début, second = fin (une date seule pour un concert). @param {string} iso */
 	function pick(iso) {
 		if (mode === 'single') {
-			start = iso;
-			end = '';
-			open = false;
+			draftStart = iso;
 			return;
 		}
-		if (!start || (start && end)) {
-			start = iso;
-			end = '';
-			return;
-		}
-		if (iso < start) {
-			end = start;
-			start = iso;
+		if (!draftStart || draftEnd) {
+			draftStart = iso;
+			draftEnd = '';
+		} else if (iso < draftStart) {
+			draftEnd = draftStart;
+			draftStart = iso;
 		} else {
-			end = iso;
+			draftEnd = iso;
 		}
-		open = false;
 	}
 
 	/** @param {string} iso */
 	function dayClass(iso) {
 		const classes = [];
 		if (iso === todayIso) classes.push('cal-day-today');
-		if (start && (iso === start || iso === end)) classes.push('cal-day-on');
-		else if (start && end && iso > start && iso < end) classes.push('cal-day-in');
+		if (draftStart && (iso === draftStart || iso === draftEnd)) classes.push('cal-day-on');
+		else if (draftStart && draftEnd && iso > draftStart && iso < draftEnd) classes.push('cal-day-in');
 		return classes.join(' ');
 	}
 </script>
 
+<svelte:window onkeydown={onKeydown} />
+
 <div class="field" class:field-invalid={invalid}>
 	<label for={inputId}>{fieldLabel}</label>
-	<button id={inputId} class="field-box range-field" type="button" aria-expanded={open} aria-describedby={describedBy} onclick={toggle}>
+	<button
+		id={inputId}
+		bind:this={fieldButton}
+		class="field-box range-field"
+		type="button"
+		aria-haspopup="dialog"
+		aria-expanded={open}
+		aria-describedby={describedBy}
+		onclick={openCalendar}
+	>
 		<Icon name="calendar" size={20} />
 		<span class:range-empty={!rangeText}>{rangeText || placeholder}</span>
 	</button>
-	{#if open}
-		<div class="calendar">
+</div>
+
+<!-- Calendrier flottant (components/ui.elyx : calendarDialog) : posé au-dessus du formulaire, sur un voile noir. -->
+{#if open}
+	<div class="calendar-layer">
+		<button class="calendar-scrim" type="button" tabindex="-1" aria-label="Fermer le calendrier" onclick={closeCalendar}></button>
+		<div class="calendar" role="dialog" aria-modal="true" aria-label={fieldLabel} tabindex="-1" bind:this={panel}>
+			<div class="cal-top">
+				<p class="cal-top-label">{fieldLabel}</p>
+				<p class="cal-top-range" class:range-empty={!draftText}>{draftText || placeholder}</p>
+			</div>
 			<div class="cal-nav">
 				<button type="button" aria-label="Mois précédent" onclick={previousMonth}>
 					<Icon name="arrow-left" size={20} />
@@ -162,6 +209,9 @@
 					{/if}
 				{/each}
 			</div>
+			<div class="cal-footer">
+				<button class="btn btn-primary" type="button" disabled={!canValidate} onclick={validate}>Valider</button>
+			</div>
 		</div>
-	{/if}
-</div>
+	</div>
+{/if}
