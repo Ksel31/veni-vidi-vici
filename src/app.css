@@ -652,7 +652,13 @@ textarea,
 }
 
 /* Démo uniquement : note de connexion factice, à retirer en phase 2. */
+/* Hors flux : la phrase ne décale rien, titre et champs restent comme dans la maquette.
+   Posée sous le logo, dans le vide au-dessus du titre. */
 .login-intro .login-demo-hint {
+	position: absolute;
+	top: 120px;
+	left: calc(var(--space-m) + var(--space-s));
+	right: calc(var(--space-m) + var(--space-s));
 	font-size: 13px;
 	font-weight: var(--weight-regular);
 	line-height: 1.35;
