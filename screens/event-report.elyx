@@ -474,7 +474,7 @@ export eventReport = frame {
       }
     }
 
-    photos = frame : ui.glassCard {
+    photos = frame : ui.foldCard {
       overrides: [insert(photoGrid, after = ui.glassCard.cardTitle)],
 
       cardTitle {

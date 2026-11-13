@@ -3,7 +3,9 @@ use "fonts/Archivo.ttf"
 
 import "icons/lucide/check.svg" as checkIcon
 import "icons/lucide/x.svg" as crossIcon
+import "icons/lucide/arrow-left.svg" as arrowLeftIcon
 import "icons/lucide/chevron-right.svg" as chevronRight
+import "icons/lucide/chevron-up.svg" as chevronUp
 import "icons/lucide/clock.svg" as clockIcon
 import "icons/lucide/music.svg" as musicIcon
 import "icons/lucide/search.svg" as searchIcon
@@ -43,10 +45,37 @@ export glassCard = frame {
   }
 }
 
+// Carte pliable (fiches en lecture) : une glassCard avec une flèche en haut à droite, zone tactile 44 px.
+// Dépliée = flèche vers le haut. Repliée = flèche vers le bas et seul le titre reste visible
+// (on masque le contenu inséré avec `display: .none` dans l'instance).
+export foldCard = frame : glassCard {
+  left: 600px,
+  top: 0px,
+  overrides: [insert(foldToggle, after = glassCard.cardTitle)],
+
+  foldToggle = frame {
+    top: 4px,
+    right: 4px,
+    width: l.lengths.tap,
+    height: l.lengths.tap,
+    ignore-stack: .true,
+    layout: {justify-content: .center, align-items: .center},
+    corner-radius: 22px,
+    children: foldGlyph,
+
+    foldGlyph = asset {
+      width: 20px,
+      height: 20px,
+      fill: c.colors.text-on-dark,
+      contents: chevronUp
+    }
+  }
+}
+
 // Petit texte d'aide ou de légende sous un titre
 export hint = text {
-  left: 0px,
-  top: 100px,
+  left: 1200px,
+  top: 0px,
   width: 100%,
   fill: c.colors.text-on-dark-muted,
   contents: "Texte d'aide",
@@ -85,8 +114,8 @@ export primaryButton = frame {
 
 // Bouton secondaire : verre dense + filet clair
 export secondaryButton = frame {
-  left: 0px,
-  top: 300px,
+  left: 600px,
+  top: 200px,
   width: 100%,
   height: 52px,
   layout: {justify-content: .center, align-items: .center, item-gap: 8px},
@@ -161,7 +190,7 @@ export field = frame {
 // Champ vide : la valeur devient un texte d'aide grisé
 @variant
 export fieldEmpty = frame : field {
-  left: 500px,
+  left: 600px,
   top: 400px,
 
   fieldBox {
@@ -174,7 +203,7 @@ export fieldEmpty = frame : field {
 // Puce de choix (type de passage, année, jour…) : inactive = verre + filet, active = pilule claire
 export chip = frame {
   left: 0px,
-  top: 500px,
+  top: 600px,
   width: .auto,
   height: l.lengths.tap,
   layout: {justify-content: .center, align-items: .center, item-gap: 8px},
@@ -195,8 +224,8 @@ export chip = frame {
 
 @variant
 export chipOn = frame : chip {
-  left: 200px,
-  top: 500px,
+  left: 600px,
+  top: 600px,
   border[0].color: c.colors.light,
   fill[0].color: c.colors.light,
 
@@ -208,7 +237,7 @@ export chipOn = frame : chip {
 // Ligne cochable (jours faits, groupes vus) : case + libellé + détail. Base = cochée ; « Off » = case vide.
 export checkRow = frame {
   left: 0px,
-  top: 600px,
+  top: 800px,
   width: 100%,
   height: .auto,
   layout: {align-items: .center, item-gap: 12px},
@@ -263,8 +292,8 @@ export checkRow = frame {
 
 @variant
 export checkRowOff = frame : checkRow {
-  left: 500px,
-  top: 600px,
+  left: 600px,
+  top: 800px,
 
   checkBox {
     fill[0].color: c.colors.neutral-1,
@@ -279,7 +308,7 @@ export checkRowOff = frame : checkRow {
 // Badge de statut : texte + icône, jamais la couleur seule. Base = « Vu » (vert), variantes « Raté » et « À confirmer ».
 export statusBadge = frame {
   left: 0px,
-  top: 700px,
+  top: 1000px,
   width: .auto,
   height: .auto,
   layout: {justify-content: .center, align-items: .center, item-gap: 4px},
@@ -307,8 +336,8 @@ export statusBadge = frame {
 
 @variant
 export statusBadgeMissed = frame : statusBadge {
-  left: 200px,
-  top: 700px,
+  left: 600px,
+  top: 1000px,
   border[0].color: c.colors.danger-border,
   fill[0].color: c.colors.danger-bg,
 
@@ -325,8 +354,8 @@ export statusBadgeMissed = frame : statusBadge {
 
 @variant
 export statusBadgePending = frame : statusBadge {
-  left: 400px,
-  top: 700px,
+  left: 1200px,
+  top: 1000px,
   border[0].color: c.colors.warning-border,
   fill[0].color: c.colors.warning-bg,
 
@@ -344,7 +373,7 @@ export statusBadgePending = frame : statusBadge {
 // Ligne d'event passé (historique) : date à gauche, titre + lieu, badge de statut à droite. Même verre que eventRow.
 export pastRow = frame {
   left: 0px,
-  top: 800px,
+  top: 1200px,
   width: 100%,
   height: .auto,
   layout: {align-items: .center, item-gap: 12px},
@@ -425,7 +454,7 @@ export pastRow = frame {
 // Event passé à confirmer (écran « À confirmer ») : carte en verre avec la question et les deux réponses.
 export pendingCard = frame {
   left: 0px,
-  top: 900px,
+  top: 1750px,
   width: 100%,
   height: .auto,
   layout: {direction: .column, item-gap: 14px},
@@ -474,8 +503,8 @@ export pendingCard = frame {
 
 // Grand choix de type d'event (étape 1 de l'ajout) : disque clair + icône, titre, phrase, chevron
 export typeCard = frame {
-  left: 0px,
-  top: 1000px,
+  left: 600px,
+  top: 1750px,
   width: 100%,
   height: .auto,
   layout: {align-items: .center, item-gap: 16px},
@@ -539,8 +568,8 @@ export typeCard = frame {
 // Ligne de groupe. Le rôle est une pastille ronde : couronne = tête d'affiche, micro = première partie.
 // Le libellé (masqué) sert aux jours de festival (« Jeu 17 »), texte centré. La poignée est masquée hors formulaire.
 export lineupRow = frame {
-  left: 0px,
-  top: 1100px,
+  left: 600px,
+  top: 1200px,
   width: 100%,
   height: .auto,
   layout: {align-items: .center, item-gap: 8px},
@@ -637,8 +666,8 @@ export lineupRow = frame {
 
 // Pouce (avis global ou par groupe) : bouton en verre avec libellé ; sélectionné = pilule claire
 export thumbButton = frame {
-  left: 0px,
-  top: 1200px,
+  left: 1200px,
+  top: 600px,
   width: .auto,
   height: 44px,
   layout: {justify-content: .center, align-items: .center, item-gap: 8px},
@@ -666,8 +695,8 @@ export thumbButton = frame {
 
 @variant
 export thumbButtonOn = frame : thumbButton {
-  left: 300px,
-  top: 1200px,
+  left: 1800px,
+  top: 600px,
   border[0].color: c.colors.light,
   fill[0].color: c.colors.light,
 
@@ -683,7 +712,7 @@ export thumbButtonOn = frame : thumbButton {
 // Zone d'envoi de fichier (billet PDF ou image) : cadre en pointillés, icône, consigne
 export uploadBox = frame {
   left: 0px,
-  top: 1300px,
+  top: 1450px,
   width: 100%,
   height: .auto,
   layout: {
@@ -727,8 +756,8 @@ export uploadBox = frame {
 
 // Fichier déjà envoyé : icône, nom, taille, croix pour le retirer
 export fileRow = frame {
-  left: 0px,
-  top: 1400px,
+  left: 1200px,
+  top: 1200px,
   width: 100%,
   height: .auto,
   layout: {align-items: .center, item-gap: 12px},
@@ -780,8 +809,8 @@ export fileRow = frame {
 
 // Case « ajouter une photo » de la grille de souvenirs : même taille que les vignettes (100 px)
 export photoAdd = frame {
-  left: 0px,
-  top: 1500px,
+  left: 600px,
+  top: 1450px,
   width: 100px,
   height: 100px,
   layout: {justify-content: .center, align-items: .center},
@@ -799,8 +828,8 @@ export photoAdd = frame {
 
 // Bouton destructif : filet et texte rouge, fond transparent, icône poubelle. Sous « Modifier l'event ».
 export dangerButton = frame {
-  left: 500px,
-  top: 300px,
+  left: 1200px,
+  top: 200px,
   width: 100%,
   height: 52px,
   layout: {justify-content: .center, align-items: .center, item-gap: 8px},
@@ -827,7 +856,7 @@ export dangerButton = frame {
 // Question de suppression : panneau opaque (plus le verre), pas un voile.
 export deleteDialog = frame {
   left: 0px,
-  top: 1650px,
+  top: 2250px,
   width: 358px,
   height: .auto,
   layout: {direction: .column, item-gap: 14px},
@@ -882,8 +911,8 @@ export deleteDialog = frame {
 
 // Même question, sur le voile noir (60 %) de l'historique et de la fiche.
 export deleteConfirm = frame {
-  left: 420px,
-  top: 1650px,
+  left: 600px,
+  top: 2250px,
   width: 390px,
   height: 280px,
   layout: {justify-content: .center, align-items: .center},
@@ -901,7 +930,7 @@ export deleteConfirm = frame {
 // Toast après « Raté » sur À confirmer : 5 secondes, action « Annuler ».
 export undoToast = frame {
   left: 0px,
-  top: 2000px,
+  top: 2050px,
   width: 358px,
   height: .auto,
   layout: {
@@ -941,10 +970,22 @@ export undoToast = frame {
   }
 }
 
+// Toast d'information sans action (ex. « Event ajouté ») : même coque que le toast d'annulation, rien à annuler.
+export infoToast = frame : undoToast {
+  left: 600px,
+  top: 2050px,
+  height: 52px,
+  overrides: [remove(undoToast.toastAction)],
+
+  toastText {
+    contents: "Event ajouté"
+  }
+}
+
 // Ligne de festival repliée : nom Medium 16, pilule crème 24 px (zone 44) texte Medium 13, croix 16 dans un cercle 28.
 export festivalBand = frame {
-  left: 0px,
-  top: 2200px,
+  left: 1800px,
+  top: 1200px,
   width: 100%,
   height: .auto,
   layout: {align-items: .center, item-gap: 2px},
@@ -1018,8 +1059,8 @@ export festivalBand = frame {
 
 // Champ d'ajout d'un groupe : le libellé à gauche, le « + » au bout à droite (ArtistField).
 export artistAddField = frame {
-  left: 0px,
-  top: 2320px,
+  left: 2400px,
+  top: 1200px,
   width: 100%,
   height: 48px,
   layout: {align-items: .center},
@@ -1056,8 +1097,8 @@ export artistAddField = frame {
 // Stepper des formulaires d'ajout : « Étape 2/3 », barre de progression claire (pas de lime : il est réservé aux CTA),
 // puis la question de l'étape et une phrase d'aide. La largeur de `stepFill` se règle par écran (33 %, 66 %, 100 %…).
 export stepHeader = frame {
-  left: 2000px,
-  top: 0px,
+  left: 1800px,
+  top: 1450px,
   width: 100%,
   height: .auto,
   layout: {direction: .column, item-gap: 12px},
@@ -1114,8 +1155,8 @@ export stepHeader = frame {
 
 // Pied de page du stepper : « Retour » (verre) + « Suivant » (lime). Sur la 1re étape, `back` est masqué.
 export stepActions = frame {
-  left: 2000px,
-  top: 200px,
+  left: 1200px,
+  top: 1450px,
   width: 100%,
   height: .auto,
   layout: {item-gap: 12px},
@@ -1148,8 +1189,8 @@ export stepActions = frame {
 // Champ en erreur : même champ, filet rouge. Le message se pose juste dessous (voir `fieldMessage`) et dit comment corriger.
 @variant
 export fieldError = frame : field {
-  left: 3000px,
-  top: 0px,
+  left: 1200px,
+  top: 400px,
 
   fieldBox {
     border[0].color: c.colors.danger-text
@@ -1158,8 +1199,8 @@ export fieldError = frame : field {
 
 // Message d'erreur sous un champ : icône + texte, jamais la couleur seule.
 export fieldMessage = frame {
-  left: 3000px,
-  top: 200px,
+  left: 1800px,
+  top: 400px,
   width: 100%,
   height: .auto,
   layout: {align-items: .center, item-gap: 6px},
@@ -1180,5 +1221,499 @@ export fieldMessage = frame {
     font-family: f.fonts.ui,
     font-style: "Regular",
     line-height: 1.3
+  }
+}
+
+// Jour du calendrier flottant : zone tactile 44 px, rayon 10, chiffre Medium 16. Base = jour libre.
+export calendarDay = frame {
+  left: 2400px,
+  top: 0px,
+  width: l.lengths.tap,
+  height: l.lengths.tap,
+  layout: {justify-content: .center, align-items: .center},
+  corner-radius: l.lengths.radius-s,
+  children: dayLabel,
+
+  dayLabel = text {
+    fill: c.colors.text-on-dark,
+    contents: "1",
+    font-size: 16,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
+  }
+}
+
+// Jour choisi (début ou fin de la plage) : pilule claire, chiffre noir
+@variant
+export calendarDayOn = frame : calendarDay {
+  left: 2400px,
+  top: 100px,
+  fill[0].color: c.colors.light,
+
+  dayLabel {
+    fill[0].color: c.colors.neutral-1
+  }
+}
+
+// Jour compris dans la plage : fond de survol, chiffre clair
+@variant
+export calendarDayIn = frame : calendarDay {
+  left: 2400px,
+  top: 200px,
+  fill[0].color: c.colors.state-hover
+}
+
+// Aujourd'hui : anneau de 2 px (jamais la couleur seule)
+@variant
+export calendarDayToday = frame : calendarDay {
+  left: 2400px,
+  top: 300px,
+  border[0].color: c.colors.text-on-dark,
+  border[0].width: 2px
+}
+
+// Calendrier en fenêtre centrée : posé au milieu de l'écran sur un voile noir, quel que soit le champ touché (« Dates » ou « Date »).
+// Le titre et la plage choisie restent visibles en haut. Premier toucher = début, second = fin, puis « Valider » ferme la fenêtre.
+// Toucher le voile ou Échap la ferme sans rien changer.
+export calendarDialog = frame {
+  left: 2400px,
+  top: 500px,
+  width: 336px,
+  height: .auto,
+  layout: {direction: .column, item-gap: 4px},
+  fill: c.colors.surface-dark,
+  border: c.colors.glass-border,
+  shadow: {
+    drop-shadow: {
+      color: rgb(0%, 0%, 0%, 65.098%),
+      offset: point(0px, 12px),
+      blur-radius: 32px
+    }
+  },
+  corner-radius: l.lengths.radius-xl,
+  padding: 14px,
+  children: [
+    calTop,
+    calNav,
+    calHeads,
+    week0,
+    week1,
+    week2,
+    week3,
+    week4,
+    week5,
+    calFooter
+  ],
+
+  calTop = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 2px},
+    padding: [4px, 4px, 8px],
+    children: [calTopLabel, calTopRange],
+
+    calTopLabel = text {
+      fill: c.colors.text-on-dark-muted,
+      contents: "Dates",
+      font-size: 13,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    calTopRange = text {
+      fill: c.colors.text-on-dark,
+      contents: "10 – 12 nov. 2026",
+      font-size: 22,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+  }
+
+  calNav = frame {
+    width: 100%,
+    height: l.lengths.tap,
+    layout: {justify-content: .space-between, align-items: .center},
+    children: [calPrev, calTitle, calNext],
+
+    calPrev = frame {
+      width: l.lengths.tap,
+      height: l.lengths.tap,
+      layout: {justify-content: .center, align-items: .center},
+      corner-radius: l.lengths.radius-pill,
+      children: calPrevGlyph,
+
+      calPrevGlyph = asset {
+        width: 20px,
+        height: 20px,
+        fill: c.colors.text-on-dark,
+        contents: arrowLeftIcon
+      }
+    }
+
+    calTitle = text {
+      fill: c.colors.text-on-dark,
+      contents: "novembre 2026",
+      font-size: 16,
+      font-family: f.fonts.ui,
+      font-style: "Medium"
+    }
+
+    calNext = frame {
+      width: l.lengths.tap,
+      height: l.lengths.tap,
+      layout: {justify-content: .center, align-items: .center},
+      corner-radius: l.lengths.radius-pill,
+      children: calNextGlyph,
+
+      calNextGlyph = asset {
+        width: 20px,
+        height: 20px,
+        fill: c.colors.text-on-dark,
+        contents: chevronRight
+      }
+    }
+  }
+
+  calHeads = frame {
+    width: 100%,
+    height: 28px,
+    layout: {justify-content: .space-between, align-items: .center},
+    children: [headLun, headMar, headMer, headJeu, headVen, headSam, headDim],
+
+    headLun = text {
+      width: l.lengths.tap,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Lun",
+      font-size: 12,
+      font-family: f.fonts.ui,
+      font-style: "Regular",
+      align: .center
+    }
+
+    headMar = text {
+      width: l.lengths.tap,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Mar",
+      font-size: 12,
+      font-family: f.fonts.ui,
+      font-style: "Regular",
+      align: .center
+    }
+
+    headMer = text {
+      width: l.lengths.tap,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Mer",
+      font-size: 12,
+      font-family: f.fonts.ui,
+      font-style: "Regular",
+      align: .center
+    }
+
+    headJeu = text {
+      width: l.lengths.tap,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Jeu",
+      font-size: 12,
+      font-family: f.fonts.ui,
+      font-style: "Regular",
+      align: .center
+    }
+
+    headVen = text {
+      width: l.lengths.tap,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Ven",
+      font-size: 12,
+      font-family: f.fonts.ui,
+      font-style: "Regular",
+      align: .center
+    }
+
+    headSam = text {
+      width: l.lengths.tap,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Sam",
+      font-size: 12,
+      font-family: f.fonts.ui,
+      font-style: "Regular",
+      align: .center
+    }
+
+    headDim = text {
+      width: l.lengths.tap,
+      fill: c.colors.text-on-dark-muted,
+      contents: "Dim",
+      font-size: 12,
+      font-family: f.fonts.ui,
+      font-style: "Regular",
+      align: .center
+    }
+  }
+
+  week0 = frame {
+    width: 100%,
+    height: l.lengths.tap,
+    layout: {justify-content: .space-between},
+    children: [e0, e1, e2, e3, e4, e5, d1],
+
+    e0 = frame {
+      width: l.lengths.tap,
+      height: l.lengths.tap
+    }
+
+    e1 = frame {
+      width: l.lengths.tap,
+      height: l.lengths.tap
+    }
+
+    e2 = frame {
+      width: l.lengths.tap,
+      height: l.lengths.tap
+    }
+
+    e3 = frame {
+      width: l.lengths.tap,
+      height: l.lengths.tap
+    }
+
+    e4 = frame {
+      width: l.lengths.tap,
+      height: l.lengths.tap
+    }
+
+    e5 = frame {
+      width: l.lengths.tap,
+      height: l.lengths.tap
+    }
+
+    d1 = frame : calendarDay {
+      dayLabel {
+        contents: "1"
+      }
+    }
+  }
+
+  week1 = frame {
+    width: 100%,
+    height: l.lengths.tap,
+    layout: {justify-content: .space-between},
+    children: [d2, d3, d4, d5, d6, d7, d8],
+
+    d2 = frame : calendarDay {
+      dayLabel {
+        contents: "2"
+      }
+    }
+
+    d3 = frame : calendarDay {
+      dayLabel {
+        contents: "3"
+      }
+    }
+
+    d4 = frame : calendarDay {
+      dayLabel {
+        contents: "4"
+      }
+    }
+
+    d5 = frame : calendarDay {
+      dayLabel {
+        contents: "5"
+      }
+    }
+
+    d6 = frame : calendarDay {
+      dayLabel {
+        contents: "6"
+      }
+    }
+
+    d7 = frame : calendarDay {
+      dayLabel {
+        contents: "7"
+      }
+    }
+
+    d8 = frame : calendarDay {
+      dayLabel {
+        contents: "8"
+      }
+    }
+  }
+
+  week2 = frame {
+    width: 100%,
+    height: l.lengths.tap,
+    layout: {justify-content: .space-between},
+    children: [d9, d10, d11, d12, d13, d14, d15],
+
+    d9 = frame : calendarDay {
+      dayLabel {
+        contents: "9"
+      }
+    }
+
+    d10 = frame : calendarDayOn {
+      dayLabel {
+        contents: "10"
+      }
+    }
+
+    d11 = frame : calendarDayIn {
+      dayLabel {
+        contents: "11"
+      }
+    }
+
+    d12 = frame : calendarDayOn {
+      dayLabel {
+        contents: "12"
+      }
+    }
+
+    d13 = frame : calendarDayToday {
+      dayLabel {
+        contents: "13"
+      }
+    }
+
+    d14 = frame : calendarDay {
+      dayLabel {
+        contents: "14"
+      }
+    }
+
+    d15 = frame : calendarDay {
+      dayLabel {
+        contents: "15"
+      }
+    }
+  }
+
+  week3 = frame {
+    width: 100%,
+    height: l.lengths.tap,
+    layout: {justify-content: .space-between},
+    children: [d16, d17, d18, d19, d20, d21, d22],
+
+    d16 = frame : calendarDay {
+      dayLabel {
+        contents: "16"
+      }
+    }
+
+    d17 = frame : calendarDay {
+      dayLabel {
+        contents: "17"
+      }
+    }
+
+    d18 = frame : calendarDay {
+      dayLabel {
+        contents: "18"
+      }
+    }
+
+    d19 = frame : calendarDay {
+      dayLabel {
+        contents: "19"
+      }
+    }
+
+    d20 = frame : calendarDay {
+      dayLabel {
+        contents: "20"
+      }
+    }
+
+    d21 = frame : calendarDay {
+      dayLabel {
+        contents: "21"
+      }
+    }
+
+    d22 = frame : calendarDay {
+      dayLabel {
+        contents: "22"
+      }
+    }
+  }
+
+  week4 = frame {
+    width: 100%,
+    height: l.lengths.tap,
+    layout: {justify-content: .space-between},
+    children: [d23, d24, d25, d26, d27, d28, d29],
+
+    d23 = frame : calendarDay {
+      dayLabel {
+        contents: "23"
+      }
+    }
+
+    d24 = frame : calendarDay {
+      dayLabel {
+        contents: "24"
+      }
+    }
+
+    d25 = frame : calendarDay {
+      dayLabel {
+        contents: "25"
+      }
+    }
+
+    d26 = frame : calendarDay {
+      dayLabel {
+        contents: "26"
+      }
+    }
+
+    d27 = frame : calendarDay {
+      dayLabel {
+        contents: "27"
+      }
+    }
+
+    d28 = frame : calendarDay {
+      dayLabel {
+        contents: "28"
+      }
+    }
+
+    d29 = frame : calendarDay {
+      dayLabel {
+        contents: "29"
+      }
+    }
+  }
+
+  week5 = frame {
+    width: 100%,
+    height: l.lengths.tap,
+    layout: {justify-content: .space-between},
+    children: d30,
+
+    d30 = frame : calendarDay {
+      dayLabel {
+        contents: "30"
+      }
+    }
+  }
+
+  calFooter = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column},
+    padding: [12px, 0px, 0px],
+    children: calValidate,
+
+    calValidate = frame : primaryButton {
+      buttonLabel {
+        contents: "Valider"
+      }
+    }
   }
 }

@@ -1,0 +1,41 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "screens/home.elyx" as home
+
+// Accueil juste après le tout premier event ajouté depuis l'onboarding : l'event est le seul à venir,
+// pas de pastille « à confirmer », et le toast confirme l'ajout pendant quelques secondes.
+export homeFirstEvent = frame : home.home {
+  title: "Accueil, premier event ajouté",
+  caption: "Fin de l'onboarding : après l'enregistrement du 1er event, retour à l'accueil avec le toast « Event ajouté » (quelques secondes, sans action). L'event devient le billet « prochain event » ; la liste « Events à venir » et la pastille « à confirmer » n'apparaissent que s'il y en a.",
+  overrides: [remove(home.home.upcoming)],
+
+  addedToast {
+    display: .visible
+  }
+
+  nextBlock {
+    overrides: [remove(home.home.nextBlock.confirmRow)]
+  }
+
+  profile {
+    stats {
+      statBands {
+        statValue {
+          contents: "0"
+        }
+      }
+
+      statSeen {
+        statValue {
+          contents: "0"
+        }
+      }
+
+      statUpcoming {
+        statValue {
+          contents: "1"
+        }
+      }
+    }
+  }
+}

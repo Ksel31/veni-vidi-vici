@@ -21,6 +21,9 @@ import "screens/onboarding-1.elyx" as onboarding1
 import "screens/home-empty.elyx" as homeEmpty
 import "screens/onboarding-2.elyx" as onboarding2
 import "screens/onboarding-3.elyx" as onboarding3
+import "screens/add-concert-calendar.elyx" as addConcertCalendar
+import "screens/add-festival-calendar.elyx" as addFestivalCalendar
+import "screens/home-first-event.elyx" as homeFirstEvent
 
 file {
   draw-connections: .true
@@ -30,119 +33,230 @@ file {
 // vers la fiche de l'event. Colonnes = étapes, lignes = branches. Chaque flèche vient d'un `connections` posé sur le bouton.
 flowLogin = frame : login.login {
   left: 0px,
-  top: 0px
+  top: 1200px
 }
 
 flowHome = frame : home.home {
   left: 700px,
-  top: 0px
+  top: 1200px,
+
+  nextBlock {
+    ticket {
+      connections[0].label-position: 0.428,
+      connections[0].route: [
+        {x: -1641px, near: -1046px},
+        {y: -1103px, near: 291px}
+      ]
+    }
+  }
 }
 
 flowToConfirm = frame : toConfirm.toConfirm {
   left: 1400px,
-  top: 0px
+  top: 1200px
 }
 
 flowHistory = frame : history.history {
-  left: 1400px,
-  top: 1100px
+  left: 700px,
+  top: 2400px
 }
 
 flowAddType = frame : addType.addType {
-  left: 1072px,
-  top: 2519px
+  left: 700px,
+  top: 3700px
 }
 
 flowEventConfirm = frame : eventConfirm.eventConfirm {
-  left: 2518px,
-  top: -45px,
+  left: 2100px,
+  top: 1200px,
   overrides: [remove(eventConfirm.eventConfirm.header)]
 }
 
 flowEventFestival = frame : eventFestival.eventFestival {
   left: 2100px,
-  top: 1100px
+  top: 2400px
 }
 
 flowAddConcert = frame : addConcert.addConcert {
-  left: 1700px,
-  top: 2260px
+  left: 1400px,
+  top: 3700px,
+
+  top {
+    card {
+      dateField {
+        connections[0].target: flowAddConcertCalendar,
+        connections[0].label: "Toucher « Date »",
+        connections[0].route: [{x: -166px, near: 117px}]
+      }
+    }
+  }
+}
+
+flowAddConcertCalendar = frame : addConcertCalendar.addConcertCalendar {
+  left: 1400px,
+  top: 4800px
 }
 
 flowAddConcert2 = frame : addConcert2.addConcert2 {
-  left: 2220px,
-  top: 2260px
+  left: 2100px,
+  top: 3700px
 }
 
 flowAddConcert3 = frame : addConcert3.addConcert3 {
-  left: 2740px,
-  top: 2260px
+  left: 2800px,
+  top: 3700px,
+
+  actions {
+    next {
+      connections[2].target: homeFirstEvent.homeFirstEvent,
+      connections[2].label: "1er event (onboarding)"
+    }
+  }
 }
 
 flowAddFestival = frame : addFestival.addFestival {
-  left: 1072px,
-  top: 5300px
+  left: 1431px,
+  top: 5779px,
+
+  top {
+    card {
+      dates {
+        connections[0].target: flowAddFestivalCalendar,
+        connections[0].label: "Toucher « Dates »",
+        connections[0].label-position: 0.44
+      }
+    }
+  }
+}
+
+flowAddFestivalCalendar = frame : addFestivalCalendar.addFestivalCalendar {
+  left: 700px,
+  top: 5900px
 }
 
 flowAddFestival2 = frame : addFestival2.addFestival2 {
-  left: 1592px,
-  top: 5300px
+  left: 2100px,
+  top: 5900px
 }
 
 flowAddFestival3 = frame : addFestival3.addFestival3 {
-  left: 2112px,
-  top: 5300px
+  left: 2800px,
+  top: 5900px,
+
+  actions {
+    next {
+      connections[1].target: homeFirstEvent.homeFirstEvent,
+      connections[1].label: "1er event (onboarding)",
+      connections[0].label-position: 0.18,
+      connections[0].route: [{y: 900px, near: 106px}]
+    }
+  }
 }
 
 flowEventReport = frame : eventReport.eventReport {
-  left: 3771px,
-  top: -535px
+  left: 2800px,
+  top: 1200px
 }
 
 flowEventUpcoming = frame : eventUpcoming.eventUpcoming {
-  left: 2852px,
-  top: 3966px
+  left: 3500px,
+  top: 4300px
 }
 
 flowEventEdit = frame : eventEdit.eventEdit {
-  left: 3701px,
-  top: 2624px
+  left: 3500px,
+  top: 0px
 }
 
 flowEventEditFestival = frame : eventEditFestival.eventEditFestival {
-  left: 5022px,
-  top: 1243px
+  left: 4200px,
+  top: 1700px
 }
 
 // Compte vide (rangée au-dessus de la connexion) : onboarding en trois écrans à swiper, puis l'accueil vide.
 // « Passer » saute directement à l'accueil vide ; « Ajouter mon 1er event » ouvre l'ajout.
 flowOnboarding1 = frame : onboarding1.onboarding1 {
   left: 0px,
-  top: -1100px
+  top: 0px,
+
+  arrow {
+    connections[0].label-position: 0.506,
+    connections[0].route: [{y: 2px, near: -102px}]
+  }
+
+  top {
+    skip {
+      connections[0].label-position: 0.478,
+      connections[0].route: [
+        {y: -438px, near: -723px},
+        {x: -26px, near: 107px},
+        {y: -446px, near: 71px}
+      ]
+    }
+  }
 }
 
 flowOnboarding2 = frame : onboarding2.onboarding2 {
   left: 700px,
-  top: -1100px
+  top: 0px,
+
+  arrow {
+    connections[0].route: [{y: -3px, near: 23px}]
+  }
+
+  top {
+    skip {
+      connections[0].route: [{y: -341px, near: -434px}]
+    }
+  }
 }
 
 flowOnboarding3 = frame : onboarding3.onboarding3 {
   left: 1400px,
-  top: -1100px
+  top: 0px,
+
+  lower {
+    choices {
+      concertChoice {
+        connections[0].route: [{x: -142px, near: -116px}]
+      }
+    }
+  }
 }
 
 flowHomeEmpty = frame : homeEmpty.homeEmpty {
   left: 2100px,
-  top: -1100px
+  top: 0px
+}
+
+// Fin de l'onboarding : une fois le 1er event ajouté (concert ou festival à venir), retour direct à l'accueil avec le toast « Event ajouté ».
+flowHomeFirstEvent = frame : homeFirstEvent.homeFirstEvent {
+  left: 2800px,
+  top: 0px
 }
 
 // Confirmation « Quitter l'ajout ? » (depuis la croix de l'étape 2 du concert) et état d'erreur du festival (titre manquant).
 flowAddExit = frame : addExit.addExit {
-  left: 2220px,
-  top: 3600px
+  left: 2100px,
+  top: 4800px,
+
+  panel {
+    dialogActions {
+      cancel {
+        connections[0].route: [
+          {y: 1926px, near: 568px},
+          {x: 571px, near: 1194px},
+          {y: 1928px, near: 705px},
+          {x: 301px, near: 1970px},
+          {y: 2018px, near: 272px},
+          {y: 2022px, near: 173px}
+        ]
+      }
+    }
+  }
 }
 
 flowAddFestivalError = frame : addFestivalError.addFestivalError {
-  left: 1072px,
-  top: 6500px
+  left: 1400px,
+  top: 7100px
 }

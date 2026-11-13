@@ -59,7 +59,7 @@ export eventEditFestival = frame {
       contents: "Le titre et les dates sont obligatoires."
     }
 
-    whenWhere = frame : ui.glassCard {
+    whenWhere = frame : ui.foldCard {
       overrides: [
         insert(titleField, after = ui.glassCard.cardTitle),
         insert(dates, after = titleField),
@@ -136,7 +136,7 @@ export eventEditFestival = frame {
       }
     }
 
-    lineup = frame : ui.glassCard {
+    lineup = frame : ui.foldCard {
       overrides: [
         insert(band1, after = ui.glassCard.cardTitle),
         insert(band2, after = band1),
@@ -173,7 +173,7 @@ export eventEditFestival = frame {
       }
     }
 
-    ticket = frame : ui.glassCard {
+    ticket = frame : ui.foldCard {
       overrides: [
         insert(ticketBought, after = ui.glassCard.cardTitle),
         insert(ticketPrice, after = ticketBought),

@@ -1,0 +1,191 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-add-festival.jpg" as bgPhoto
+import "components/screen-header.elyx" as headers
+import "components/ui.elyx" as ui
+import "icons/lucide/x.svg" as closeIcon
+import "icons/lucide/calendar.svg" as calendarIcon
+import "icons/lucide/tent.svg" as tentIcon
+import "icons/lucide/map-pin.svg" as mapPinIcon
+import "icons/lucide/building-2.svg" as buildingIcon
+import "screens/add-festival-2.elyx" as step2
+import "screens/add-festival-error.elyx" as errorScreen
+
+// Ajout d'un festival, étape 1/3 : le titre et les dates (obligatoires), puis le lieu (facultatif).
+export addFestivalCalendar = frame {
+  title: "Ajouter un festival, calendrier des dates",
+  caption: "Le calendrier s'ouvre au centre de l'écran, sur un voile noir : même emplacement quel que soit le champ. Premier toucher = début, second = fin, « Valider » ferme. Même fenêtre pour la date d'un concert.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: .auto,
+  min-height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 78%)),
+          stop(40%, rgb(0%, 0%, 0%, 80%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 32px],
+  children: [top, actions, scrim, calendar],
+
+  // Posé sur toute la page (après le bouton) pour flotter au-dessus du formulaire et de « Suivant »
+  scrim = frame {
+    left: 0px,
+    top: 0px,
+    width: 100%,
+    height: 100%,
+    ignore-stack: .true,
+    fill: rgb(0%, 0%, 0%, 60%)
+  }
+
+  calendar = frame : ui.calendarDialog {
+    left: 27px,
+    top: 150px,
+    ignore-stack: .true
+  }
+
+  top = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 20px},
+    overflow: .visible,
+    children: [header, intro, card],
+
+    header = frame : headers.pageHeader {
+      padding-top: 8px,
+      padding-left: 8px,
+      padding-bottom: 0px,
+      padding-right: 8px,
+
+      backButton {
+        glyph {
+          contents: closeIcon
+        }
+      }
+
+      pageTitle {
+        contents: "Nouveau festival"
+      }
+    }
+
+    intro = frame : ui.stepHeader {
+      stepTrack {
+        stepFill {
+          width: 117px
+        }
+      }
+
+      stepLabel {
+        contents: "Étape 1/3"
+      }
+
+      stepTitle {
+        contents: "Quel festival ?"
+      }
+
+      stepHelp {
+        contents: "Le titre et les dates sont obligatoires ; le lieu peut venir plus tard."
+      }
+    }
+
+    card = frame : ui.glassCard {
+      overrides: [
+        insert(titleField, after = ui.glassCard.cardTitle),
+        insert(dates, after = titleField),
+        insert(cityField, after = dates),
+        insert(roomField, after = cityField)
+      ],
+
+      cardTitle {
+        display: .none
+      }
+
+      titleField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: tentIcon
+          }
+
+          fieldValue {
+            contents: "Rock Werchter"
+          }
+        }
+
+        fieldLabel {
+          contents: "Titre"
+        }
+      }
+
+      dates = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: calendarIcon
+          }
+
+          fieldValue {
+            contents: "10 – 12 nov. 2026"
+          }
+        }
+
+        fieldLabel {
+          contents: "Dates"
+        }
+      }
+
+      cityField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: mapPinIcon
+          }
+
+          fieldValue {
+            contents: "Werchter"
+          }
+        }
+
+        fieldLabel {
+          contents: "Ville (optionnel)"
+        }
+      }
+
+      roomField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: buildingIcon
+          }
+
+          fieldValue {
+            contents: "Rock Werchter"
+          }
+        }
+
+        fieldLabel {
+          contents: "Lieu, salle (optionnel)"
+        }
+      }
+    }
+  }
+
+  actions = frame : ui.stepActions {
+    next {
+      connections[0].target: step2.addFestival2,
+      connections[1].target: errorScreen.addFestivalError,
+      connections[0].label: "Suivant",
+      connections[1].label: "Titre manquant"
+    }
+
+    back {
+      display: .none
+    }
+  }
+}

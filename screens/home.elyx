@@ -6,6 +6,7 @@ import "tokens/colors.elyx" as c
 import "tokens/fonts.elyx" as f
 import "components/profile.elyx" as profileParts
 import "components/tab-bar.elyx" as nav
+import "components/ui.elyx" as ui
 import "screens/event-upcoming.elyx" as eventUpcoming
 import "screens/to-confirm.elyx" as toConfirm
 import "screens/history.elyx" as history
@@ -36,7 +37,15 @@ export home = frame {
   ],
   corner-radius: 48px,
   padding: [24px, 12px, 0px],
-  children: [profile, nextBlock, upcoming, bottomFade, tabs, addButton],
+  children: [
+    profile,
+    nextBlock,
+    upcoming,
+    bottomFade,
+    addedToast,
+    tabs,
+    addButton
+  ],
 
   profile = frame : profileParts.profileHeader {}
 
@@ -46,7 +55,21 @@ export home = frame {
     height: .auto,
     layout: {direction: .column, item-gap: 14px},
     padding: [24px, 0px, 0px],
-    children: [nextTitle, ticket],
+    children: [confirmRow, nextTitle, ticket],
+
+    // Pastille « à confirmer » : au-dessus du titre du prochain event
+    confirmRow = frame {
+      width: 100%,
+      height: .auto,
+      layout: {direction: .row},
+      padding: [0px, 6px],
+      children: confirmBadge,
+
+      confirmBadge = frame : cards.confirmPill {
+        connections[0].label: "À confirmer",
+        connections[0].target: toConfirm.toConfirm
+      }
+    }
 
     nextTitle = text {
       width: 100%,
@@ -80,7 +103,7 @@ export home = frame {
     height: .auto,
     layout: {direction: .column, item-gap: 12px},
     padding: [56px, 0px, 0px],
-    children: [upcomingTitle, confirmRow, row2, row3],
+    children: [upcomingTitle, row2, row3],
 
     upcomingTitle = text {
       width: 100%,
@@ -91,19 +114,6 @@ export home = frame {
       font-style: "Medium",
       line-height: 1,
       letter-spacing: -3%
-    }
-
-    confirmRow = frame {
-      width: 100%,
-      height: .auto,
-      layout: {direction: .row},
-      padding: [0px, 6px],
-      children: confirmBadge,
-
-      confirmBadge = frame : cards.confirmPill {
-        connections[0].label: "À confirmer",
-        connections[0].target: toConfirm.toConfirm
-      }
     }
 
     row2 = frame : cards.eventRow {
@@ -163,6 +173,14 @@ export home = frame {
         ]
       }
     }
+  }
+
+  // Toast « Event ajouté » : masqué sur l'accueil normal, affiché par l'accueil du premier event
+  addedToast = frame : ui.infoToast {
+    left: 16px,
+    bottom: 112px,
+    display: .none,
+    ignore-stack: .true
   }
 
   tabs = frame : nav.tabBar {

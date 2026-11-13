@@ -1,0 +1,225 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "images/bg-add-concert.jpg" as bgPhoto
+import "components/screen-header.elyx" as headers
+import "tokens/colors.elyx" as c
+import "components/ui.elyx" as ui
+import "icons/lucide/x.svg" as closeIcon
+import "icons/lucide/music.svg" as musicIcon
+import "icons/lucide/calendar.svg" as calendarIcon
+import "icons/lucide/map-pin.svg" as mapPinIcon
+import "icons/lucide/building-2.svg" as buildingIcon
+
+// Ajout d'un concert, étape 1/3 : quand et où. Seule la date est obligatoire ; la ville d'abord, la salle ensuite.
+export addConcertCalendar = frame {
+  title: "Ajouter un concert, calendrier de la date",
+  caption: "Même fenêtre centrée que pour le festival, mais avec une date unique : un seul jour est choisi, le titre de la fenêtre est « Date ». « Valider » ferme.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: .auto,
+  min-height: 844px,
+  layout: {direction: .column, justify-content: .space-between},
+  fill: [
+    {image: {ref: bgPhoto}},
+    {
+      linear-gradient: {
+        angle: 180deg,
+        stops: [
+          stop(0%, rgb(0%, 0%, 0%, 78%)),
+          stop(40%, rgb(0%, 0%, 0%, 80%)),
+          stop(100%, rgb(0%, 0%, 0%, 92%))
+        ]
+      }
+    }
+  ],
+  corner-radius: 48px,
+  padding: [24px, 12px, 32px],
+  children: [top, actions, scrim, calendar],
+
+  scrim = frame {
+    left: 0px,
+    top: 0px,
+    width: 100%,
+    height: 100%,
+    ignore-stack: .true,
+    fill: rgb(0%, 0%, 0%, 60%)
+  }
+
+  calendar = frame : ui.calendarDialog {
+    left: 27px,
+    top: 150px,
+    ignore-stack: .true,
+
+    week2 {
+      d14 {
+        fill[0].color: c.colors.light,
+
+        dayLabel {
+          fill[0].color: c.colors.neutral-1
+        }
+      }
+
+      d12 {
+        fill[0].color: .transparent,
+
+        dayLabel {
+          fill[0].color: c.colors.text-on-dark
+        }
+      }
+
+      d11 {
+        fill[0].color: .transparent
+      }
+
+      d10 {
+        fill[0].color: .transparent,
+
+        dayLabel {
+          fill[0].color: c.colors.text-on-dark
+        }
+      }
+    }
+
+    calTop {
+      calTopRange {
+        contents: "14 nov. 2026"
+      }
+
+      calTopLabel {
+        contents: "Date"
+      }
+    }
+  }
+
+  top = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 20px},
+    children: [header, intro, card],
+
+    header = frame : headers.pageHeader {
+      padding-top: 8px,
+      padding-left: 8px,
+      padding-bottom: 0px,
+      padding-right: 8px,
+
+      backButton {
+        glyph {
+          contents: closeIcon
+        }
+      }
+
+      pageTitle {
+        contents: "Nouveau concert"
+      }
+    }
+
+    intro = frame : ui.stepHeader {
+      stepTrack {
+        stepFill {
+          width: 117px
+        }
+      }
+
+      stepLabel {
+        contents: "Étape 1/3"
+      }
+
+      stepTitle {
+        contents: "Quand et où ?"
+      }
+
+      stepHelp {
+        contents: "La date est obligatoire. Le reste peut venir plus tard."
+      }
+    }
+
+    card = frame : ui.glassCard {
+      overrides: [
+        insert(dateField, after = ui.glassCard.cardTitle),
+        insert(cityField, after = dateField),
+        insert(roomField, after = cityField),
+        insert(titleField, after = roomField)
+      ],
+
+      cardTitle {
+        display: .none
+      }
+
+      dateField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: calendarIcon
+          }
+
+          fieldValue {
+            contents: "14 nov. 2026"
+          }
+        }
+
+        fieldLabel {
+          contents: "Date"
+        }
+      }
+
+      cityField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: mapPinIcon
+          }
+
+          fieldValue {
+            contents: "Bruxelles"
+          }
+        }
+
+        fieldLabel {
+          contents: "Ville (optionnel)"
+        }
+      }
+
+      roomField = frame : ui.field {
+        fieldBox {
+          fieldGlyph {
+            contents: buildingIcon
+          }
+
+          fieldValue {
+            contents: "Ancienne Belgique"
+          }
+        }
+
+        fieldLabel {
+          contents: "Lieu, salle (optionnel)"
+        }
+      }
+
+      titleField = frame : ui.fieldEmpty {
+        fieldBox {
+          fieldGlyph {
+            contents: musicIcon
+          }
+
+          fieldValue {
+            contents: "Ex. tournée Wild God"
+          }
+        }
+
+        fieldLabel {
+          contents: "Titre (optionnel)"
+        }
+      }
+    }
+  }
+
+  actions = frame : ui.stepActions {
+    back {
+      display: .none
+    }
+
+    next {
+      display: .none
+    }
+  }
+}

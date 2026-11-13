@@ -3465,7 +3465,7 @@ export styleGuide = frame {
       {
         image: {
           ref: componentsPhoto,
-          sizing: {scale: 0.24, offset: [0px, -272.6951px]}
+          sizing: {scale: 0.4986, offset: [0px, -566.4984px]}
         }
       },
       {

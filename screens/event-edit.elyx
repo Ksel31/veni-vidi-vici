@@ -62,7 +62,7 @@ export eventEdit = frame {
       contents: "La date est obligatoire."
     }
 
-    whenWhere = frame : ui.glassCard {
+    whenWhere = frame : ui.foldCard {
       overrides: [
         insert(dateField, after = ui.glassCard.cardTitle),
         insert(cityField, after = dateField),
@@ -139,7 +139,7 @@ export eventEdit = frame {
       }
     }
 
-    bands = frame : ui.glassCard {
+    bands = frame : ui.foldCard {
       overrides: [
         insert(zoneHead, after = ui.glassCard.cardTitle),
         insert(zoneSupport, after = zoneHead)
@@ -228,7 +228,7 @@ export eventEdit = frame {
       }
     }
 
-    ticket = frame : ui.glassCard {
+    ticket = frame : ui.foldCard {
       overrides: [
         insert(ticketBought, after = ui.glassCard.cardTitle),
         insert(ticketPrice, after = ticketBought),
