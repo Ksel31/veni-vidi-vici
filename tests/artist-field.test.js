@@ -1,16 +1,23 @@
-// Garde-fou du bouton « + » (groupes) : le composant Svelte ne tourne pas sous node:test,
-// on vérifie donc dans sa source les deux points qui causaient le bug.
-// Cause : au toucher du « + », le champ perdait le focus, le clavier mobile se fermait, la page se décalait
-// et un test de géométrie au pointerup (« le doigt est-il encore sur le bouton ? ») échouait sans rien dire.
+// Garde-fous du bouton « + » (groupes). Le composant Svelte ne tourne pas sous node:test :
+// la logique (doublon) est testée dans rules.js, le reste est vérifié dans la source du composant.
+// Le vrai parcours dans un navigateur : e2e/lineup.mjs (voir README).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { nomDejaPris } from '../src/lib/rules.js';
 
 const source = readFileSync(new URL('../src/lib/components/ArtistField.svelte', import.meta.url), 'utf8');
 
-test('le « + » garde le focus du champ au toucher (pas de clavier qui se ferme)', () => {
-	assert.match(source, /onpointerdown=\{keepFocus\}/);
-	assert.match(source, /function keepFocus\(event\)\s*\{\s*event\.preventDefault\(\)/);
+test('nomDejaPris : repère un doublon sans tenir compte de la casse ni des espaces', () => {
+	assert.equal(nomDejaPris(['Skeptical Minds'], 'skeptical minds'), true);
+	assert.equal(nomDejaPris(['Skeptical Minds'], '  Skeptical Minds '), true);
+	assert.equal(nomDejaPris(['Skeptical Minds'], 'Autre groupe'), false);
+	assert.equal(nomDejaPris([], 'Skeptical Minds'), false);
+});
+
+test('un doublon affiche « Déjà dans le line-up » au lieu d\'être ignoré en silence', () => {
+	assert.match(source, /nomDejaPris\(taken, trimmed\)/);
+	assert.match(source, /Déjà dans le line-up/);
 });
 
 test("l'ajout passe par un clic normal, sans test de géométrie au pointerup", () => {

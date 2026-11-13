@@ -1,11 +1,15 @@
 <script>
 	import { showInfoToast } from '#lib/toast.js';
+	import { nomDejaPris } from '#lib/rules.js';
+	import FieldMessage from './FieldMessage.svelte';
 	import Icon from './Icon.svelte';
 
 	/** @type {{ artists: import('#lib/store.js').Artist[], taken: string[], placeholder: string, inputId?: string, onAdd: (name: string) => void }} */
 	let { artists, taken, placeholder, inputId = 'artist-query', onAdd } = $props();
 
 	let query = $state('');
+	/** Le dernier nom tenté est déjà dans le line-up : message sous le champ, texte conservé. */
+	let duplicate = $state(false);
 	/** @type {HTMLInputElement | null} */
 	let input = $state(null);
 
@@ -23,8 +27,8 @@
 	}
 
 	/**
-	 * Garde le focus dans le champ au toucher d'un bouton. Sinon le clavier mobile se ferme,
-	 * la page se décale sous le doigt et le clic n'atteint plus le bouton : le « + » semblait ne rien faire.
+	 * Garde le focus dans le champ au toucher d'un bouton, pour que le clavier mobile reste ouvert.
+	 * Non reproduit sur bureau (le « + » y marche avec ou sans) : précaution pour le tactile.
 	 * @param {PointerEvent} event
 	 */
 	function keepFocus(event) {
@@ -35,6 +39,8 @@
 	function commit(name) {
 		const trimmed = name.trim();
 		if (!trimmed) return;
+		duplicate = nomDejaPris(taken, trimmed);
+		if (duplicate) return;
 		// Une erreur dans l'écran parent ne doit pas rester muette : sans ça, le « + » semble ne rien faire.
 		try {
 			onAdd(trimmed);
@@ -73,6 +79,9 @@
 			autocomplete="off"
 			autocapitalize="off"
 			enterkeyhint="done"
+			aria-invalid={duplicate}
+			aria-describedby={duplicate ? `${inputId}-error` : undefined}
+			oninput={() => (duplicate = false)}
 			onkeydown={onKey}
 		/>
 		<button
@@ -85,6 +94,7 @@
 			<Icon name="plus" size={20} />
 		</button>
 	</div>
+	{#if duplicate}<FieldMessage id="{inputId}-error" text="Déjà dans le line-up" />{/if}
 	{#if matches.length > 0}
 		<ul class="suggestions">
 			{#each matches as artist (artist.id)}

@@ -108,3 +108,13 @@ export function historyEvents(state) {
 		.filter((event) => event.status === 'attended' || event.status === 'missed')
 		.sort((a, b) => effectiveDate(b).localeCompare(effectiveDate(a)));
 }
+
+/** Ce nom de groupe est-il déjà dans le line-up ? Sans tenir compte des majuscules ni des espaces autour.
+ * Sert à dire « Déjà dans le line-up » au lieu d'ignorer l'ajout en silence (le « + » semblait ne rien faire).
+ * @param {string[]} noms
+ * @param {string} nom
+ */
+export function nomDejaPris(noms, nom) {
+	const voulu = nom.trim().toLowerCase();
+	return noms.some((item) => item.trim().toLowerCase() === voulu);
+}

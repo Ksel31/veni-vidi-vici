@@ -91,6 +91,15 @@ npm test
 
 Le code est en SvelteKit (JavaScript + JSDoc). Les routes visées sont `/login`, `/`, `/to-confirm`, `/history`, `/add`, `/add/concert`, `/add/festival`, `/event/[id]` et `/event/[id]/edit`.
 
+### Parcours navigateur du line-up (facultatif)
+
+`e2e/lineup.mjs` rejoue l'ajout d'un groupe (+) et le message « Déjà dans le line-up » contre une appli déjà lancée, idéalement en HTTP simple sur l'IP du réseau comme sur le Pinas. Playwright n'est pas dans `package.json` : `npx` le télécharge à la demande.
+
+```sh
+npx -y -p playwright playwright install chromium
+E2E_APP_URL=http://<ip>:3000 E2E_USER=<identifiant> E2E_PASSWORD=<mot de passe> npx -y -p playwright node e2e/lineup.mjs
+```
+
 ## Phases suivantes
 
 1. Prototype navigable (en cours)
