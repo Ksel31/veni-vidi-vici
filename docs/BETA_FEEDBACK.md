@@ -96,3 +96,18 @@ Rien pour l'instant.
   - Statut : fait
   - Source : Ruru
   - Fait le 12 nov. 2026 (PR #15)
+
+- [x] **Festival d'un seul jour impossible (obligé de choisir plusieurs jours)**
+  - Date : 13 nov. 2026
+  - Description : retour bêta après le déploiement Docker sur le Pinas. Le calendrier exigeait deux touchers, donc un festival d'un jour était impossible. Un toucher suffit maintenant (début = fin), « 1 jour » s'écrit au singulier et les stats comptent 1 jour.
+  - Priorité : P2
+  - Statut : fait
+  - Source : Axel
+  - Fait le 13 nov. 2026
+
+- [x] **Bouton + du line-up qui ne fait rien**
+  - Date : 13 nov. 2026
+  - Description : retour bêta sur la version Docker / PocketBase du Pinas. Dans « Line-up à voir », le bouton + à droite d'un groupe (ex. « Skeptical Minds ») ne faisait rien. Cause : `crypto.randomUUID` n'existe pas quand l'appli est servie en HTTP simple (hors HTTPS ou localhost), l'erreur était avalée en silence. Les identifiants passent maintenant par `newId` (`getRandomValues`), et une erreur d'ajout affiche un message. Même correction pour le concert (ajout et modification).
+  - Statut : fait
+  - Source : Axel
+  - Fait le 13 nov. 2026

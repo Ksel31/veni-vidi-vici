@@ -1,7 +1,9 @@
 <script>
+	import { newId } from '#lib/ids.js';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { data, addArtist, addVenue, deleteEvent, saveEditedEvent } from '#lib/store.js';
+	import { festivalDatesValid } from '#lib/rules.js';
 	import { dayChipLabel, daysFrom, findVenue } from '#lib/present.js';
 	import { shellTone } from '#lib/shell.js';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
@@ -39,7 +41,7 @@
 	const canSave = $derived.by(() => {
 		if (!event) return false;
 		if (event.type === 'festival') {
-			return Boolean(title.trim() && startDate && endDate && endDate >= startDate) && bands.every((band) => chosenDay(band));
+			return Boolean(title.trim() && festivalDatesValid(startDate, endDate)) && bands.every((band) => chosenDay(band));
 		}
 		return Boolean(startDate);
 	});
@@ -56,7 +58,7 @@
 		const venue = findVenue($data.venues, event.venueId);
 		title = event.title ?? '';
 		startDate = event.startDate;
-		endDate = event.endDate ?? '';
+		endDate = event.endDate ?? event.startDate;
 		venueName = venue?.name ?? '';
 		venueCity = venue?.city ?? '';
 		venueId = event.venueId;
@@ -92,7 +94,7 @@
 		if (!trimmed) return;
 		if (bands.some((band) => band.name.toLowerCase() === trimmed.toLowerCase())) return;
 		bands = [...bands, {
-			key: crypto.randomUUID(),
+			key: newId(),
 			performanceId: null,
 			name: trimmed,
 			billing,

@@ -1,6 +1,6 @@
 <script>
 	import { data, deleteEvent, historyEvents } from '#lib/store.js';
-	import { dateParts, dayCount, eventTitle, findVenue, venueLine } from '#lib/present.js';
+	import { dateParts, dayCount, dayCountLabel, eventTitle, findVenue, venueLine } from '#lib/present.js';
 	import Icon from '#lib/components/Icon.svelte';
 	import DeleteConfirm from '#lib/components/DeleteConfirm.svelte';
 	import TabBar from '#lib/components/TabBar.svelte';
@@ -22,9 +22,8 @@
 	function meta(event, venue) {
 		if (event.type === 'festival') {
 			const count = dayCount(event.startDate, event.endDate);
-			const word = count > 1 ? 'jours' : 'jour';
 			const where = venue?.city || venue?.name || 'Lieu à venir';
-			return `Festival, ${count} ${word}, ${where}`;
+			return `Festival, ${dayCountLabel(count)}, ${where}`;
 		}
 		return venueLine(venue) ?? 'Lieu à venir';
 	}

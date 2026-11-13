@@ -1,4 +1,6 @@
 <script>
+	import { showInfoToast } from '#lib/toast.js';
+
 	/** @type {{ artists: import('#lib/store.js').Artist[], taken: string[], placeholder: string, inputId?: string, onAdd: (name: string) => void }} */
 	let { artists, taken, placeholder, inputId = 'artist-query', onAdd } = $props();
 
@@ -41,7 +43,14 @@
 	function commit(name) {
 		const trimmed = name.trim();
 		if (!trimmed) return;
-		onAdd(trimmed);
+		// Une erreur dans l'écran parent ne doit pas rester muette : sans ça, le « + » semble ne rien faire.
+		try {
+			onAdd(trimmed);
+		} catch (error) {
+			console.error(error);
+			showInfoToast("Impossible d'ajouter ce groupe. Réessaie.");
+			return;
+		}
 		query = '';
 		buffered = '';
 		if (input) input.value = '';
