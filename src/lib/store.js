@@ -1,5 +1,6 @@
 import { get, writable } from 'svelte/store';
 import { createDemoData, DEMO_SEED_VERSION } from './demo-data.js';
+import { clearAccount, DATA_KEY_PREFIX, loadAccount } from './accounts.js';
 
 // `localStorage` n'existe pas pendant le rendu serveur.
 const browser = typeof localStorage !== 'undefined';
@@ -81,7 +82,7 @@ const SESSION_KEY = 'vvv-session';
  * @param {string} userId
  */
 function storageKey(userId) {
-	return `vvv-user:${userId}`;
+	return `${DATA_KEY_PREFIX}${userId}`;
 }
 
 /** @returns {AppData} */
@@ -212,6 +213,7 @@ export function login(identifier) {
 				: demo()
 			: (saved ?? empty);
 	commit({ userId, ...payload });
+	loadAccount(userId);
 }
 
 /**
@@ -242,6 +244,7 @@ export function restoreSession() {
 export function logout() {
 	if (!browser) return;
 	localStorage.removeItem(SESSION_KEY);
+	clearAccount();
 	data.set(loggedOut());
 }
 

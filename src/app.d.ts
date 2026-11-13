@@ -8,6 +8,9 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	/** Version de package.json, injectée par vite.config.js au build. */
+	const __APP_VERSION__: string;
 }
 
 export {};
