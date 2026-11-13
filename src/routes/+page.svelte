@@ -1,6 +1,6 @@
 <script>
-	import { goto } from '$app/navigation';
-	import { data, historyEvents, logout, toConfirmEvents, upcomingEvents } from '#lib/store.js';
+	import { data, historyEvents, toConfirmEvents, upcomingEvents } from '#lib/store.js';
+	import { account, initialOf } from '#lib/accounts.js';
 	import { untilHeading, daysUntil } from '#lib/present.js';
 	import ProfileHeader from '#lib/components/ProfileHeader.svelte';
 	import NextTicket from '#lib/components/NextTicket.svelte';
@@ -16,11 +16,7 @@
 	const seenBands = $derived($data.performances.filter((performance) => performance.status === 'seen').length);
 	const heading = $derived(next ? untilHeading(daysUntil(next.startDate)) : '');
 	const isEmpty = $derived($data.events.length === 0);
-
-	function signOut() {
-		logout();
-		goto('/login');
-	}
+	const initial = $derived(initialOf($account));
 </script>
 
 <svelte:head>
@@ -30,11 +26,11 @@
 <section class="screen screen-home" class:screen-home-empty={isEmpty}>
 	{#if $data.userId}
 		<ProfileHeader
-			name={$data.userId}
+			{initial}
+			avatar={$account?.avatar ?? null}
 			upcoming={upcoming.length}
 			{seenEvents}
 			{seenBands}
-			onLogout={signOut}
 			hideStats={isEmpty}
 		/>
 	{/if}

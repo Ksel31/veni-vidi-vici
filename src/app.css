@@ -652,7 +652,13 @@ textarea,
 }
 
 /* Démo uniquement : note de connexion factice, à retirer en phase 2. */
+/* Hors flux : la phrase ne décale rien, titre et champs restent comme dans la maquette.
+   Posée sous le logo, dans le vide au-dessus du titre. */
 .login-intro .login-demo-hint {
+	position: absolute;
+	top: 120px;
+	left: calc(var(--space-m) + var(--space-s));
+	right: calc(var(--space-m) + var(--space-s));
 	font-size: 13px;
 	font-weight: var(--weight-regular);
 	line-height: 1.35;
@@ -661,6 +667,67 @@ textarea,
 .login-demo-hint strong {
 	color: var(--text-on-dark);
 	font-weight: var(--weight-medium);
+}
+
+/* Lien texte centré, zone tactile de 44 px (« Créer un compte », « Déjà un compte ? Se connecter »). */
+.text-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	align-self: center;
+	min-height: var(--tap);
+	padding: 0 var(--space-m);
+	border-radius: var(--radius-pill);
+	color: var(--text-on-dark);
+	font-size: 14px;
+	font-weight: var(--weight-medium);
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.text-link:hover,
+	.logout-link:hover {
+		background: var(--state-hover);
+	}
+}
+
+.text-link:active,
+.logout-link:active {
+	background: var(--state-pressed);
+}
+
+/* Inscription (screens/signup.elyx) : l'en-tête en haut, le formulaire en bas, à portée du pouce. */
+.screen-signup {
+	justify-content: space-between;
+	gap: 0;
+	padding: 24px 12px 32px;
+}
+
+.screen-signup .page-header {
+	padding-top: 8px;
+}
+
+.signup-form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-m);
+	padding: 0 var(--space-s);
+}
+
+/* Un champ et son message (erreur ou aide), collés l'un à l'autre. */
+.field-group {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.field-hint {
+	font-size: 13px;
+}
+
+/* Le texte du navigateur est ~3 % plus large que celui de la maquette : sans ce léger resserrement,
+   « Ce nom d'utilisateur est déjà pris. Essaie-en un autre. » passerait sur deux lignes. */
+.signup-form .field-message {
+	letter-spacing: -0.01em;
 }
 
 /* En-tête d'écran secondaire (screen-header.elyx). */
@@ -861,23 +928,25 @@ textarea,
 	flex: none;
 	align-items: center;
 	justify-content: center;
-	width: 52px;
-	height: 52px;
+	overflow: hidden;
 	border: 2px solid var(--text-on-dark);
-	border-radius: var(--radius-pill);
+	border-radius: 50%;
 	background: var(--neutral-12);
 	color: var(--neutral-1);
-	font-size: 24px;
 	font-weight: var(--weight-medium);
 }
 
-.profile-name {
-	min-width: 0;
-	overflow: hidden;
-	font-size: 26px;
-	font-weight: var(--weight-medium);
-	text-overflow: ellipsis;
-	white-space: nowrap;
+.avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* L'avatar de l'accueil ouvre le profil. */
+.avatar-link {
+	display: inline-flex;
+	flex: none;
+	border-radius: var(--radius-pill);
 }
 
 .stats {
@@ -907,30 +976,14 @@ textarea,
 	font-size: 14px;
 }
 
-.logout {
-	flex: none;
-	align-self: center;
-	min-height: var(--tap);
-	padding: 0 14px;
-	border: var(--line-width) solid var(--glass-border);
-	border-radius: var(--radius-pill);
-	background: var(--glass-strong);
-	color: var(--text-on-dark-muted);
-	font-size: 14px;
-	font-weight: var(--weight-regular);
-	white-space: nowrap;
-}
-
 @media (hover: hover) and (pointer: fine) {
-	.logout:hover {
-		background: var(--state-hover);
-		color: var(--text-on-dark);
+	.avatar-link:hover .avatar {
+		background: var(--light-hover);
 	}
 }
 
-.logout:active {
-	background: var(--state-pressed);
-	color: var(--text-on-dark);
+.avatar-link:active .avatar {
+	background: var(--light-pressed);
 }
 
 /* Titres de section de l'accueil : Medium 36, interlettrage -3 %. */
@@ -2694,4 +2747,189 @@ button.field-box:active {
 
 .next-block > .confirm-pill {
 	margin-inline: 6px;
+}
+
+/* Profil (screens/profile.elyx, profile-empty.elyx). Cartes à 12 px du bord, 12 px entre les blocs. */
+.screen-profile {
+	gap: 12px;
+	padding-bottom: max(32px, env(safe-area-inset-bottom, 0px));
+}
+
+.screen-profile > .page-header + * {
+	margin-top: 0;
+}
+
+.screen-profile > .profile-card {
+	margin-inline: 0;
+}
+
+/* Avatar + prénom + @nom d'utilisateur (retrait de 8 px, comme l'en-tête). */
+.profile-identity {
+	display: flex;
+	align-items: center;
+	gap: var(--space-m);
+}
+
+.avatar-large {
+	position: relative;
+	flex: none;
+	width: 88px;
+	height: 88px;
+}
+
+.avatar-large .avatar {
+	border: 0;
+}
+
+/* Pastille crayon : 32 px visibles, zone tactile de 44 px. */
+.avatar-edit {
+	position: absolute;
+	right: -4px;
+	bottom: -4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border: 2px solid var(--text-on-dark);
+	border-radius: var(--radius-pill);
+	background: var(--neutral-1);
+	color: var(--text-on-dark);
+}
+
+.avatar-edit::after {
+	content: "";
+	position: absolute;
+	inset: -8px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.avatar-edit:hover {
+		background: var(--state-hover);
+	}
+}
+
+.avatar-edit:active {
+	background: var(--state-pressed);
+}
+
+.profile-names {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+	/* Le texte de la maquette est posé ~1 px plus bas. */
+	padding-top: 1px;
+}
+
+.profile-first-name {
+	margin: 0;
+	overflow: hidden;
+	font-size: 32px;
+	font-weight: var(--weight-medium);
+	letter-spacing: -0.03em;
+	line-height: 1;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.profile-username {
+	margin: 0;
+	overflow: hidden;
+	color: var(--text-on-dark-muted);
+	font-size: 16px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Quatre chiffres séparés par un filet : le 1er à 16 px du bord, les autres à 12 px de leur filet. */
+.profile-stats {
+	flex-direction: row;
+	gap: 0;
+	padding: 16px 0;
+}
+
+.profile-stats p {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 2px;
+	margin: 0;
+	padding-left: 12px;
+	border-left: var(--line-width) solid var(--divider);
+}
+
+.profile-stats p:first-child {
+	padding-left: 16px;
+	border-left: 0;
+}
+
+.profile-stats .stat-label {
+	font-size: 13px;
+	line-height: 1.15;
+}
+
+/* Cartes Compte et Réglages : le titre, puis des lignes de 48 px collées. */
+.setting-card {
+	gap: 0;
+}
+
+/* La maquette laisse ~2 px de plus entre le titre de la carte et sa première ligne. */
+.setting-card .card-title {
+	padding-bottom: 2px;
+}
+
+.setting-card + .setting-card {
+	gap: 14px;
+}
+
+.setting-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	min-height: 48px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	border-radius: var(--radius-s);
+	color: var(--text-on-dark);
+	font-size: 16px;
+	text-align: left;
+}
+
+.setting-row .icon {
+	color: var(--text-on-dark-muted);
+}
+
+.setting-label {
+	flex: 1;
+}
+
+.setting-value {
+	color: var(--text-on-dark-muted);
+	font-size: 14px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.setting-row:hover {
+		background: var(--state-hover);
+	}
+}
+
+.setting-row:active {
+	background: var(--state-pressed);
+}
+
+/* « Se déconnecter » : texte grisé, sans fond ni filet. */
+.logout-link {
+	align-self: center;
+	min-height: var(--tap);
+	padding: 0 var(--space-m);
+	border: 0;
+	background: transparent;
+	border-radius: var(--radius-pill);
+	color: var(--text-on-dark-muted);
+	font-size: 14px;
+	font-weight: var(--weight-regular);
 }
