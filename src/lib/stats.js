@@ -183,3 +183,15 @@ export function computeStats(state, year) {
 		lastLiked
 	};
 }
+
+/**
+ * Dépenses de billets. `0` (gratuit) est un vrai prix : il compte dans le total et baisse la moyenne.
+ * `null` (prix non renseigné) est ignoré : on ne sait pas, donc on ne compte pas.
+ * @param {Array<{ ticketPrice: number | null }>} events
+ * @returns {{ count: number, total: number, average: number | null }}
+ */
+export function ticketSpending(events) {
+	const prices = events.map((event) => event.ticketPrice).filter((price) => price != null);
+	const total = prices.reduce((sum, price) => sum + price, 0);
+	return { count: prices.length, total, average: prices.length ? total / prices.length : null };
+}

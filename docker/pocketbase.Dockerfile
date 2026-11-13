@@ -1,6 +1,7 @@
 # PocketBase n'a pas d'image Docker officielle : on télécharge ici le binaire officiel de la release
 # GitHub, à une version épinglée, et on vérifie son empreinte SHA-256 avant de l'utiliser.
-# Les migrations du dépôt (pb_migrations/) sont copiées dans l'image et appliquées au démarrage.
+# Les migrations (pb_migrations/) sont appliquées au démarrage ; le hook (pb_hooks/) règle les inscriptions
+# publiques d'après VVV_INSCRIPTIONS_OUVERTES.
 # Pour changer de version : modifier PB_VERSION et les deux empreintes (fichier checksums.txt de la release).
 
 # ── 1. Téléchargement ───────────────────────────────────────────────────────
@@ -26,14 +27,15 @@ FROM alpine:3.24.4
 # ca-certificates : pour les connexions sortantes de PocketBase (e-mails, etc.).
 RUN apk add --no-cache ca-certificates \
     && addgroup -S pocketbase && adduser -S -G pocketbase pocketbase \
-    && mkdir -p /pb/pb_data /pb/pb_migrations \
+    && mkdir -p /pb/pb_data /pb/pb_migrations /pb/pb_hooks \
     && chown -R pocketbase:pocketbase /pb
 
 COPY --from=fetch /out/pocketbase /pb/pocketbase
 COPY pb_migrations/ /pb/pb_migrations/
+COPY pb_hooks/ /pb/pb_hooks/
 
 WORKDIR /pb
 USER pocketbase
 EXPOSE 8090
 # Les données (base SQLite, fichiers envoyés) vivent dans /pb/pb_data : à monter sur un volume.
-CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/pb/pb_data", "--migrationsDir=/pb/pb_migrations"]
+CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/pb/pb_data", "--migrationsDir=/pb/pb_migrations", "--hooksDir=/pb/pb_hooks"]

@@ -72,3 +72,13 @@ test("l'e-mail se modifie sans toucher au mot de passe", async () => {
 	await localBackend.signOut();
 	assert.equal((await localBackend.signIn('axel', 'secret')).ok, true);
 });
+
+test('un prix à 0 (gratuit) reste 0 et se distingue d\'un prix non renseigné', async () => {
+	const { data: empty } = await localBackend.signUp(newUser);
+	const base = { type: 'concert', title: null, startDate: '2999-01-01', endDate: null, venueId: null };
+	const events = [{ ...base, id: 'e-free', ticketPrice: 0 }, { ...base, id: 'e-na', ticketPrice: null }];
+	localBackend.saveData(empty, { ...empty, events });
+	const saved = (await localBackend.restoreSession()).data.events;
+	assert.equal(saved.find((e) => e.id === 'e-free').ticketPrice, 0);
+	assert.equal(saved.find((e) => e.id === 'e-na').ticketPrice, null);
+});

@@ -57,6 +57,8 @@ export function authErrorText(error) {
 			return 'Ce mot de passe est trop court (8 caractères minimum).';
 		case 'email-invalid':
 			return 'Cet e-mail est invalide ou déjà utilisé.';
+		case 'signups-closed':
+			return "Les inscriptions sont fermées. Demande un compte à l'admin.";
 		case 'unreachable':
 			return 'Le serveur ne répond pas. Vérifie ta connexion et réessaie.';
 		case 'config':

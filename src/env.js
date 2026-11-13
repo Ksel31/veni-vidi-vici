@@ -19,5 +19,11 @@ export const variables = defineEnvVars({
 		public: true,
 		description: "Adresse de PocketBase vue depuis le navigateur. Obligatoire seulement si PUBLIC_STORE=pocketbase.",
 		schema: (value) => (value ?? '').trim().replace(/\/+$/, '')
+	},
+	PUBLIC_INSCRIPTIONS_OUVERTES: {
+		public: true,
+		description:
+			"Mode pocketbase : 'true' affiche le formulaire d'inscription. Défaut : fermé (l'admin crée les comptes). À garder aligné avec VVV_INSCRIPTIONS_OUVERTES côté PocketBase. Ignoré en mode local.",
+		schema: (value) => (value ?? '').trim().toLowerCase() === 'true'
 	}
 });

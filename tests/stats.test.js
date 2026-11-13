@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { computeStats, statsYears } from '../src/lib/stats.js';
+import { computeStats, statsYears, ticketSpending } from '../src/lib/stats.js';
 
 function makeEvent(changes) {
 	return {
@@ -73,4 +73,10 @@ test('compte vide : tout est à zéro, sans erreur', () => {
 	assert.equal(stats.seenCount, 0);
 	assert.equal(stats.likedShare, 0);
 	assert.deepEqual(statsYears(empty), []);
+});
+
+test('dépenses : 0 (gratuit) compte dans le total et la moyenne, null est ignoré', () => {
+	const spending = ticketSpending([{ ticketPrice: 50 }, { ticketPrice: 0 }, { ticketPrice: null }, { ticketPrice: 10 }]);
+	assert.deepEqual(spending, { count: 3, total: 60, average: 20 });
+	assert.deepEqual(ticketSpending([{ ticketPrice: null }]), { count: 0, total: 0, average: null });
 });

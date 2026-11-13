@@ -12,6 +12,9 @@ services:
     ports:
       # Le NAVIGATEUR parle directement à PocketBase : ce port doit être joignable depuis tes appareils.
       - "${POCKETBASE_PORT:-8090}:8090"
+    environment:
+      # Inscriptions publiques : fermées par défaut (l'admin crée les comptes). INSCRIPTIONS_OUVERTES=true pour rouvrir.
+      VVV_INSCRIPTIONS_OUVERTES: ${INSCRIPTIONS_OUVERTES:-false}
     volumes:
       # Volume nommé : les données survivent aux mises à jour et aux recréations du conteneur.
       - pb_data:/pb/pb_data
@@ -34,6 +37,8 @@ services:
       PUBLIC_STORE: pocketbase
       # Adresse de PocketBase telle que le navigateur la voit. À renseigner : aucune valeur par défaut.
       PUBLIC_POCKETBASE_URL: ${PUBLIC_POCKETBASE_URL:?Renseigne PUBLIC_POCKETBASE_URL (adresse de PocketBase vue depuis ton navigateur)}
+      # Même réglage que côté PocketBase : l'écran d'inscription affiche le formulaire ou « inscriptions fermées ».
+      PUBLIC_INSCRIPTIONS_OUVERTES: ${INSCRIPTIONS_OUVERTES:-false}
       PORT: "3000"
 
 volumes:

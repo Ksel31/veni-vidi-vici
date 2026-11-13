@@ -36,13 +36,14 @@
 		if (fileInput) fileInput.value = '';
 	}
 
-	// E-mail : facultatif, ajoutable ou modifiable ici. Il ne sert qu'à récupérer le mot de passe un jour ;
-	// sans e-mail, c'est l'admin de l'instance qui le réinitialise.
+	// E-mail : facultatif, ajoutable ou modifiable ici. Sans e-mail, c'est l'admin de l'instance
+	// qui réinitialise le mot de passe.
 	let editingEmail = $state(false);
 	let emailDraft = $state('');
 	let emailProblem = $state('');
 	let savingEmail = $state(false);
-	// Avec PocketBase, changer l'e-mail redemande le mot de passe (la session est renouvelée juste après).
+	// PocketBase invalide la session quand l'e-mail change : on redemande le mot de passe pour confirmer
+	// que c'est bien le titulaire, puis le backend se reconnecte (voir updateAccount). Inutile en mode local.
 	const askPassword = storeMode() === 'pocketbase';
 	let emailPassword = $state('');
 
@@ -57,6 +58,10 @@
 	async function submitEmail(event) {
 		event.preventDefault();
 		if (!$account || savingEmail) return;
+		if (askPassword && !emailPassword) {
+			emailProblem = 'Entre ton mot de passe pour confirmer.';
+			return;
+		}
 		savingEmail = true;
 		const error = await saveEmail($account, emailDraft, emailPassword);
 		savingEmail = false;
@@ -165,6 +170,7 @@
 							label="Mot de passe (pour confirmer)"
 							icon="lock"
 							type="password"
+							autocomplete="current-password"
 							bind:value={emailPassword}
 						/>
 					{/if}

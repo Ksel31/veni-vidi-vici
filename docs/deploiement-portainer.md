@@ -35,8 +35,9 @@ Les images n'existent qu'**après** le premier passage de l'Action sur `main` (j
 | `PUBLIC_POCKETBASE_URL` | **oui** | Adresse de PocketBase **telle que ton navigateur la voit**, ex. `http://<adresse-du-pinas>:8090` | aucun (la stack refuse de démarrer sans) |
 | `APP_PORT` | non | Port publié pour l'appli | `3000` |
 | `POCKETBASE_PORT` | non | Port publié pour PocketBase | `8090` |
+| `INSCRIPTIONS_OUVERTES` | non | `true` pour que n'importe qui puisse créer un compte depuis l'appli (voir [Rouvrir les inscriptions](#rouvrir-les-inscriptions)) | `false` : l'admin crée les comptes |
 
-`PUBLIC_STORE=pocketbase` est déjà réglé par le `docker-compose.yml`. Les deux variables `PUBLIC_*` sont lues **au démarrage du conteneur**, pas au build : changer l'adresse de PocketBase demande de redémarrer la stack, pas de toucher à l'image.
+`PUBLIC_STORE=pocketbase` est déjà réglé par le `docker-compose.yml`. Les variables `PUBLIC_*` sont lues **au démarrage du conteneur**, pas au build : changer l'adresse de PocketBase demande de redémarrer la stack, pas de toucher à l'image.
 
 ## Déployer comme stack Portainer depuis le dépôt GitHub
 
@@ -50,9 +51,9 @@ Les images n'existent qu'**après** le premier passage de l'Action sur `main` (j
 8. **Deploy the stack.** Portainer tire les images GHCR : pas de compilation sur le Pinas.
 9. Ouvre `http://<adresse-du-pinas>:3000` (ou ton `APP_PORT`).
 
-## Créer le compte admin PocketBase (une seule fois)
+## Premier lancement : créer le superuser PocketBase (une seule fois)
 
-L'admin (« superuser ») sert à gérer PocketBase : voir les utilisateurs, réinitialiser un mot de passe, sauvegarder. Ce n'est pas ton compte dans l'appli.
+Le superuser (l'« admin ») gère PocketBase : il crée les comptes, réinitialise un mot de passe, fait les sauvegardes. Ce n'est **pas** un compte de l'appli. Tant qu'il n'existe pas, personne ne peut créer de compte (les inscriptions sont fermées).
 
 **Option 1, par le navigateur.** Au tout premier démarrage, PocketBase écrit dans ses journaux une ligne qui ressemble à :
 
@@ -71,11 +72,27 @@ Dans Portainer : **Containers → pocketbase → Logs**. Ouvre ce lien en rempla
 
 Ensuite, le tableau de bord est sur `http://<adresse-du-pinas>:8090/_/`.
 
-## Ton compte dans l'appli
+## Créer les comptes (c'est l'admin qui s'en charge)
 
-Sur l'écran de connexion, « Créer un compte » : nom d'utilisateur + mot de passe (8 caractères minimum). L'e-mail est facultatif. Si tu oublies ton mot de passe sans e-mail, c'est l'admin PocketBase qui le réinitialise depuis le tableau de bord (collection `users`).
+Les inscriptions publiques sont **fermées** : sur l'écran « Créer un compte », l'appli affiche « Les inscriptions sont fermées. Demande un compte à l'admin. ». Pour créer le tien et ceux de tes proches :
 
-Les inscriptions sont ouvertes à quiconque atteint l'appli. Une fois ton compte (et ceux de tes proches) créés, tu peux les fermer : tableau de bord PocketBase → **Collections → users → API rules → Create rule → « Set superusers only »**.
+1. Ouvre le tableau de bord (`http://<adresse-du-pinas>:8090/_/`) et connecte-toi en superuser.
+2. **Collections → users → New record.**
+3. Renseigne **username** (l'identifiant de connexion), **password** et **passwordConfirm** (8 caractères minimum). Le prénom et l'e-mail sont facultatifs ; **verified** n'a pas d'effet ici.
+4. **Create.** La personne se connecte ensuite sur l'appli avec ce nom d'utilisateur et ce mot de passe.
+
+Si quelqu'un oublie son mot de passe : même écran, ouvre son compte dans `users`, change le mot de passe. Sans e-mail dans le profil, il n'y a pas d'autre moyen de le réinitialiser, et l'appli n'envoie aucun e-mail.
+
+## Rouvrir les inscriptions
+
+Utile seulement pour laisser des proches se créer un compte eux-mêmes. À éviter si l'appli est joignable depuis internet.
+
+1. Dans Portainer, ajoute la variable **`INSCRIPTIONS_OUVERTES=true`** à la stack.
+2. **Update the stack** (ou « Pull and redeploy »). La variable est transmise à PocketBase (au démarrage, il ouvre la règle « Create » de `users`) **et** à l'appli (qui affiche le formulaire). Les deux doivent redémarrer : le redéploiement s'en charge.
+
+Pour refermer : remets `false` (ou retire la variable) et redéploie ; PocketBase referme la règle au démarrage.
+
+Sans passer par la variable, tu peux aussi agir sur PocketBase seul : **Collections → users → API rules → Create rule**, champ vide pour ouvrir ou « Set superusers only » pour fermer. Mais l'appli, elle, continuera d'afficher « inscriptions fermées » tant que `INSCRIPTIONS_OUVERTES` n'est pas `true`, et PocketBase remettra la règle selon la variable à son prochain redémarrage : la variable reste le moyen simple.
 
 ## Où vivent les données
 

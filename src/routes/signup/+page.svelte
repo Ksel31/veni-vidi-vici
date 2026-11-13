@@ -1,10 +1,14 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { authErrorText } from '#lib/accounts.js';
+	import { inscriptionsOuvertes } from '#lib/config.js';
 	import { needsOnboarding, signUp } from '#lib/store.js';
 	import TextField from '#lib/components/TextField.svelte';
 	import FieldMessage from '#lib/components/FieldMessage.svelte';
 	import Icon from '#lib/components/Icon.svelte';
+
+	// PocketBase : inscriptions fermées par défaut, on le dit au lieu de laisser le formulaire échouer.
+	const ouvertes = inscriptionsOuvertes();
 
 	let username = $state('');
 	let firstName = $state('');
@@ -67,6 +71,12 @@
 		<h1>Créer un compte</h1>
 	</header>
 
+	{#if !ouvertes}
+		<div class="glass-card">
+			<p id="signup-closed">{authErrorText('signups-closed')}</p>
+		</div>
+		<a class="text-link" href="/login">Déjà un compte ? Se connecter</a>
+	{:else}
 	<form class="signup-form" onsubmit={submit} novalidate>
 		<div class="glass-card">
 			<div class="field-group">
@@ -105,7 +115,7 @@
 					bind:value={email}
 					describedBy="email-hint"
 				/>
-				<p class="hint field-hint" id="email-hint">Pour récupérer ton mot de passe</p>
+				<p class="hint field-hint" id="email-hint">Facultatif. Sans e-mail, c'est l'admin qui réinitialise ton mot de passe.</p>
 			</div>
 
 			<div class="field-group">
@@ -146,4 +156,5 @@
 
 		<a class="text-link" href="/login">Déjà un compte ? Se connecter</a>
 	</form>
+	{/if}
 </section>

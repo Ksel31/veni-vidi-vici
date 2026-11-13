@@ -12,7 +12,7 @@ import { pocketbaseBackend } from './pocketbase.js';
  */
 
 /**
- * @typedef {'invalid-credentials' | 'username-taken' | 'password-invalid' | 'email-invalid' | 'unreachable' | 'config' | 'storage-full' | 'unknown'} AuthError
+ * @typedef {'invalid-credentials' | 'username-taken' | 'password-invalid' | 'email-invalid' | 'signups-closed' | 'unreachable' | 'config' | 'storage-full' | 'unknown'} AuthError
  */
 
 /**
