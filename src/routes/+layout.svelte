@@ -25,7 +25,7 @@
 		if (current === '/login' || current === '/signup') return 'bg-login';
 		if (current === '/') return 'bg-home';
 		if (current === '/to-confirm') return 'bg-confirm';
-		if (current === '/history' || current === '/profile') return 'bg-history';
+		if (current === '/history' || current === '/profile' || current === '/stats') return 'bg-history';
 		if (current === '/add') return 'bg-add-type';
 		if (current.startsWith('/add/concert')) return 'bg-add-concert';
 		if (current.startsWith('/add/festival')) return 'bg-add-festival';

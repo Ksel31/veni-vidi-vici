@@ -1,5 +1,6 @@
 <script>
 	import { data, historyEvents, toConfirmEvents, upcomingEvents } from '#lib/store.js';
+	import { seenBandCount } from '#lib/stats.js';
 	import { account, initialOf } from '#lib/accounts.js';
 	import { untilHeading, daysUntil } from '#lib/present.js';
 	import ProfileHeader from '#lib/components/ProfileHeader.svelte';
@@ -13,7 +14,8 @@
 	const later = $derived(upcoming.slice(1));
 	const confirmList = $derived(toConfirmEvents($data));
 	const seenEvents = $derived(historyEvents($data).filter((event) => event.status === 'attended').length);
-	const seenBands = $derived($data.performances.filter((performance) => performance.status === 'seen').length);
+	// Groupes différents vus : même règle que le profil et l'écran Statistiques.
+	const seenBands = $derived(seenBandCount($data));
 	const heading = $derived(next ? untilHeading(daysUntil(next.startDate)) : '');
 	const isEmpty = $derived($data.events.length === 0);
 	const initial = $derived(initialOf($account));
