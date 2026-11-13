@@ -24,3 +24,8 @@ vite.config.ts.timestamp-*
 
 # Références esthétiques (perso, non versionnées)
 /references
+
+# PocketBase (binaire et données : jamais dans le dépôt)
+pb_data/
+pocketbase
+pocketbase.exe

@@ -1,7 +1,7 @@
 // Calculs de l'écran Statistiques (« Vici »). Tout vient du store : rien n'est écrit en dur.
 // Une règle par fonction, expliquée juste au-dessus.
 
-import { upcomingEvents } from './store.js';
+import { effectiveDate, upcomingEvents } from './rules.js';
 import { dayCount, eventTitle, findVenue, venueLine } from './present.js';
 
 /** Nombre de lignes d'un classement.
@@ -152,7 +152,7 @@ export function computeStats(state, year) {
 	const rated = liked.length + disliked;
 	// Derniers aimés : du plus récent au plus ancien (date de fin, sinon de début).
 	const lastLiked = [...liked]
-		.sort((a, b) => (b.endDate || b.startDate).localeCompare(a.endDate || a.startDate))
+		.sort((a, b) => effectiveDate(b).localeCompare(effectiveDate(a)))
 		.slice(0, LIKED_LIMIT)
 		.map((event) => ({
 			id: event.id,
@@ -182,4 +182,16 @@ export function computeStats(state, year) {
 		likedShare: rated > 0 ? Math.round((liked.length / rated) * 100) : 0,
 		lastLiked
 	};
+}
+
+/**
+ * Dépenses de billets. `0` (gratuit) est un vrai prix : il compte dans le total et baisse la moyenne.
+ * `null` (prix non renseigné) est ignoré : on ne sait pas, donc on ne compte pas.
+ * @param {Array<{ ticketPrice: number | null }>} events
+ * @returns {{ count: number, total: number, average: number | null }}
+ */
+export function ticketSpending(events) {
+	const prices = events.map((event) => event.ticketPrice).filter((price) => price != null);
+	const total = prices.reduce((sum, price) => sum + price, 0);
+	return { count: prices.length, total, average: prices.length ? total / prices.length : null };
 }

@@ -14,6 +14,26 @@ Chaque event garde aussi son billet : acheté ou non, prix, fichier du billet (P
 
 Le brief complet (modèle de données, règles métier, routes, checklist de validation, phases suivantes) est dans [`AGENTS.md`](AGENTS.md).
 
+### Où vivent les données (`PUBLIC_STORE`)
+
+- `local` (défaut) : dans le navigateur, avec le compte `demo`. C'est le mode de la démo en ligne.
+- `pocketbase` : sur un serveur [PocketBase](https://pocketbase.io) avec de vrais comptes (identifiant + mot de passe). Le schéma est dans [`pb_migrations/`](pb_migrations/README.md) (PocketBase 0.40.6).
+
+Les inscriptions sont fermées par défaut avec PocketBase : l'admin crée les comptes (réouverture : voir [`pb_migrations/README.md`](pb_migrations/README.md)).
+
+Les variables (`PUBLIC_STORE`, `PUBLIC_POCKETBASE_URL`, `PUBLIC_INSCRIPTIONS_OUVERTES`) sont décrites dans [`.env.example`](.env.example). Pour essayer PocketBase en local : `pocketbase serve --migrationsDir=./pb_migrations --hooksDir=./pb_hooks`, puis dans `.env` `PUBLIC_STORE=pocketbase` et `PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090`, puis `npm run dev`.
+
+
+### Où se trouve quoi / Ajouter un champ
+
+Pour ajouter un champ (par ex. un nouveau renseignement sur un event), on passe par ces trois endroits, **dans cet ordre** :
+
+1. **Migration** — le champ est d’abord décrit dans le modèle de [`AGENTS.md`](AGENTS.md). Pour PocketBase, on ajoute une **nouvelle** migration dans [`pb_migrations/`](pb_migrations/README.md) (on ne modifie pas une migration déjà publiée : PocketBase l’aurait déjà appliquée). En mode `local`, pas de migration : le navigateur enregistre ce que l’adaptateur lui envoie.
+2. **Adaptateur** — on ajoute le champ au type JSDoc dans `src/lib/store.js`, puis à la lecture/écriture des deux backends (`src/lib/backend/local.js` et `src/lib/backend/pocketbase.js`). L’interface commune est dans `src/lib/backend/index.js`. Les écrans n’appellent **jamais** PocketBase ni `localStorage` directement, seulement le store.
+3. **Écran** — le formulaire ou l’affichage dans `src/routes/`.
+
+Les règles métier pures (dates, « à confirmer », listes) vivent dans `src/lib/rules.js`. Les calculs de stats sont dans `src/lib/stats.js`. Les deux sont couverts par `npm test`.
+
 ## Les maquettes
 
 Les écrans sont dans `screens/`, un fichier par écran, et assemblés dans `screens/flow.elyx` avec les flèches de navigation. Des PNG prêts à regarder sont dans [`exports/`](exports/).
@@ -64,6 +84,7 @@ Les PNG sont numérotés dans l'ordre du parcours (`00-flow`, `01-login`, `02` �
 ```sh
 npm install
 npm run dev
+npm test
 ```
 
 Le code est en SvelteKit (JavaScript + JSDoc). Les routes visées sont `/login`, `/`, `/to-confirm`, `/history`, `/add`, `/add/concert`, `/add/festival`, `/event/[id]` et `/event/[id]/edit`.

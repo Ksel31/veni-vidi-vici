@@ -1,9 +1,11 @@
 import { get, writable } from 'svelte/store';
-import { createDemoData, DEMO_SEED_VERSION } from './demo-data.js';
-import { clearAccount, DATA_KEY_PREFIX, loadAccount } from './accounts.js';
+import { account } from './accounts.js';
+import { getBackend } from './backend/index.js';
+import { applyPerformanceRules, isPast, normalizeEvent } from './rules.js';
+import { showInfoToast } from './toast.js';
 
-// `localStorage` n'existe pas pendant le rendu serveur.
-const browser = typeof localStorage !== 'undefined';
+// Où les données vivent (navigateur ou PocketBase) ne regarde pas ce fichier :
+// il calcule le nouvel état, puis le backend choisi par PUBLIC_STORE l'enregistre.
 
 /**
  * @typedef {'concert' | 'festival'} EventType
@@ -39,7 +41,7 @@ const browser = typeof localStorage !== 'undefined';
  * @property {string | null} venueId
  * @property {EventStatus} status
  * @property {boolean} ticketBought
- * @property {number | null} ticketPrice
+ * @property {number | null} ticketPrice  en euros ; `0` = gratuit, `null` = non renseigné
  * @property {null} ticketFile
  * @property {string[]} photos
  * @property {string[]} daysAttended
@@ -62,7 +64,7 @@ const browser = typeof localStorage !== 'undefined';
  */
 
 /**
- * Données d'un compte, sans l'identifiant (il sert de clé de stockage).
+ * Données d'un compte, sans l'identifiant du compte.
  * @typedef {Object} UserData
  * @property {Venue[]} venues
  * @property {Artist[]} artists
@@ -76,13 +78,10 @@ const browser = typeof localStorage !== 'undefined';
  * @typedef {UserData & { userId: string | null }} AppData
  */
 
-const SESSION_KEY = 'vvv-session';
-
-/** Une clé par identifiant : les comptes ne partagent rien.
- * @param {string} userId
- */
-function storageKey(userId) {
-	return `${DATA_KEY_PREFIX}${userId}`;
+/** Identifiant d'une ligne : 15 caractères a-z0-9, le format que PocketBase accepte pour un id. */
+function newId() {
+	const letters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+	return Array.from(crypto.getRandomValues(new Uint8Array(15)), (byte) => letters[byte % letters.length]).join('');
 }
 
 /** @returns {AppData} */
@@ -90,130 +89,62 @@ function loggedOut() {
 	return { userId: null, venues: [], artists: [], events: [], performances: [], onboardingSeen: false };
 }
 
-/** @returns {string} AAAA-MM-JJ, calendrier local. */
-function todayIso() {
-	const now = new Date();
-	const month = String(now.getMonth() + 1).padStart(2, '0');
-	const day = String(now.getDate()).padStart(2, '0');
-	return `${now.getFullYear()}-${month}-${day}`;
-}
-
-/** Festival : la date de fin. Sinon le jour de début.
- * @param {Pick<Event, 'startDate' | 'endDate'>} event
- */
-function effectiveDate(event) {
-	return event.endDate || event.startDate;
-}
-
-/**
- * Passé = strictement avant aujourd'hui.
- * Le jour même reste « à venir » (pas encore à confirmer).
- * @param {Pick<Event, 'startDate' | 'endDate'>} event
- * @param {string} [today]
- */
-function isPast(event, today = todayIso()) {
-	return effectiveDate(event) < today;
-}
-
-/**
- * Aujourd'hui ou plus tard : l'event redevient `planned`.
- * @param {Event} event
- * @returns {Event}
- */
-function normalizeEvent(event) {
-	if (!isPast(event) && event.status !== 'planned') {
-		return { ...event, status: 'planned' };
-	}
-	return event;
-}
-
-/**
- * Aujourd'hui ou plus tard : les passages de cet event repassent en `to_see`.
- * Festival entier marqué « Raté » (date passée) : tous ses passages passent en `missed`.
- * @param {Event} event
- * @param {Performance[]} performances
- * @returns {Performance[]}
- */
-function applyPerformanceRules(event, performances) {
-	if (!isPast(event)) {
-		return performances.map((performance) => {
-			if (performance.eventId !== event.id || performance.status === 'to_see') return performance;
-			return { ...performance, status: 'to_see' };
-		});
-	}
-	if (event.type !== 'festival' || event.status !== 'missed') return performances;
-	return performances.map((performance) => {
-		if (performance.eventId !== event.id || performance.status === 'missed') return performance;
-		return { ...performance, status: 'missed' };
-	});
-}
-
 export const data = writable(loggedOut());
 
 /** @param {AppData} state */
-function save(state) {
-	if (!browser || !state.userId) return;
-	const payload = {
-		venues: state.venues,
-		artists: state.artists,
-		events: state.events,
-		performances: state.performances,
-		onboardingSeen: state.onboardingSeen === true,
-		seedVersion: state.seedVersion ?? 0
-	};
-	localStorage.setItem(storageKey(state.userId), JSON.stringify(payload));
-	localStorage.setItem(SESSION_KEY, state.userId);
-}
-
-/** @param {AppData} state */
 function commit(state) {
-	save(state);
+	const previous = get(data);
 	data.set(state);
+	getBackend().saveData(previous, state);
 }
 
-/** @param {string} userId @returns {UserData | null} */
-function readUser(userId) {
-	const raw = localStorage.getItem(storageKey(userId));
-	if (!raw) return null;
-	try {
-		const parsed = JSON.parse(raw);
-		return {
-			venues: parsed.venues ?? [],
-			artists: parsed.artists ?? [],
-			events: parsed.events ?? [],
-			performances: parsed.performances ?? [],
-			onboardingSeen: parsed.onboardingSeen === true,
-			seedVersion: typeof parsed.seedVersion === 'number' ? parsed.seedVersion : 0
-		};
-	} catch {
-		return null;
-	}
+let watching = false;
+
+// Un enregistrement a échoué : on le dit, puis on relit les données du serveur
+// pour que l'écran montre ce qui est vraiment enregistré.
+function watchSaveErrors() {
+	if (watching) return;
+	watching = true;
+	const backend = getBackend();
+	backend.onSaveError(async () => {
+		showInfoToast("Modification non enregistrée. Réessaie dans un instant.");
+		try {
+			const saved = await backend.reload();
+			if (saved) data.set(saved);
+		} catch {
+			// Toujours injoignable : on garde l'écran tel quel.
+		}
+	});
+}
+
+/** @param {import('./backend/index.js').Session} session */
+function openSession(session) {
+	watchSaveErrors();
+	data.set(session.data);
+	account.set(session.account);
 }
 
 /**
- * Ouvre le compte. `demo` reçoit les données de démo au premier passage.
- * Un autre identifiant part d'une appli vide. Ce qui est déjà enregistré est gardé.
+ * Ouvre le compte. En mode local, `demo` reçoit les données de démo (n'importe quel mot de passe).
  * @param {string} identifier
+ * @param {string} [password]
+ * @returns {Promise<import('./backend/index.js').AuthResult>} `ok: false` avec la raison si la connexion échoue
  */
-export function login(identifier) {
-	if (!browser) return;
-	const userId = identifier.trim();
-	if (!userId) return;
+export async function login(identifier, password = '') {
+	const result = await getBackend().signIn(identifier, password);
+	if (result.ok) openSession(result);
+	return result;
+}
 
-	const saved = readUser(userId);
-	const empty = { venues: [], artists: [], events: [], performances: [], onboardingSeen: false };
-	// `demo` est recalculé quand la version du seed change : les dates suivent
-	// le jour du chargement, même si un ancien compte est déjà dans le navigateur.
-	// Ça remplace aussi les modifications faites sur ce compte démo.
-	const demo = () => ({ ...createDemoData(), onboardingSeen: true, seedVersion: DEMO_SEED_VERSION });
-	const payload =
-		userId === 'demo'
-			? saved && saved.seedVersion === DEMO_SEED_VERSION
-				? saved
-				: demo()
-			: (saved ?? empty);
-	commit({ userId, ...payload });
-	loadAccount(userId);
+/**
+ * Crée un compte et l'ouvre.
+ * @param {{ username: string, firstName: string, email: string, password: string }} input
+ * @returns {Promise<import('./backend/index.js').AuthResult>}
+ */
+export async function signUp(input) {
+	const result = await getBackend().signUp(input);
+	if (result.ok) openSession(result);
+	return result;
 }
 
 /**
@@ -233,18 +164,16 @@ export function completeOnboarding() {
 	commit({ ...state, onboardingSeen: true });
 }
 
-/** Après un rechargement, rouvre le dernier identifiant. */
-export function restoreSession() {
-	if (!browser) return;
-	const userId = localStorage.getItem(SESSION_KEY);
-	if (userId) login(userId);
+/** Après un rechargement, rouvre la session d'avant. */
+export async function restoreSession() {
+	const session = await getBackend().restoreSession();
+	if (session) openSession(session);
 }
 
-/** Ferme la session. Les données du compte restent dans le navigateur. */
-export function logout() {
-	if (!browser) return;
-	localStorage.removeItem(SESSION_KEY);
-	clearAccount();
+/** Ferme la session. En mode local, les données du compte restent dans le navigateur. */
+export async function logout() {
+	await getBackend().signOut();
+	account.set(null);
 	data.set(loggedOut());
 }
 
@@ -267,7 +196,7 @@ export function addVenue(input) {
 	);
 	if (existing) return existing.id;
 
-	const venue = { id: crypto.randomUUID(), name, city, country };
+	const venue = { id: newId(), name, city, country };
 	commit({ ...state, venues: [...state.venues, venue] });
 	return venue.id;
 }
@@ -287,7 +216,7 @@ export function addArtist(name) {
 	const existing = state.artists.find((artist) => artist.name.toLowerCase() === trimmed.toLowerCase());
 	if (existing) return existing.id;
 
-	const artist = { id: crypto.randomUUID(), name: trimmed };
+	const artist = { id: newId(), name: trimmed };
 	commit({ ...state, artists: [...state.artists, artist] });
 	return artist.id;
 }
@@ -302,7 +231,7 @@ export function addEvent(input, bandList = []) {
 	if (!state.userId) return null;
 
 	const event = normalizeEvent({
-		id: crypto.randomUUID(),
+		id: newId(),
 		title: null,
 		endDate: null,
 		venueId: null,
@@ -320,7 +249,7 @@ export function addEvent(input, bandList = []) {
 	const performances = applyPerformanceRules(event, [
 		...state.performances,
 		...bandList.map((band) => ({
-			id: crypto.randomUUID(),
+			id: newId(),
 			eventId: event.id,
 			artistId: band.artistId,
 			billing: band.billing ?? null,
@@ -471,7 +400,7 @@ export function saveEditedEvent(eventId, changes, bandList) {
 		if (!band.artistId) return [];
 		const old = band.performanceId ? previous.get(band.performanceId) : undefined;
 		return [{
-			id: old?.id ?? crypto.randomUUID(),
+			id: old?.id ?? newId(),
 			eventId,
 			artistId: band.artistId,
 			billing: band.billing,
@@ -526,29 +455,5 @@ export function updatePerformance(id, changes) {
 	commit({ ...state, performances });
 }
 
-/** Events `planned` dont la date n'est pas passée, du plus proche au plus lointain.
- * @param {AppData} state
- */
-export function upcomingEvents(state) {
-	return state.events
-		.filter((event) => event.status === 'planned' && !isPast(event))
-		.sort((a, b) => a.startDate.localeCompare(b.startDate));
-}
-
-/** `planned` et date passée. Ce n'est pas un statut enregistré.
- * @param {AppData} state
- */
-export function toConfirmEvents(state) {
-	return state.events
-		.filter((event) => event.status === 'planned' && isPast(event))
-		.sort((a, b) => a.startDate.localeCompare(b.startDate));
-}
-
-/** Vus et ratés, du plus récent au plus ancien (date de fin, sinon de début).
- * @param {AppData} state
- */
-export function historyEvents(state) {
-	return state.events
-		.filter((event) => event.status === 'attended' || event.status === 'missed')
-		.sort((a, b) => effectiveDate(b).localeCompare(effectiveDate(a)));
-}
+// Les listes d'events vivent dans rules.js (sans Svelte, pour pouvoir être testées) ; les écrans les prennent ici.
+export { historyEvents, toConfirmEvents, upcomingEvents } from './rules.js';

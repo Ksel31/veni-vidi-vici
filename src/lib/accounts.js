@@ -1,118 +1,16 @@
 import { writable } from 'svelte/store';
+import { getBackend } from './backend/index.js';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DÉMO UNIQUEMENT : comptes simulés dans le navigateur.
-// Le mot de passe est enregistré EN CLAIR dans localStorage, ce qui serait
-// inacceptable pour un vrai service. Ici tout reste sur l'appareil, sans serveur.
-// Remplacé par PocketBase en phase 2 (vrais comptes, mots de passe protégés).
-// ─────────────────────────────────────────────────────────────────────────────
-
-// `localStorage` n'existe pas pendant le rendu serveur.
-const browser = typeof localStorage !== 'undefined';
-
-/** Préfixe des données d'un compte (events, lieux…). Lu aussi par store.js. */
-export const DATA_KEY_PREFIX = 'vvv-user:';
-/** Préfixe de la fiche d'un compte (prénom, e-mail, mot de passe, avatar). */
-const ACCOUNT_KEY_PREFIX = 'vvv-account:';
-
-/** Côté (en px) de l'avatar enregistré : assez net pour 88 px à l'écran, assez léger pour localStorage. */
+/** Côté (en px) de l'avatar enregistré : assez net pour 88 px à l'écran, assez léger pour le stockage. */
 const AVATAR_SIZE = 192;
 
 /**
- * Fiche d'un compte.
- * @typedef {Object} Account
- * @property {string} username  nom d'utilisateur, unique
- * @property {string} firstName  facultatif ('' si absent)
- * @property {string} email  facultatif ('' si absent)
- * @property {string} password  démo uniquement : en clair
- * @property {string | null} avatar  image en data URL, ou null (on affiche l'initiale)
+ * Fiche d'un compte (voir backend/index.js).
+ * @typedef {import('./backend/index.js').Account} Account
  */
 
 /** Compte ouvert en ce moment (null si personne n'est connecté). */
 export const account = writable(/** @type {Account | null} */ (null));
-
-/** @param {string} username */
-function accountKey(username) {
-	return `${ACCOUNT_KEY_PREFIX}${username}`;
-}
-
-/** Fiche vide : comptes `demo` et comptes créés avant l'arrivée de l'inscription.
- * @param {string} username
- * @returns {Account}
- */
-function blankAccount(username) {
-	return { username, firstName: '', email: '', password: '', avatar: null };
-}
-
-/** @param {string} username @returns {Account | null} */
-function readAccount(username) {
-	const raw = localStorage.getItem(accountKey(username));
-	if (!raw) return null;
-	try {
-		const parsed = JSON.parse(raw);
-		return {
-			username,
-			firstName: typeof parsed.firstName === 'string' ? parsed.firstName : '',
-			email: typeof parsed.email === 'string' ? parsed.email : '',
-			password: typeof parsed.password === 'string' ? parsed.password : '',
-			avatar: typeof parsed.avatar === 'string' ? parsed.avatar : null
-		};
-	} catch {
-		return null;
-	}
-}
-
-/** @param {Account} value @returns {boolean} false si le navigateur refuse d'écrire (stockage plein). */
-function writeAccount(value) {
-	try {
-		localStorage.setItem(accountKey(value.username), JSON.stringify(value));
-		return true;
-	} catch {
-		return false;
-	}
-}
-
-/**
- * Nom déjà pris : `demo`, un compte inscrit, ou un ancien identifiant déjà utilisé
- * dans ce navigateur. Majuscules et minuscules ne comptent pas.
- * @param {string} username
- */
-export function isUsernameTaken(username) {
-	if (!browser) return false;
-	const wanted = username.trim().toLowerCase();
-	if (wanted === 'demo') return true;
-	for (let i = 0; i < localStorage.length; i += 1) {
-		const key = localStorage.key(i) ?? '';
-		for (const prefix of [ACCOUNT_KEY_PREFIX, DATA_KEY_PREFIX]) {
-			if (key.startsWith(prefix) && key.slice(prefix.length).toLowerCase() === wanted) return true;
-		}
-	}
-	return false;
-}
-
-/**
- * Crée un compte. Ne l'ouvre pas : l'appelant enchaîne avec `login()` de store.js.
- * @param {{ username: string, firstName: string, email: string, password: string }} input
- * @returns {{ ok: true } | { ok: false, error: 'username-taken' }}
- */
-export function createAccount(input) {
-	const username = input.username.trim();
-	if (isUsernameTaken(username)) return { ok: false, error: 'username-taken' };
-	writeAccount({
-		username,
-		firstName: input.firstName.trim(),
-		email: input.email.trim(),
-		password: input.password,
-		avatar: null
-	});
-	return { ok: true };
-}
-
-/** Ouvre la fiche du compte qui vient de se connecter. @param {string} username */
-export function loadAccount(username) {
-	if (!browser) return;
-	account.set(readAccount(username) ?? blankAccount(username));
-}
 
 /** Ferme la fiche (déconnexion). */
 export function clearAccount() {
@@ -120,16 +18,56 @@ export function clearAccount() {
 }
 
 /**
+ * Enregistre l'e-mail (facultatif : '' l'efface) du compte ouvert.
+ * @param {Account} current
+ * @param {string} email
+ * @param {string} [password]  mot de passe actuel, exigé avec PocketBase (ignoré en mode local)
+ * @returns {Promise<import('./backend/index.js').AuthError | null>} null si tout s'est bien passé
+ */
+export async function saveEmail(current, email, password = '') {
+	const result = await getBackend().updateAccount(current, { email, password });
+	if (!result.ok) return result.error;
+	account.set(result.account);
+	return null;
+}
+
+/**
  * Enregistre l'avatar du compte ouvert.
  * @param {Account} current
- * @param {string | null} avatar
- * @returns {boolean} false si l'image n'a pas pu être enregistrée
+ * @param {string | null} avatar  data URL (voir resizeAvatar), ou null pour l'enlever
+ * @returns {Promise<boolean>} false si l'image n'a pas pu être enregistrée
  */
-export function saveAvatar(current, avatar) {
-	const next = { ...current, avatar };
-	if (!writeAccount(next)) return false;
-	account.set(next);
+export async function saveAvatar(current, avatar) {
+	const result = await getBackend().updateAccount(current, { avatar });
+	if (!result.ok) return false;
+	account.set(result.account);
 	return true;
+}
+
+/** Phrase à afficher pour une erreur de connexion, d'inscription ou de profil.
+ * @param {import('./backend/index.js').AuthError} error
+ */
+export function authErrorText(error) {
+	switch (error) {
+		case 'invalid-credentials':
+			return 'Identifiant ou mot de passe incorrect.';
+		case 'username-taken':
+			return "Ce nom d'utilisateur est déjà pris. Essaie-en un autre.";
+		case 'password-invalid':
+			return 'Ce mot de passe est trop court (8 caractères minimum).';
+		case 'email-invalid':
+			return 'Cet e-mail est invalide ou déjà utilisé.';
+		case 'signups-closed':
+			return "Les inscriptions sont fermées. Demande un compte à l'admin.";
+		case 'unreachable':
+			return 'Le serveur ne répond pas. Vérifie ta connexion et réessaie.';
+		case 'config':
+			return "L'appli n'est pas configurée : adresse du serveur manquante.";
+		case 'storage-full':
+			return "Le navigateur n'a plus de place pour enregistrer.";
+		default:
+			return "Une erreur est survenue. Réessaie dans un instant.";
+	}
 }
 
 /** Lettre de l'avatar quand il n'y a pas de photo.
@@ -149,7 +87,7 @@ export function displayName(value) {
 
 /**
  * Photo choisie → carré de 192 px (centré, rogné), en JPEG, sous forme de data URL.
- * Le plus simple en démo : pas d'envoi de fichier, l'image vit dans localStorage.
+ * Léger : le backend local la garde telle quelle, PocketBase l'envoie comme fichier.
  * @param {File} file
  * @returns {Promise<string>}
  */
