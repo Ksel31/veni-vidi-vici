@@ -1,7 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { createAccount, isUsernameTaken } from '#lib/accounts.js';
-	import { login, needsOnboarding } from '#lib/store.js';
+	import { authErrorText } from '#lib/accounts.js';
+	import { needsOnboarding, signUp } from '#lib/store.js';
 	import TextField from '#lib/components/TextField.svelte';
 	import FieldMessage from '#lib/components/FieldMessage.svelte';
 	import Icon from '#lib/components/Icon.svelte';
@@ -16,6 +16,9 @@
 	let tried = $state(false);
 	/** Le nom a été refusé parce qu'il existe déjà. */
 	let usernameTaken = $state(false);
+	/** Autre refus du serveur (mot de passe trop court, serveur injoignable…), sinon ''. */
+	let problem = $state('');
+	let busy = $state(false);
 
 	const usernameEmpty = $derived(tried && !username.trim());
 	const passwordEmpty = $derived(tried && !password);
@@ -26,18 +29,28 @@
 		username;
 		usernameTaken = false;
 	});
+	$effect(() => {
+		password;
+		email;
+		problem = '';
+	});
 
 	/** @param {SubmitEvent} event */
-	function submit(event) {
+	async function submit(event) {
 		event.preventDefault();
 		tried = true;
-		// Toutes les erreurs s'affichent ensemble : nom déjà pris et mots de passe différents peuvent coexister.
-		usernameTaken = Boolean(username.trim()) && isUsernameTaken(username);
-		if (usernameTaken || !username.trim() || !password || password !== confirmation) return;
+		if (busy || !username.trim() || !password || password !== confirmation) return;
 
-		createAccount({ username, firstName, email, password });
-		// Le compte est neuf et vide : on l'ouvre et l'onboarding commence.
-		login(username);
+		busy = true;
+		// Le compte est neuf et vide : il s'ouvre tout de suite et l'onboarding commence.
+		const result = await signUp({ username, firstName, email, password });
+		busy = false;
+		if (!result.ok) {
+			// Le nom pris a son message sous le champ ; les autres refus sont dits sous le bouton.
+			if (result.error === 'username-taken') usernameTaken = true;
+			else problem = authErrorText(result.error);
+			return;
+		}
 		goto(needsOnboarding() ? '/onboarding' : '/');
 	}
 </script>
@@ -124,7 +137,9 @@
 			</div>
 		</div>
 
-		<button class="btn btn-primary" type="submit">
+		{#if problem}<FieldMessage id="signup-error" text={problem} />{/if}
+
+		<button class="btn btn-primary" type="submit" disabled={busy}>
 			<Icon name="chevron-right" size={22} />
 			Créer mon compte
 		</button>

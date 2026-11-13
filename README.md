@@ -14,6 +14,13 @@ Chaque event garde aussi son billet : acheté ou non, prix, fichier du billet (P
 
 Le brief complet (modèle de données, règles métier, routes, checklist de validation, phases suivantes) est dans [`AGENTS.md`](AGENTS.md).
 
+### Où vivent les données (`PUBLIC_STORE`)
+
+- `local` (défaut) : dans le navigateur, avec le compte `demo`. C'est le mode de la démo en ligne.
+- `pocketbase` : sur un serveur [PocketBase](https://pocketbase.io) avec de vrais comptes (identifiant + mot de passe). Le schéma est dans [`pb_migrations/`](pb_migrations/README.md) (PocketBase 0.40.6).
+
+Les variables (`PUBLIC_STORE`, `PUBLIC_POCKETBASE_URL`) sont décrites dans [`.env.example`](.env.example). Pour essayer PocketBase en local : `pocketbase serve --migrationsDir=./pb_migrations`, puis dans `.env` `PUBLIC_STORE=pocketbase` et `PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090`, puis `npm run dev`.
+
 ## Les maquettes
 
 Les écrans sont dans `screens/`, un fichier par écran, et assemblés dans `screens/flow.elyx` avec les flèches de navigation. Des PNG prêts à regarder sont dans [`exports/`](exports/).

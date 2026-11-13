@@ -2,10 +2,13 @@
 	import { goto } from '$app/navigation';
 	import { data, logout, upcomingEvents } from '#lib/store.js';
 	import { seenBandCount } from '#lib/stats.js';
-	import { account, displayName, initialOf, resizeAvatar, saveAvatar } from '#lib/accounts.js';
+	import { storeMode } from '#lib/config.js';
+	import { account, authErrorText, displayName, initialOf, resizeAvatar, saveAvatar, saveEmail } from '#lib/accounts.js';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import Avatar from '#lib/components/Avatar.svelte';
 	import SettingRow from '#lib/components/SettingRow.svelte';
+	import TextField from '#lib/components/TextField.svelte';
+	import FieldMessage from '#lib/components/FieldMessage.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 
 	// Version lue dans package.json au build (voir vite.config.js).
@@ -21,20 +24,51 @@
 	/** @type {HTMLInputElement | null} */
 	let fileInput = $state(null);
 
-	/** Photo choisie : réduite en carré, gardée dans le navigateur. */
+	/** Photo choisie : réduite en carré, puis enregistrée (navigateur ou serveur). */
 	async function onAvatarPicked() {
 		const file = fileInput?.files?.[0];
 		if (!file || !$account) return;
 		try {
 			saveAvatar($account, await resizeAvatar(file));
 		} catch {
-			// Fichier illisible ou stockage plein : l'avatar reste ce qu'il était.
+			// Fichier illisible ou refusé : l'avatar reste ce qu'il était.
 		}
 		if (fileInput) fileInput.value = '';
 	}
 
-	function signOut() {
-		logout();
+	// E-mail : facultatif, ajoutable ou modifiable ici. Il ne sert qu'à récupérer le mot de passe un jour ;
+	// sans e-mail, c'est l'admin de l'instance qui le réinitialise.
+	let editingEmail = $state(false);
+	let emailDraft = $state('');
+	let emailProblem = $state('');
+	let savingEmail = $state(false);
+	// Avec PocketBase, changer l'e-mail redemande le mot de passe (la session est renouvelée juste après).
+	const askPassword = storeMode() === 'pocketbase';
+	let emailPassword = $state('');
+
+	function startEmailEdit() {
+		emailDraft = $account?.email ?? '';
+		emailPassword = '';
+		emailProblem = '';
+		editingEmail = true;
+	}
+
+	/** @param {SubmitEvent} event */
+	async function submitEmail(event) {
+		event.preventDefault();
+		if (!$account || savingEmail) return;
+		savingEmail = true;
+		const error = await saveEmail($account, emailDraft, emailPassword);
+		savingEmail = false;
+		if (error) {
+			emailProblem = authErrorText(error);
+			return;
+		}
+		editingEmail = false;
+	}
+
+	async function signOut() {
+		await logout();
 		goto('/login');
 	}
 </script>
@@ -108,7 +142,36 @@
 			<h2 class="card-title">Compte</h2>
 			<SettingRow label="Prénom" value={$account.firstName || 'Ajouter'} />
 			<SettingRow label="Mot de passe" value="Modifier" />
-			<SettingRow label="E-mail" value={$account.email || 'Ajouter'} />
+			<SettingRow label="E-mail" value={$account.email || 'Ajouter'} onclick={startEmailEdit} />
+			{#if editingEmail}
+				<form class="email-edit" onsubmit={submitEmail} novalidate>
+					<div class="field-group">
+						<TextField
+							id="profile-email"
+							label="E-mail (facultatif)"
+							icon="mail"
+							type="email"
+							autocomplete="email"
+							placeholder="nom@exemple.com"
+							bind:value={emailDraft}
+							invalid={emailProblem !== ''}
+							describedBy={emailProblem ? 'profile-email-error' : undefined}
+						/>
+						{#if emailProblem}<FieldMessage id="profile-email-error" text={emailProblem} />{/if}
+					</div>
+					{#if askPassword}
+						<TextField
+							id="profile-email-password"
+							label="Mot de passe (pour confirmer)"
+							icon="lock"
+							type="password"
+							bind:value={emailPassword}
+						/>
+					{/if}
+					<button class="btn btn-primary" type="submit" disabled={savingEmail}>Enregistrer</button>
+					<button class="btn btn-secondary" type="button" onclick={() => (editingEmail = false)}>Annuler</button>
+				</form>
+			{/if}
 		</div>
 
 		<div class="glass-card profile-card setting-card">

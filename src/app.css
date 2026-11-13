@@ -2930,6 +2930,14 @@ button.field-box:active {
 	background: var(--state-pressed);
 }
 
+/* Profil : saisie de l'e-mail, sous la ligne E-mail. */
+.email-edit {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-s);
+	padding: var(--space-s) 0;
+}
+
 /* « Se déconnecter » : texte grisé, sans fond ni filet. */
 .logout-link {
 	align-self: center;

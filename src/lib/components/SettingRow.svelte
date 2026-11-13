@@ -2,12 +2,12 @@
 	import Icon from './Icon.svelte';
 
 	/** Ligne de réglage (profile.elyx : settingRow) : libellé, valeur grisée, chevron. */
-	/** @type {{ label: string, value: string }} */
-	let { label, value } = $props();
+	/** @type {{ label: string, value: string, onclick?: () => void }} */
+	let { label, value, onclick } = $props();
 </script>
 
-<!-- Pas encore d'écran derrière les lignes dans les maquettes : elles ne mènent nulle part pour l'instant. -->
-<button class="setting-row" type="button">
+<!-- Seule la ligne E-mail fait quelque chose pour l'instant (elle ouvre la saisie) ; les autres n'ont pas encore d'écran. -->
+<button class="setting-row" type="button" {onclick}>
 	<span class="setting-label">{label}</span>
 	<span class="setting-value">{value}</span>
 	<Icon name="chevron-right" size={20} />

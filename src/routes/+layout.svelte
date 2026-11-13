@@ -34,8 +34,9 @@
 		return 'bg-plain';
 	}
 
-	onMount(() => {
-		restoreSession();
+	onMount(async () => {
+		// Avec PocketBase, rouvrir la session demande un aller-retour serveur : on attend avant d'afficher.
+		await restoreSession();
 		ready = true;
 	});
 
