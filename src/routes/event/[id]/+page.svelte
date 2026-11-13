@@ -22,6 +22,7 @@
 	import NextTicket from '#lib/components/NextTicket.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 	import DeleteConfirm from '#lib/components/DeleteConfirm.svelte';
+	import FoldCard from '#lib/components/FoldCard.svelte';
 
 	const eventId = $derived(page.params.id ?? '');
 	const event = $derived($data.events.find((item) => item.id === eventId) ?? null);
@@ -314,9 +315,7 @@
 			</div>
 		{/if}
 
-		{#if !past || (event.type === 'concert' && event.status !== 'attended')}
-			<div class="glass-card">
-				{#if !past}<p class="card-title">Infos</p>{/if}
+		{#snippet infoFields()}
 				<div class="field">
 					<span class="field-caption">Date</span>
 					<div class="field-box field-box-text">
@@ -331,12 +330,16 @@
 						<span class="field-value">{place}</span>
 					</div>
 				</div>
-			</div>
+		{/snippet}
+
+		{#if !past}
+			<FoldCard title="Infos">{@render infoFields()}</FoldCard>
+		{:else if event.type === 'concert' && event.status !== 'attended'}
+			<div class="glass-card">{@render infoFields()}</div>
 		{/if}
 
 		{#if !past}
-			<div class="glass-card">
-				<p class="card-title">Billet</p>
+			<FoldCard title="Billet">
 				{#if event.ticketPrice != null}
 					<div class="field">
 						<span class="field-caption">Prix du billet</span>
@@ -351,12 +354,11 @@
 					<p>Ajouter le billet</p>
 					<p class="upload-hint">PDF ou image.</p>
 				</div>
-			</div>
+			</FoldCard>
 		{/if}
 
 		{#if event.type === 'concert' && lineup.length > 0 && event.status !== 'attended'}
-			<div class="glass-card">
-				<p class="card-title">Line-up</p>
+			<FoldCard title="Line-up">
 				{#each lineup as band (band.id)}
 					<div class="lineup-row">
 						<span class="band-name">{artistName(band.artistId)}</span>
@@ -367,12 +369,11 @@
 						{/if}
 					</div>
 				{/each}
-			</div>
+			</FoldCard>
 		{/if}
 
 		{#if !past && event.type === 'festival' && lineup.length > 0}
-			<div class="glass-card">
-				<p class="card-title">Line-up</p>
+			<FoldCard title="Line-up">
 				{#each lineup as band (band.id)}
 					<div class="lineup-row">
 						<span class="band-name">{artistName(band.artistId)}</span>
@@ -381,7 +382,7 @@
 						{/if}
 					</div>
 				{/each}
-			</div>
+			</FoldCard>
 		{/if}
 
 		{#if past && event.type === 'concert' && event.status !== 'attended'}
@@ -563,14 +564,13 @@
 				{/each}
 			{/if}
 
-			<div class="glass-card">
-				<p class="card-title">Photos souvenirs</p>
+			<FoldCard title="Photos souvenirs">
 				<div class="photo-grid">
 					<div class="photo-add">
 						<Icon name="plus" size={28} />
 					</div>
 				</div>
-			</div>
+			</FoldCard>
 
 			<div class="glass-card">
 				<p class="card-title">Billet</p>

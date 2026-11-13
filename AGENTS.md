@@ -177,6 +177,7 @@ Ne pas faire : vrai backend, vrais comptes, envoi réel de fichiers (billets, ph
 ## Phases suivantes (pour information, ne pas commencer)
 
 - **Phase 2** — PocketBase (backend en un exécutable : base SQLite, comptes, stockage de fichiers). Remplacer le store local par l'API PocketBase, vrais comptes.
+  - Comptes : connexion par nom d'utilisateur + mot de passe (identity field `username` dans PocketBase). L'e-mail est facultatif, ajoutable dans les réglages du profil, et ne sert qu'à la réinitialisation du mot de passe ou aux notifs. Sans e-mail, c'est l'admin de l'instance qui réinitialise (appli self-hosted, comme Jellyfin ou Mealie).
 - **Phase 3** — Envoi et stockage réels des billets et des photos (pièces jointes d'un event, champs déjà dessinés en phase 1), import de setlist depuis setlist.fm, stats (« Vici »), export de sauvegarde.
 - **Phase 4** — Design final, Docker pour le Pinas (accès local + Tailscale), APK Android (enveloppe Capacitor) avec billets disponibles hors ligne.
 

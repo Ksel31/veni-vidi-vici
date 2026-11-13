@@ -53,33 +53,42 @@
 			</div>
 		</div>
 	{:else}
+		{#snippet confirmPill()}
+			<a class="confirm-pill" href="/to-confirm">
+				{confirmList.length === 1 ? '1 event à confirmer' : `${confirmList.length} events à confirmer`}
+				<Icon name="chevron-right" size={16} />
+			</a>
+		{/snippet}
+
 		{#if next}
-			<h1 class="section-title">{heading}</h1>
-			<NextTicket event={next} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
+			<!-- Prochain event : la pastille « à confirmer » est au-dessus du titre (screens/home.elyx : nextBlock) -->
+			<div class="next-block">
+				{#if confirmList.length > 0}{@render confirmPill()}{/if}
+				<h1 class="section-title">{heading}</h1>
+				<NextTicket event={next} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
+			</div>
 		{/if}
 
-		<div class="upcoming-block">
-			{#if next}
-				<h2 class="section-title">Events à venir</h2>
-			{:else}
-				<h1 class="section-title">Events à venir</h1>
-			{/if}
+		<!-- La liste « Events à venir » n'apparaît que s'il y en a (screens/home-first-event.elyx) -->
+		{#if !next || later.length > 0}
+			<div class="upcoming-block">
+				{#if next}
+					<h2 class="section-title">Events à venir</h2>
+				{:else}
+					<h1 class="section-title">Events à venir</h1>
+				{/if}
 
-			{#if confirmList.length > 0}
-				<a class="confirm-pill" href="/to-confirm">
-					{confirmList.length === 1 ? '1 event à confirmer' : `${confirmList.length} events à confirmer`}
-					<Icon name="chevron-right" size={16} />
-				</a>
-			{/if}
+				{#if !next && confirmList.length > 0}{@render confirmPill()}{/if}
 
-			{#if upcoming.length === 0}
-				<p class="empty-title">Aucun event à venir.</p>
-			{:else}
-				{#each later as event (event.id)}
-					<EventRow {event} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
-				{/each}
-			{/if}
-		</div>
+				{#if upcoming.length === 0}
+					<p class="empty-title">Aucun event à venir.</p>
+				{:else}
+					{#each later as event (event.id)}
+						<EventRow {event} performances={$data.performances} artists={$data.artists} venues={$data.venues} />
+					{/each}
+				{/if}
+			</div>
+		{/if}
 	{/if}
 </section>
 
