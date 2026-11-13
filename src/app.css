@@ -77,6 +77,9 @@
 	--glass: rgb(7% 7% 7% / 55%);
 	--glass-strong: rgb(7% 7% 7% / 80%);
 	--glass-border: rgb(100% 100% 100% / 14%);
+	/* Contour dégradé du verre : clair en haut à gauche, presque noir en bas à droite */
+	--glass-edge-light: rgb(40% 40% 40%);
+	--glass-edge-dark: rgb(14.7% 15.3% 14.7%);
 	--divider: rgb(100% 100% 100% / 25%);
 
 	/* Rôles */
@@ -135,6 +138,8 @@
 	--radius-xl: 24px;
 	--radius-pill: 32px;
 	--line-width: 1px;
+	/* Rayon maximal du flou d'arrière-plan du verre (progressif : plein en haut, nul vers 60 % de la hauteur) */
+	--glass-blur: 18px;
 	--focus-ring-width: 2px;
 	--tap: 44px;
 
@@ -602,6 +607,7 @@ textarea,
 }
 
 .glass-card {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 14px;
@@ -1019,6 +1025,7 @@ textarea,
 
 .event-row,
 .pending-head {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: 12px;
@@ -1192,6 +1199,7 @@ textarea,
 }
 
 .pending-card {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 14px;
@@ -1326,7 +1334,7 @@ textarea,
 .modal-layer .glass-card,
 .delete-panel {
 	width: min(358px, 100%);
-	background: var(--surface-dark-raised);
+	background: var(--glass-strong);
 }
 
 .status-badge {
@@ -1391,6 +1399,7 @@ textarea,
 }
 
 .type-card {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: var(--space-m);
@@ -1520,7 +1529,7 @@ textarea,
 	padding: calc(14px - var(--line-width));
 	border: var(--line-width) solid var(--glass-border);
 	border-radius: var(--radius-xl);
-	background: var(--surface-dark);
+	background: var(--glass-strong);
 	box-shadow: 0 12px 32px rgb(0% 0% 0% / 65.098%);
 }
 
@@ -2932,4 +2941,299 @@ button.field-box:active {
 	color: var(--text-on-dark-muted);
 	font-size: 14px;
 	font-weight: var(--weight-regular);
+}
+
+/* Nouveau verre (components/ui.elyx, event-card.elyx, tab-bar.elyx) : contour en dégradé + flou progressif.
+   S'applique aux cartes verre, lignes d'events, barre d'onglets et modales.
+   Les deux effets vivent dans des pseudo-éléments : le flou ne doit pas masquer le contenu,
+   et le contour ne doit pas couvrir le fond.
+   `isolation` garde les pseudo-éléments derrière le contenu sans changer position ni z-index. */
+.glass-card,
+.event-row,
+.pending-card,
+.history-row,
+.type-card,
+.tab-bar,
+.calendar {
+	isolation: isolate;
+	/* Le filet plat devient transparent : il garde la place, le dégradé le remplace. */
+	border-color: transparent;
+}
+
+/* Flou : 18 px en haut, nul vers 60 % de la hauteur (le masque rend le flou progressif). */
+.glass-card::before,
+.event-row::before,
+.pending-card::before,
+.history-row::before,
+.type-card::before,
+.tab-bar::before,
+.calendar::before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	inset: 0;
+	border-radius: inherit;
+	pointer-events: none;
+	-webkit-backdrop-filter: blur(var(--glass-blur));
+	backdrop-filter: blur(var(--glass-blur));
+	-webkit-mask-image: linear-gradient(180deg, #000 5.71%, transparent 59.93%);
+	mask-image: linear-gradient(180deg, #000 5.71%, transparent 59.93%);
+}
+
+/* Contour de 1 px : le dégradé est visible seulement sur le bord (masque « exclure »).
+   Maquette : de (17 %, 11 %) à (55 %, 100 %), clair à 9 %, sombre à 76 % de ce trait.
+   TODO : CSS ne sait pas placer ces deux points ; angle et arrêts sont ajustés à l'œil
+   pour une carte large (~358 × 100 px). */
+.glass-card::after,
+.event-row::after,
+.pending-card::after,
+.history-row::after,
+.type-card::after,
+.tab-bar::after,
+.calendar::after {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	inset: calc(var(--line-width) * -1);
+	padding: var(--line-width);
+	border-radius: inherit;
+	pointer-events: none;
+	background: linear-gradient(125deg, var(--glass-edge-light) 20%, var(--glass-edge-dark) 50%);
+	-webkit-mask:
+		linear-gradient(#000 0 0) content-box,
+		linear-gradient(#000 0 0);
+	-webkit-mask-composite: xor;
+	mask:
+		linear-gradient(#000 0 0) content-box exclude,
+		linear-gradient(#000 0 0);
+}
+
+/* La liste de dates défile : le contour reste dans la zone visible. */
+.calendar::before,
+.calendar::after {
+	inset: 0;
+}
+
+/* Statistiques (screens/stats.elyx, components/stats.elyx). Cartes à 12 px du bord, 12 px entre les blocs. */
+.screen-stats {
+	gap: 12px;
+	padding-bottom: max(32px, env(safe-area-inset-bottom, 0px));
+}
+
+.screen-stats > .page-header + * {
+	margin-top: 0;
+}
+
+.screen-stats > .glass-card,
+.screen-stats > .btn {
+	margin-inline: 0;
+}
+
+/* Puces d'année : une seule ligne, on fait défiler à l'horizontale quand elles s'accumulent. */
+.screen-stats > .stats-years {
+	display: flex;
+	gap: var(--space-s);
+	margin-inline: 0;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.stats-years::-webkit-scrollbar {
+	display: none;
+}
+
+.stats-years .chip {
+	flex: none;
+}
+
+/* Chiffres clés : 3 colonnes sur 2 lignes, filet entre les colonnes. */
+.stats-numbers {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	row-gap: 16px;
+}
+
+.stats-numbers p {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	margin: 0;
+	padding-left: 12px;
+	border-left: var(--line-width) solid var(--divider);
+}
+
+.stats-numbers p:nth-child(3n + 1) {
+	padding-left: 0;
+	border-left: 0;
+}
+
+.stats-numbers .stat-label {
+	font-size: 13px;
+	line-height: 1.15;
+}
+
+/* Histogramme : barre de 12 px sur une ligne de base commune ; le pic est lime, les autres olive. */
+.bar-chart {
+	display: flex;
+	align-items: flex-end;
+	gap: 4px;
+	margin: 0;
+	padding: 8px 0 0;
+	list-style: none;
+}
+
+.bar-column {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+
+.bar-value {
+	min-height: 13px;
+	color: var(--text-accent);
+	font-size: 13px;
+	font-weight: var(--weight-medium);
+	line-height: 1;
+}
+
+.bar {
+	width: 12px;
+	border-radius: 4px;
+	background: var(--neutral-9);
+}
+
+.bar-peak .bar {
+	background: var(--cta);
+}
+
+.bar-label {
+	color: var(--text-on-dark-muted);
+	font-size: 12px;
+	line-height: 1;
+}
+
+.bar-peak .bar-label {
+	color: var(--text-on-dark);
+}
+
+/* Classements : rang, nom, nombre, puis filet de proportion (100 % = le premier). */
+.rank-list {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.rank-row {
+	display: grid;
+	grid-template-columns: 16px 1fr auto;
+	align-items: center;
+	column-gap: 12px;
+	row-gap: 8px;
+}
+
+.rank-index {
+	color: var(--text-on-dark-muted);
+	font-size: 14px;
+	font-weight: var(--weight-medium);
+}
+
+.rank-name {
+	min-width: 0;
+	font-size: 16px;
+	font-weight: var(--weight-medium);
+}
+
+.rank-count {
+	font-size: 14px;
+}
+
+.rank-track {
+	grid-column: 1 / -1;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--glass-strong);
+}
+
+.rank-fill {
+	display: block;
+	height: 100%;
+	border-radius: 2px;
+	background: var(--neutral-9);
+}
+
+/* Tête du classement : filet lime, nombre en lime clair (le texte dit déjà le chiffre). */
+.rank-top .rank-fill {
+	background: var(--cta);
+}
+
+.rank-top .rank-count {
+	color: var(--text-accent);
+}
+
+/* Ressenti : pouces, barre de proportion, derniers events aimés. */
+.feeling-numbers {
+	display: flex;
+}
+
+.feeling-numbers .thumb-stat {
+	flex: 1;
+}
+
+.thumb-stat {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 0;
+}
+
+.thumb-texts {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.thumb-value {
+	font-size: 26px;
+	font-weight: var(--weight-medium);
+	line-height: 1;
+}
+
+.thumb-label {
+	font-size: 13px;
+}
+
+.feeling-bar {
+	height: 6px;
+	border-radius: 3px;
+	background: var(--neutral-9);
+}
+
+.feeling-bar span {
+	display: block;
+	height: 100%;
+	border-radius: 3px;
+	background: var(--cta);
+}
+
+.stats-subtitle {
+	margin: 0;
+	font-size: 16px;
+	font-weight: var(--weight-medium);
+}
+
+.liked-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.liked-row .rank-count {
+	flex: none;
 }

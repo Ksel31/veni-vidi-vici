@@ -1,6 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { data, logout, upcomingEvents } from '#lib/store.js';
+	import { seenBandCount } from '#lib/stats.js';
 	import { account, displayName, initialOf, resizeAvatar, saveAvatar } from '#lib/accounts.js';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import Avatar from '#lib/components/Avatar.svelte';
@@ -12,7 +13,8 @@
 
 	const isEmpty = $derived($data.events.length === 0);
 	const attended = $derived($data.events.filter((event) => event.status === 'attended'));
-	const seenBands = $derived($data.performances.filter((performance) => performance.status === 'seen').length);
+	// Groupes différents vus : même règle que l'écran Statistiques.
+	const seenBands = $derived(seenBandCount($data));
 	const festivals = $derived(attended.filter((event) => event.type === 'festival').length);
 	const upcoming = $derived(upcomingEvents($data).length);
 
@@ -95,6 +97,11 @@
 					<span class="stat-label">À venir</span>
 				</p>
 			</div>
+			<!-- Absent du profil vide (screens/profile-empty.elyx). -->
+			<a class="btn btn-secondary" href="/stats">
+				<Icon name="chart-column" size={22} />
+				Voir mes statistiques
+			</a>
 		{/if}
 
 		<div class="glass-card profile-card setting-card">
