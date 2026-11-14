@@ -131,4 +131,6 @@ Garde cette archive hors du Pinas (autre disque, autre machine) si tu tiens à p
 
 ## Réseau, HTTPS
 
-Rien n'est prévu pour internet. Si tu veux y accéder hors de chez toi (Tailscale, reverse proxy…), à brancher selon ton réseau. Une seule règle : si l'appli est servie en HTTPS, PocketBase doit l'être aussi, sinon le navigateur bloquera les appels (contenu mixte). `PUBLIC_POCKETBASE_URL` doit alors contenir l'adresse HTTPS.
+Rien n'est prévu pour internet. Si tu veux y accéder hors de chez toi (Tailscale, reverse proxy…), à brancher selon ton réseau.
+
+**Accès distant (Tailscale).** Le navigateur parle directement à PocketBase. Si `PUBLIC_POCKETBASE_URL` contient l'IP locale du Pinas, la connexion échoue depuis l'extérieur (« Le serveur ne répond pas »). Mets simplement `PUBLIC_POCKETBASE_URL=:8090` : l'adresse de PocketBase est alors celle de la page ouverte, sur le port 8090. Ça marche avec l'IP locale, l'IP Tailscale ou le nom de machine, sans rien changer d'un cas à l'autre. Redémarre la stack après le changement. Le port 8090 doit aussi être joignable via Tailscale (rien à ouvrir de plus si Tailscale tourne sur le Pinas). Une seule règle : si l'appli est servie en HTTPS, PocketBase doit l'être aussi, sinon le navigateur bloquera les appels (contenu mixte). `PUBLIC_POCKETBASE_URL` doit alors contenir l'adresse HTTPS.

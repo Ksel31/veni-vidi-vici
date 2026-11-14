@@ -17,7 +17,7 @@ export const variables = defineEnvVars({
 	},
 	PUBLIC_POCKETBASE_URL: {
 		public: true,
-		description: "Adresse de PocketBase vue depuis le navigateur. Obligatoire seulement si PUBLIC_STORE=pocketbase.",
+		description: "Adresse de PocketBase vue depuis le navigateur, ou juste un port (':8090') pour reprendre l'adresse de la page. Obligatoire seulement si PUBLIC_STORE=pocketbase.",
 		schema: (value) => (value ?? '').trim().replace(/\/+$/, '')
 	},
 	PUBLIC_INSCRIPTIONS_OUVERTES: {
