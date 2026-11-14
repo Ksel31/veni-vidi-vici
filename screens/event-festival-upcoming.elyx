@@ -1,0 +1,159 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "components/event-card.elyx" as cards
+import "components/ui.elyx" as ui
+import "screens/event-upcoming.elyx" as upcoming
+
+// Fiche d'un festival à venir : même fiche que le concert, avec le billet rose, la plage de dates et le line-up par jour.
+export eventFestivalUpcoming = frame : upcoming.eventUpcoming {
+  title: "Fiche : festival à venir",
+  caption: "Avant la date : compte à rebours, billet rose (« FESTIVAL »), plage de dates et line-up avec le jour de passage de chaque groupe. Même fiche que le concert : « Ajouter à mon agenda », dans la carte Infos, crée un seul événement sur toute la plage.",
+
+  body {
+    lineup {
+      overrides: [
+        insert(band1, after = upcoming.eventUpcoming.body.lineup.lineupHead),
+        insert(band2, after = band1),
+        insert(band3, after = band2),
+        insert(band4, after = band3),
+        remove(upcoming.eventUpcoming.body.lineup.headliner),
+        remove(upcoming.eventUpcoming.body.lineup.support)
+      ]
+    }
+
+    infos {
+      venueInfo {
+        fieldBox {
+          fieldValue {
+            contents: "Werchter"
+          }
+        }
+      }
+
+      dateInfo {
+        fieldBox {
+          fieldValue {
+            contents: "17 – 20 juillet 2027"
+          }
+        }
+      }
+    }
+
+    @with-variant(cards.nextTicketFestival)
+    ticket {
+      ticketStub {
+        dateMonth {
+          contents: "JUIL"
+        }
+
+        dateDay {
+          contents: "17"
+        }
+      }
+
+      ticketInfo {
+        eventMeta {
+          contents: "Werchter, 4 jours"
+        }
+
+        eventTitle {
+          contents: "ROCK WERCHTER"
+        }
+      }
+    }
+
+    countdown {
+      contents: "Dans 249 jours"
+    }
+  }
+
+  header {
+    pageTitle {
+      contents: "Rock Werchter"
+    }
+  }
+
+  band1 = frame : ui.festivalBand {
+    left: 0px,
+    top: 0px,
+
+    bandRemove {
+      display: .none
+    }
+
+    bandName {
+      contents: "Foo Fighters"
+    }
+
+    dayPill {
+      dayFace {
+        dayLabel {
+          contents: "Sam 17"
+        }
+      }
+    }
+  }
+
+  band2 = frame : ui.festivalBand {
+    left: 0px,
+    top: 0px,
+
+    bandRemove {
+      display: .none
+    }
+
+    bandName {
+      contents: "Placebo"
+    }
+
+    dayPill {
+      dayFace {
+        dayLabel {
+          contents: "Dim 18"
+        }
+      }
+    }
+  }
+
+  band3 = frame : ui.festivalBand {
+    left: 0px,
+    top: 0px,
+
+    bandRemove {
+      display: .none
+    }
+
+    bandName {
+      contents: "Idles"
+    }
+
+    dayPill {
+      dayFace {
+        dayLabel {
+          contents: "Lun 19"
+        }
+      }
+    }
+  }
+
+  band4 = frame : ui.festivalBand {
+    left: 0px,
+    top: 0px,
+
+    bandRemove {
+      display: .none
+    }
+
+    bandName {
+      contents: "Fontaines D.C."
+    }
+
+    dayPill {
+      dayFace {
+        dayLabel {
+          contents: "Mar 20"
+        }
+      }
+    }
+  }
+}

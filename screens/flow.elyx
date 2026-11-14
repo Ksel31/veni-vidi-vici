@@ -26,6 +26,10 @@ import "screens/onboarding-3.elyx" as onboarding3
 import "screens/add-concert-calendar.elyx" as addConcertCalendar
 import "screens/add-festival-calendar.elyx" as addFestivalCalendar
 import "screens/home-first-event.elyx" as homeFirstEvent
+import "screens/home-festival.elyx" as homeFestival
+import "screens/event-festival-upcoming.elyx" as eventFestivalUpcoming
+import "screens/add-concert-conflict.elyx" as addConcertConflict
+import "screens/add-festival-conflict.elyx" as addFestivalConflict
 import "screens/stats.elyx" as stats
 import "screens/signup.elyx" as signup
 import "screens/signup-error.elyx" as signupError
@@ -101,6 +105,17 @@ flowAddConcertCalendar = frame : addConcertCalendar.addConcertCalendar {
   top: 5804px
 }
 
+// Alerte de conflit de dates : variantes de l'étape 1 quand la date (ou la plage) chevauche un event déjà prévu.
+flowAddConcertConflict = frame : addConcertConflict.addConcertConflict {
+  left: -1100px,
+  top: 5804px
+}
+
+flowAddFestivalConflict = frame : addFestivalConflict.addFestivalConflict {
+  left: 300px,
+  top: 8104px
+}
+
 flowAddConcert2 = frame : addConcert2.addConcert2 {
   left: 300px,
   top: 4704px
@@ -164,6 +179,12 @@ flowEventReport = frame : eventReport.eventReport {
 
 flowEventUpcoming = frame : eventUpcoming.eventUpcoming {
   left: 3500px,
+  top: 4300px
+}
+
+// Fiche d'un festival à venir, ouverte depuis le billet rose de l'accueil.
+flowEventFestivalUpcoming = frame : eventFestivalUpcoming.eventFestivalUpcoming {
+  left: 4200px,
   top: 4300px
 }
 
@@ -251,6 +272,12 @@ flowHomeFirstEvent = frame : homeFirstEvent.homeFirstEvent {
       }
     }
   }
+}
+
+// Variante de l'accueil quand le prochain event est un festival : billet rose néon. Le billet ouvre la fiche festival.
+flowHomeFestival = frame : homeFestival.homeFestival {
+  left: 2800px,
+  top: 1700px
 }
 
 // Confirmation « Quitter l'ajout ? » (depuis la croix de l'étape 2 du concert) et état d'erreur du festival (titre manquant).

@@ -2,6 +2,7 @@ use "fonts/CabinetGrotesk-Variable.ttf"
 use "fonts/Wagon-Bold.otf"
 
 import "images/ticket-holo.png" as ticketHolo
+import "images/ticket-holo-pink.png" as ticketHoloPink
 import "icons/lucide/chevron-right.svg" as chevronRight
 import "icons/lucide/check.svg" as checkIcon
 import "icons/lucide/x.svg" as crossIcon
@@ -56,8 +57,8 @@ export nextTicket = frame {
   ticketShadow = frame {
     left: 14px,
     top: 8px,
+    bottom: 8px,
     width: 338px,
-    height: 136px,
     ignore-stack: .true,
     fill: c.colors.neutral-1,
     shadow: {
@@ -76,7 +77,8 @@ export nextTicket = frame {
     width: 100%,
     height: 100%,
     ignore-stack: .true,
-    contents: ticketHolo
+    contents: ticketHolo,
+    sizing: .stretch
   }
 
   ticketInfo = frame {
@@ -183,6 +185,24 @@ export nextTicketLong = frame : nextTicket {
   }
 }
 
+// Billet d'un festival : même billet, image holographique rose néon à la place du lime, type écrit « FESTIVAL ».
+// La couleur ne porte jamais le type seule : le texte reste.
+@variant
+export nextTicketFestival = frame : nextTicket {
+  left: 840px,
+  top: 60px,
+
+  ticketBg {
+    contents: ticketHoloPink
+  }
+
+  ticketInfo {
+    eventType {
+      contents: "FESTIVAL"
+    }
+  }
+}
+
 // Pastille « N events à confirmer » : discrète, alignée à gauche. Noir, filet et texte verts, chevron.
 export confirmPill = frame {
   left: 0px,
@@ -222,9 +242,12 @@ export eventRow = frame {
   fill: c.colors.glass,
   border: {
     linear-gradient: {
-      from: [17.1389%, 10.85%],
-      to: [55.06%, 100%],
-      stops: [stop(75.79%, c.colors.glass-edge-dark), stop(8.98%, c.colors.glass-edge-light)]
+      from: point(17.1389%, 10.85%),
+      to: point(55.06%, 100%),
+      stops: [
+        stop(75.79%, c.colors.glass-edge-dark),
+        stop(8.98%, c.colors.glass-edge-light)
+      ]
     }
   },
   filter: {

@@ -40,9 +40,10 @@ Exemple d'entrée :
 - [ ] **Billets de festival en rose néon**
   - Date : 14 nov. 2026
   - Description : proposition design. Donner aux billets des events de type festival une couleur à part (rose néon), pour les distinguer d'un coup d'œil des billets de concert (lime).
-  - Note : le lime `#aaff22` est la couleur de marque du billet du prochain event. À valider dans Elyx (teinte de rose, contraste du texte, lisibilité sur la photo) avant tout code. Le type reste aussi lisible en texte ou en icône, la couleur ne le porte pas seule.
+  - Note : le lime `#aaff22` est la couleur de marque du billet du prochain event. Le type reste aussi lisible en texte ou en icône, la couleur ne le porte pas seule.
+  - Design : validé dans Elyx le 14 nov. 2026. Billet monochrome (un talon crème a été testé et écarté). Variante `nextTicketFestival` dans `components/event-card.elyx`, écran `screens/home-festival.elyx`, ajouté au flow. Reste à coder dans l'appli.
   - Priorité : P3
-  - Statut : à trier
+  - Statut : à faire
   - Source : Axel
 
 ## 💡 Idées de fonctionnalités
@@ -50,15 +51,17 @@ Exemple d'entrée :
 - [ ] **Export calendrier (iCal)**
   - Date : 14 nov. 2026
   - Description : exporter ses events à venir au format calendrier (`.ics`) pour les importer dans Google Agenda, Apple Calendar, Outlook ou Home Assistant. Deux formes possibles : un fichier à importer une fois, ou un lien d'abonnement qui garde l'agenda à jour tout seul (à trancher).
+  - Design : maquettes faites le 14 nov. 2026. Bouton « Ajouter à mon agenda » par event, dans la carte Infos sous le lieu (`screens/event-upcoming.elyx` et `screens/event-festival-upcoming.elyx`, fichier `.ics`) et bouton « Exporter mon calendrier » sous « Voir mes statistiques » dans le profil (`screens/profile.elyx`, export global des events à venir, fichier ponctuel). Lien d'abonnement écarté pour l'instant (adresse publique nécessaire). Reste à coder.
   - Priorité : à définir
-  - Statut : à trier
+  - Statut : à faire
   - Source : Axel
 
 - [ ] **Alerte de conflit de dates**
   - Date : 14 nov. 2026
   - Description : quand on ajoute ou modifie un event dont les dates chevauchent un autre event prévu, afficher un avertissement qui nomme l'event en conflit. Ça n'empêche pas l'enregistrement : on peut vouloir deux events le même jour.
+  - Design : maquettes faites le 14 nov. 2026 (encart ambre sous la date : `screens/add-concert-conflict.elyx`, `screens/add-festival-conflict.elyx`, composant `conflictNotice`). « Suivant » reste actif, pas de mention « enregistrer quand même ». Reste à dessiner sur les formulaires de modification, puis à coder.
   - Priorité : P2
-  - Statut : à trier
+  - Statut : à faire
   - Source : Axel
 
 - [ ] **Rappels par notification**

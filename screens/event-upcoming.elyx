@@ -5,19 +5,23 @@ import "components/screen-header.elyx" as headers
 import "tokens/colors.elyx" as c
 import "tokens/fonts.elyx" as f
 import "components/event-card.elyx" as cards
+import "icons/lucide/ticket.svg" as ticketIcon
 import "components/ui.elyx" as ui
+import "icons/lucide/music.svg" as musicIcon
 import "screens/event-edit.elyx" as eventEdit
 import "icons/lucide/calendar.svg" as calendarIcon
 import "icons/lucide/map-pin.svg" as mapPinIcon
 import "icons/lucide/mic-vocal.svg" as micIcon
 import "icons/lucide/euro.svg" as euroIcon
+import "icons/lucide/info.svg" as infoIcon
 import "icons/lucide/pencil.svg" as pencilIcon
+import "icons/lucide/calendar-plus.svg" as calendarPlusIcon
 import "icons/lucide/chevron-down.svg" as chevronDownIcon
 
 // Fiche d'un event à venir : billet, compte à rebours, infos et line-up. Tout se modifie depuis le bouton du bas.
 export eventUpcoming = frame {
   title: "Fiche : event à venir",
-  caption: "Avant la date : compte à rebours et infos. Le jour même dit « Aujourd'hui », jamais « J-0 ». Rôles en icônes. Sous Modifier : Supprimer. Chaque carte (Infos, Billet, Line-up) se plie et se déplie avec la flèche en haut à droite : dépliée = flèche vers le haut, repliée = seul le titre reste, flèche vers le bas. Ici, Billet est replié en exemple.",
+  caption: "Avant la date : compte à rebours et infos. Le jour même dit « Aujourd'hui », jamais « J-0 ». Rôles en icônes. Sous Modifier : Supprimer. Chaque carte (Infos, Billet, Line-up) se plie et se déplie avec la flèche en haut à droite : dépliée = flèche vers le haut, repliée = seul le titre reste, flèche vers le bas. Ici, Billet est replié en exemple. « Ajouter à mon agenda » (carte Infos, sous le lieu) télécharge cet event en .ics.",
   left: 0px,
   top: 0px,
   width: 390px,
@@ -83,12 +87,25 @@ export eventUpcoming = frame {
 
     infos = frame : ui.foldCard {
       overrides: [
-        insert(dateInfo, after = ui.glassCard.cardTitle),
-        insert(venueInfo, after = dateInfo)
+        insert(infosHead, after = ui.glassCard.cardTitle),
+        insert(dateInfo, after = infosHead),
+        insert(venueInfo, after = dateInfo),
+        insert(calendarExport, after = venueInfo)
       ],
 
       cardTitle {
+        display: .none,
         contents: "Infos"
+      }
+
+      infosHead = frame : ui.cardHead {
+        headGlyph {
+          contents: infoIcon
+        }
+
+        headLabel {
+          contents: "Infos"
+        }
       }
 
       dateInfo = frame : ui.field {
@@ -122,14 +139,33 @@ export eventUpcoming = frame {
           contents: "Lieu"
         }
       }
+
+      // Export d'un seul event : télécharge un fichier .ics à ouvrir dans son agenda. Pour un festival, un seul événement sur toute la plage de dates.
+      calendarExport = frame : ui.secondaryButton {
+        height: 44px,
+
+        buttonGlyph {
+          contents: calendarPlusIcon
+        }
+
+        buttonLabel {
+          contents: "Ajouter à mon agenda"
+        }
+      }
     }
 
     // Exemple de carte repliée : seul le titre reste, la flèche pointe vers le bas
     ticketCard = frame : ui.foldCard {
       overrides: [
-        insert(priceInfo, after = ui.glassCard.cardTitle),
+        insert(ticketHead, after = ui.glassCard.cardTitle),
+        insert(priceInfo, after = ticketHead),
         insert(ticketFile, after = priceInfo)
       ],
+
+      cardTitle {
+        display: .none,
+        contents: "Billet"
+      }
 
       foldToggle {
         foldGlyph {
@@ -137,8 +173,14 @@ export eventUpcoming = frame {
         }
       }
 
-      cardTitle {
-        contents: "Billet"
+      ticketHead = frame : ui.cardHead {
+        headGlyph {
+          contents: ticketIcon
+        }
+
+        headLabel {
+          contents: "Billet"
+        }
       }
 
       priceInfo = frame : ui.field {
@@ -166,12 +208,24 @@ export eventUpcoming = frame {
 
     lineup = frame : ui.foldCard {
       overrides: [
-        insert(headliner, after = ui.glassCard.cardTitle),
+        insert(lineupHead, after = ui.glassCard.cardTitle),
+        insert(headliner, after = lineupHead),
         insert(support, after = headliner)
       ],
 
       cardTitle {
+        display: .none,
         contents: "Line-up"
+      }
+
+      lineupHead = frame : ui.cardHead {
+        headGlyph {
+          contents: musicIcon
+        }
+
+        headLabel {
+          contents: "Line-up"
+        }
       }
 
       headliner = frame : ui.lineupRow {

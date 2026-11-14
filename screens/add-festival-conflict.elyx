@@ -1,0 +1,39 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "components/ui.elyx" as ui
+import "screens/add-festival.elyx" as addFestival
+
+// Ajout d'un festival, étape 1/3, dates qui chevauchent deux events : l'encart ambre sous les dates les nomme tous.
+// Il n'empêche pas d'enregistrer : « Suivant » reste actif.
+export addFestivalConflict = frame : addFestival.addFestival {
+  title: "Ajouter un festival, conflit de dates",
+  caption: "Même alerte que pour un concert, sous le champ « Dates ». Si plusieurs events chevauchent la plage, ils sont tous nommés dans la même phrase.",
+
+  top {
+    card {
+      overrides: [
+        insert(datesConflict, after = addFestival.addFestival.top.card.dates)
+      ],
+
+      dates {
+        fieldBox {
+          fieldValue {
+            contents: "17 – 19 nov. 2026"
+          }
+        }
+      }
+    }
+  }
+
+  datesConflict = frame : ui.conflictNotice {
+    noticeTexts {
+      noticeTitle {
+        contents: "Deux autres events pendant ces dates"
+      }
+
+      noticeDetail {
+        contents: "Nick Cave, 18 nov. et Ghost, 19 nov."
+      }
+    }
+  }
+}

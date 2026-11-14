@@ -1,0 +1,28 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "components/event-card.elyx" as cards
+import "screens/home.elyx" as home
+import "screens/event-festival-upcoming.elyx" as eventFestivalUpcoming
+
+// Accueil quand le prochain event est un festival : le billet passe en rose néon, le type est écrit « FESTIVAL ».
+export homeFestival = frame : home.home {
+  title: "Accueil, prochain event : festival",
+  caption: "Quand le prochain event est un festival, son billet est rose néon (le concert reste lime). Le type est toujours écrit sur le billet, la couleur ne le porte pas seule.",
+
+  nextBlock {
+    @with-variant(cards.nextTicketFestival)
+    ticket {
+      connections[0].target: eventFestivalUpcoming.eventFestivalUpcoming,
+
+      ticketInfo {
+        eventMeta {
+          contents: "Werchter, 3 jours"
+        }
+
+        eventTitle {
+          contents: "ROCK WERCHTER"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+use "fonts/CabinetGrotesk-Variable.ttf"
+
+import "components/ui.elyx" as ui
+import "screens/add-concert.elyx" as addConcert
+
+// Ajout d'un concert, étape 1/3, date déjà prise : un avertissement ambre sous la date nomme l'event en conflit.
+// Il n'empêche pas d'enregistrer : « Suivant » reste actif.
+export addConcertConflict = frame : addConcert.addConcert {
+  title: "Ajouter un concert, conflit de dates",
+  caption: "Alerte, pas erreur : si un autre event est prévu le même jour, un encart ambre (icône + texte) le nomme sous la date. On peut continuer, deux events le même jour restent possibles.",
+
+  top {
+    card {
+      overrides: [
+        insert(dateConflict, after = addConcert.addConcert.top.card.dateField)
+      ],
+
+      dateField {
+        fieldBox {
+          fieldValue {
+            contents: "18 nov. 2026"
+          }
+        }
+      }
+    }
+  }
+
+  dateConflict = frame : ui.conflictNotice {
+    noticeTexts {
+      noticeTitle {
+        contents: "Un autre event ce jour-là"
+      }
+
+      noticeDetail {
+        contents: "Nick Cave, Ancienne Belgique."
+      }
+    }
+  }
+}

@@ -15,6 +15,7 @@ import "icons/lucide/file-text.svg" as fileIcon
 import "icons/lucide/plus.svg" as plusIcon
 import "icons/lucide/crown.svg" as crownIcon
 import "icons/lucide/trash.svg" as trashIcon
+import "icons/lucide/triangle-alert.svg" as triangleAlertIcon
 import "tokens/colors.elyx" as c
 import "tokens/lengths.elyx" as l
 import "tokens/fonts.elyx" as f
@@ -83,6 +84,32 @@ export foldCard = frame : glassCard {
       fill: c.colors.text-on-dark,
       contents: chevronUp
     }
+  }
+}
+
+// Titre de carte avec icône : icône Lucide 20 px (gris secondaire) + titre 18 px Medium, sur une ligne.
+// On masque `cardTitle` (display: .none) et on insère cette ligne à sa place ; l'icône se change par carte.
+export cardHead = frame {
+  left: 3600px,
+  top: 0px,
+  width: 100%,
+  height: .auto,
+  layout: {align-items: .center, item-gap: 10px},
+  children: [headGlyph, headLabel],
+
+  headGlyph = asset {
+    width: 20px,
+    height: 20px,
+    fill: c.colors.text-on-dark-muted,
+    contents: musicIcon
+  }
+
+  headLabel = text {
+    fill: c.colors.text-on-dark,
+    contents: "Titre",
+    font-size: 18,
+    font-family: f.fonts.ui,
+    font-style: "Medium"
   }
 }
 
@@ -1291,6 +1318,55 @@ export fieldMessage = frame {
     font-family: f.fonts.ui,
     font-style: "Regular",
     line-height: 1.3
+  }
+}
+
+// Avertissement de conflit de dates (ambre) : posé sous le champ de date, il nomme l'event qui chevauche.
+// Il informe sans bloquer : « Suivant » reste actif. Icône + texte, jamais la couleur seule.
+export conflictNotice = frame {
+  left: 3000px,
+  top: 400px,
+  width: 100%,
+  height: .auto,
+  layout: {item-gap: 10px},
+  fill: c.colors.warning-bg,
+  border: c.colors.warning-border,
+  corner-radius: l.lengths.radius-m,
+  padding: [10px, 12px],
+  children: [noticeGlyph, noticeTexts],
+
+  noticeGlyph = asset {
+    width: 18px,
+    height: 18px,
+    fill: c.colors.warning-text,
+    contents: triangleAlertIcon
+  }
+
+  noticeTexts = frame {
+    width: 100%,
+    height: .auto,
+    layout: {direction: .column, item-gap: 2px},
+    children: [noticeTitle, noticeDetail],
+
+    noticeTitle = text {
+      width: 100%,
+      fill: c.colors.warning-text,
+      contents: "Même date qu'un autre event",
+      font-size: 14,
+      font-family: f.fonts.ui,
+      font-style: "Medium",
+      line-height: 1.3
+    }
+
+    noticeDetail = text {
+      width: 100%,
+      fill: c.colors.text-on-dark,
+      contents: "Nick Cave, 18 nov.",
+      font-size: 13,
+      font-family: f.fonts.ui,
+      font-style: "Regular",
+      line-height: 1.3
+    }
   }
 }
 
