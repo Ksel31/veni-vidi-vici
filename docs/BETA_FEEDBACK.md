@@ -21,7 +21,13 @@ Démo : [veni-vidi-vici sur Vercel](https://veni-vidi-vici-ksel31.vercel.app). C
 
 ## 🐞 Bugs à corriger
 
-Rien pour l'instant.
+- [ ] **Connexion impossible en accès distant (Tailscale)**
+  - Date : 14 nov. 2026
+  - Écran : Connexion
+  - Description : depuis l'extérieur via Tailscale, la connexion affiche « Le serveur ne répond pas. Vérifie ta connexion et réessaie. » Cause probable : le navigateur appelle PocketBase directement à l'adresse de `PUBLIC_POCKETBASE_URL`, et si c'est l'IP locale du Pinas, elle est injoignable hors de la maison. Correctif proposé : mettre `PUBLIC_POCKETBASE_URL=:8090` (port seul), l'adresse de PocketBase reprend alors celle de la page ouverte, en local comme en Tailscale. À confirmer sur le Pinas (valeur actuelle de la variable, puis test à distance).
+  - Priorité : P2
+  - Statut : en cours
+  - Source : Axel
 
 <!--
 Exemple d'entrée :

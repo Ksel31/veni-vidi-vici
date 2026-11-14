@@ -1,4 +1,5 @@
 import { PUBLIC_INSCRIPTIONS_OUVERTES, PUBLIC_POCKETBASE_URL, PUBLIC_STORE } from '$app/env/public';
+import { resolvePocketbaseUrl } from './pocketbase-url.js';
 
 // Les variables sont déclarées dans `src/env.js` ; leurs valeurs par défaut et leur rôle sont
 // documentés dans `.env.example`. Elles sont lues quand le serveur démarre, pas figées au build.
@@ -11,10 +12,11 @@ export function storeMode() {
 }
 
 /** Adresse de PocketBase vue depuis le navigateur. Vide si elle n'est pas renseignée.
+ * Une valeur `:8090` (port seul) reprend l'adresse de la page ouverte : voir `pocketbase-url.js`.
  * @returns {string}
  */
 export function pocketbaseUrl() {
-	return PUBLIC_POCKETBASE_URL;
+	return resolvePocketbaseUrl(PUBLIC_POCKETBASE_URL, globalThis.location);
 }
 
 /** Peut-on créer un compte depuis l'appli ? Toujours oui en mode `local` (démo, aucun vrai compte).
