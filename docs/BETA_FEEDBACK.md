@@ -37,22 +37,15 @@ Exemple d'entrée :
 
 ## 🎨 Améliorations UX/UI
 
-- [ ] **Billet DR Festival en rose néon**
+- [ ] **Billets de festival en rose néon**
   - Date : 14 nov. 2026
-  - Description : proposition design. Donner aux billets du DR Festival une couleur à part (rose néon) plutôt que le lime habituel, pour les repérer d'un coup d'œil.
-  - Note : le lime `#aaff22` est la couleur de marque du billet du prochain event. À valider dans Elyx (rose, contraste du texte, lisibilité sur la photo) avant tout code.
+  - Description : proposition design. Donner aux billets des events de type festival une couleur à part (rose néon), pour les distinguer d'un coup d'œil des billets de concert (lime).
+  - Note : le lime `#aaff22` est la couleur de marque du billet du prochain event. À valider dans Elyx (teinte de rose, contraste du texte, lisibilité sur la photo) avant tout code. Le type reste aussi lisible en texte ou en icône, la couleur ne le porte pas seule.
   - Priorité : P3
   - Statut : à trier
   - Source : Axel
 
 ## 💡 Idées de fonctionnalités
-
-- [ ] **Couleur de billet choisie par festival**
-  - Date : 14 nov. 2026
-  - Description : proposition fonctionnalité, liée à « Billet DR Festival en rose néon ». Pouvoir associer une couleur à un festival (ou à un event) pour que ses billets la reprennent, au lieu de coder le rose du DR Festival en dur. Il faudrait un champ couleur sur l'event ou le festival, et une palette de quelques teintes validées dans les maquettes.
-  - Priorité : à définir
-  - Statut : à trier
-  - Source : Axel
 
 - [ ] **Pré-workout de concert**
   - Description : proposer des playlists Spotify quelques jours avant le concert.
