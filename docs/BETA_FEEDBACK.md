@@ -21,7 +21,21 @@ Démo : [veni-vidi-vici sur Vercel](https://veni-vidi-vici-ksel31.vercel.app). C
 
 ## 🐞 Bugs à corriger
 
-Rien pour l'instant.
+- [ ] **La ville de l'event ne s'enregistre pas**
+  - Date : 14 nov. 2026
+  - Source : Axel
+  - Écran : Ajout / modification d'un event
+  - Description : la ville saisie dans le formulaire n'est pas conservée sur l'event. On s'attend à la retrouver ensuite (fiche, accueil, historique).
+  - Priorité : à définir
+  - Statut : à trier
+
+- [ ] **Festival : le jour de passage d'un groupe est obligatoire**
+  - Date : 14 nov. 2026
+  - Source : Axel
+  - Écran : Ajout / modification d'un festival
+  - Description : on doit choisir un jour pour chaque groupe avant d'enregistrer. C'est gênant quand le festival est ajouté et que les groupes sont annoncés, mais pas encore le programme. Le jour doit pouvoir rester vide et se remplir plus tard.
+  - Priorité : à définir
+  - Statut : à trier
 
 <!--
 Exemple d'entrée :
