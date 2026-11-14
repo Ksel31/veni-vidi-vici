@@ -47,6 +47,13 @@ Exemple d'entrée :
 
 ## 💡 Idées de fonctionnalités
 
+- [ ] **Choisir la couleur du billet par festival**
+  - Date : 14 nov. 2026
+  - Description : proposition fonctionnalité, liée à « Billets de festival en rose néon ». Pouvoir choisir la couleur du billet pour chaque festival (ex. un rose pour l'un, un autre ton pour un autre). Il faudrait un champ couleur sur l'event, avec une palette de quelques teintes validées dans les maquettes. Le rose néon serait la couleur par défaut des festivals.
+  - Priorité : à définir
+  - Statut : à trier
+  - Source : Axel
+
 - [ ] **Pré-workout de concert**
   - Description : proposer des playlists Spotify quelques jours avant le concert.
   - Priorité : à définir
