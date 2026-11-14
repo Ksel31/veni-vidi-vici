@@ -25,6 +25,21 @@ export function festivalDatesValid(start, end) {
 }
 
 /**
+ * Sélection de dates dans le calendrier. Un toucher = un jour déjà valide (début = fin).
+ * Un second toucher sur une autre date forme la plage, dans n'importe quel ordre.
+ * Un toucher après une plage complète recommence. `fin` vide ou égale au début = un seul jour choisi.
+ * @param {{ debut: string, fin: string }} choix
+ * @param {string} iso
+ * @param {'single' | 'range'} [mode] `single` : un concert, une seule date.
+ * @returns {{ debut: string, fin: string }}
+ */
+export function choisirDate(choix, iso, mode = 'range') {
+	const unSeulJour = Boolean(choix.debut) && (!choix.fin || choix.fin === choix.debut);
+	if (mode === 'single' || !unSeulJour) return { debut: iso, fin: mode === 'single' ? '' : iso };
+	return iso < choix.debut ? { debut: iso, fin: choix.debut } : { debut: choix.debut, fin: iso };
+}
+
+/**
  * Passé = strictement avant aujourd'hui.
  * Le jour même reste « à venir » (pas encore à confirmer).
  * @param {Pick<import('./store.js').Event, 'startDate' | 'endDate'>} event
@@ -92,4 +107,14 @@ export function historyEvents(state) {
 	return state.events
 		.filter((event) => event.status === 'attended' || event.status === 'missed')
 		.sort((a, b) => effectiveDate(b).localeCompare(effectiveDate(a)));
+}
+
+/** Ce nom de groupe est-il déjà dans le line-up ? Sans tenir compte des majuscules ni des espaces autour.
+ * Sert à dire « Déjà dans le line-up » au lieu d'ignorer l'ajout en silence (le « + » semblait ne rien faire).
+ * @param {string[]} noms
+ * @param {string} nom
+ */
+export function nomDejaPris(noms, nom) {
+	const voulu = nom.trim().toLowerCase();
+	return noms.some((item) => item.trim().toLowerCase() === voulu);
 }

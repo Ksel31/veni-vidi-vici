@@ -92,7 +92,6 @@
 	function addBand(name, billing = 'headliner') {
 		const trimmed = name.trim();
 		if (!trimmed) return;
-		if (bands.some((band) => band.name.toLowerCase() === trimmed.toLowerCase())) return;
 		bands = [...bands, {
 			key: newId(),
 			performanceId: null,

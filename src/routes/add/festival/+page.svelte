@@ -55,7 +55,6 @@
 	function addBand(name) {
 		const trimmed = name.trim();
 		if (!trimmed) return;
-		if (bands.some((band) => band.name.toLowerCase() === trimmed.toLowerCase())) return;
 		bands = [...bands, { key: newId(), name: trimmed, day: null, picking: false }];
 	}
 
