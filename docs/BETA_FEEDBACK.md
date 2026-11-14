@@ -47,6 +47,21 @@ Exemple d'entrée :
 
 ## 💡 Idées de fonctionnalités
 
+- [ ] **Alerte de conflit de dates**
+  - Date : 14 nov. 2026
+  - Description : quand on ajoute ou modifie un event dont les dates chevauchent un autre event prévu, afficher un avertissement qui nomme l'event en conflit. Ça n'empêche pas l'enregistrement : on peut vouloir deux events le même jour.
+  - Priorité : P2
+  - Statut : à trier
+  - Source : Axel
+
+- [ ] **Rappels par notification**
+  - Date : 14 nov. 2026
+  - Description : une notification quelques jours avant un event, et un rappel si le billet n'est pas encore marqué acheté.
+  - Note : à voir selon la forme de l'appli (les notifications push demandent une appli installée, donc probablement l'APK de la phase 4).
+  - Priorité : P2
+  - Statut : à trier
+  - Source : Axel
+
 - [ ] **Choisir la couleur du billet par festival**
   - Date : 14 nov. 2026
   - Description : proposition fonctionnalité, liée à « Billets de festival en rose néon ». Pouvoir choisir la couleur du billet pour chaque festival (ex. un rose pour l'un, un autre ton pour un autre). Il faudrait un champ couleur sur l'event, avec une palette de quelques teintes validées dans les maquettes. Le rose néon serait la couleur par défaut des festivals.
