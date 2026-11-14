@@ -47,6 +47,13 @@ Exemple d'entrée :
 
 ## 💡 Idées de fonctionnalités
 
+- [ ] **Export calendrier (iCal)**
+  - Date : 14 nov. 2026
+  - Description : exporter ses events à venir au format calendrier (`.ics`) pour les importer dans Google Agenda, Apple Calendar, Outlook ou Home Assistant. Deux formes possibles : un fichier à importer une fois, ou un lien d'abonnement qui garde l'agenda à jour tout seul (à trancher).
+  - Priorité : à définir
+  - Statut : à trier
+  - Source : Axel
+
 - [ ] **Alerte de conflit de dates**
   - Date : 14 nov. 2026
   - Description : quand on ajoute ou modifie un event dont les dates chevauchent un autre event prévu, afficher un avertissement qui nomme l'event en conflit. Ça n'empêche pas l'enregistrement : on peut vouloir deux events le même jour.
